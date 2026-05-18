@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg-base: #0a0a0a;
+  --color-bg-surface: #111111;
+  --color-bg-elevated: #1a1a1a;
+  --color-amber: #c9a84c;
+  --color-amber-light: #e8c97a;
+  --color-amber-dim: #8a6f2e;
+  --color-smoke: rgba(201, 168, 76, 0.08);
+  --color-text-primary: #f0ede8;
+  --color-text-secondary: #9a9090;
+  --color-text-muted: #5a5555;
+  --color-border: rgba(201, 168, 76, 0.15);
+
+  --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', 'Helvetica Neue', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #0a0a0a;
+  color: #f0ede8;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
+}
+
+#root {
+  min-height: 100svh;
+  max-width: 430px;
+  margin: 0 auto;
+  position: relative;
+  background-color: #0a0a0a;
+}
+
+/* スクロールバー非表示 */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* 選択ハイライト */
+::selection {
+  background: rgba(201, 168, 76, 0.3);
+  color: #f0ede8;
+}
