@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Trash2, PlusCircle } from 'lucide-react'
-import { useRecipes } from '../hooks/useRecipes'
+import { Search, Trash2, PlusCircle, FlaskConical } from 'lucide-react'
+import { useRecipes, useFlavors } from '../hooks/useStorage'
 
 export default function RecipeList() {
   const { recipes, deleteRecipe } = useRecipes()
+  const { getFlavor } = useFlavors()
   const [query, setQuery] = useState('')
   const navigate = useNavigate()
 
@@ -32,7 +33,7 @@ export default function RecipeList() {
           placeholder="Search recipes..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#111] border border-[rgba(201,168,76,0.15)] text-[#f0ede8] placeholder-[#3a3535] text-sm outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors"
+          className="w-full pl-10 pr-4 py-3 bg-[#111] border border-[rgba(201,168,76,0.15)] text-[#f0ede8] placeholder-[#3a3535] text-sm outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors"
         />
       </div>
 
@@ -55,7 +56,12 @@ export default function RecipeList() {
       ) : (
         <div className="space-y-3">
           {filtered.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} onDelete={deleteRecipe} />
+            <RecipeCard
+              key={recipe.id}
+              recipe={recipe}
+              getFlavor={getFlavor}
+              onDelete={deleteRecipe}
+            />
           ))}
         </div>
       )}
@@ -63,9 +69,7 @@ export default function RecipeList() {
   )
 }
 
-function RecipeCard({ recipe, onDelete }) {
-  const totalRatio = recipe.flavors?.reduce((s, f) => s + (f.ratio || 0), 0) || 0
-
+function RecipeCard({ recipe, getFlavor, onDelete }) {
   const handleDelete = (e) => {
     e.stopPropagation()
     if (confirm(`「${recipe.name}」を削除しますか？`)) {
@@ -73,13 +77,23 @@ function RecipeCard({ recipe, onDelete }) {
     }
   }
 
+  const totalGrams = recipe.totalGrams ?? recipe.flavors?.reduce((s, f) => s + (f.grams || 0), 0) ?? 0
+
   return (
-    <div className="p-4 rounded-xl bg-[#111] border border-[rgba(201,168,76,0.1)]">
+    <div className="p-4 bg-[#111] border border-[rgba(201,168,76,0.1)]">
+
+      {/* ヘッダー */}
       <div className="flex items-start gap-3 mb-3">
-        <span className="text-2xl">{recipe.emoji || '🌿'}</span>
+        <div
+          className="w-9 h-9 flex items-center justify-center shrink-0"
+          style={{ background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.15)' }}
+        >
+          <FlaskConical size={16} className="text-[#c9a84c]" strokeWidth={1.5} />
+        </div>
         <div className="flex-1 min-w-0">
           <h3 className="text-[#f0ede8] font-medium text-sm truncate">{recipe.name}</h3>
           <p className="text-[#5a5555] text-xs mt-0.5">
+            {totalGrams > 0 && <span>{totalGrams}g · </span>}
             {new Date(recipe.createdAt).toLocaleDateString('ja-JP')}
           </p>
         </div>
@@ -94,29 +108,36 @@ function RecipeCard({ recipe, onDelete }) {
       {/* フレーバーバー */}
       {recipe.flavors && recipe.flavors.length > 0 && (
         <div className="space-y-1.5">
-          {recipe.flavors.map((flavor, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <span className="text-[#9a9090] text-xs w-20 truncate shrink-0">{flavor.name}</span>
-              <div className="flex-1 h-1.5 bg-[#1a1a1a] rounded-full overflow-hidden">
-                <div
-                  className="h-full rounded-full transition-all"
-                  style={{
-                    width: `${totalRatio > 0 ? (flavor.ratio / totalRatio) * 100 : 0}%`,
-                    background: 'linear-gradient(90deg, #8a6f2e, #c9a84c)',
-                  }}
-                />
+          {recipe.flavors.map((item, i) => {
+            const flavorData = getFlavor(item.flavorId)
+            const pct = totalGrams > 0 ? Math.round((item.grams / totalGrams) * 100) : 0
+            return (
+              <div key={i} className="flex items-center gap-2">
+                <span className="text-[#9a9090] text-xs w-24 truncate shrink-0">
+                  {flavorData?.nameJa ?? '不明'}
+                </span>
+                <div className="flex-1 h-1.5 bg-[#1a1a1a] rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full"
+                    style={{
+                      width: `${pct}%`,
+                      background: 'linear-gradient(90deg, #8a6f2e, #c9a84c)',
+                    }}
+                  />
+                </div>
+                <span className="text-[#5a5555] text-xs w-10 text-right shrink-0">
+                  {item.grams}g
+                </span>
               </div>
-              <span className="text-[#5a5555] text-xs w-8 text-right shrink-0">
-                {flavor.ratio}%
-              </span>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
 
-      {recipe.memo && (
+      {/* テイスティングノート */}
+      {(recipe.tastingNote || recipe.memo) && (
         <p className="mt-3 text-[#5a5555] text-xs leading-relaxed border-t border-[rgba(201,168,76,0.08)] pt-3">
-          {recipe.memo}
+          {recipe.tastingNote || recipe.memo}
         </p>
       )}
     </div>

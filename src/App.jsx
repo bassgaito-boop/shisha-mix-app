@@ -8,13 +8,13 @@ import SettingMemo from './pages/SettingMemo'
 import Layout from './components/common/Layout'
 
 export default function App() {
-  const [ageVerified] = useLocalStorage('ageVerified', false)
+  const [ageVerified, setAgeVerified] = useLocalStorage('ageVerified', false)
 
   if (!ageVerified) {
     return (
       <BrowserRouter>
         <Routes>
-          <Route path="*" element={<AgeGate />} />
+          <Route path="*" element={<AgeGate onVerify={() => setAgeVerified(true)} />} />
         </Routes>
       </BrowserRouter>
     )

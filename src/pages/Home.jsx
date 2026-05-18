@@ -1,97 +1,156 @@
 import { useNavigate } from 'react-router-dom'
-import { PlusCircle, BookOpen, Clock } from 'lucide-react'
-import { useRecipes } from '../hooks/useRecipes'
+import { PlusCircle, BookOpen, SlidersHorizontal, ChevronRight } from 'lucide-react'
+import { useRecipes, useSettings } from '../hooks/useStorage'
+
+const menuItems = [
+  {
+    label: 'MIX RECIPE 作成',
+    sub: '新しいレシピを記録する',
+    to: '/recipes/new',
+    Icon: PlusCircle,
+  },
+  {
+    label: 'RECIPE LIST',
+    sub: '保存したレシピを見る',
+    to: '/recipes',
+    Icon: BookOpen,
+  },
+  {
+    label: 'SETTING MEMO',
+    sub: 'セッティングをメモする',
+    to: '/memo',
+    Icon: SlidersHorizontal,
+  },
+]
 
 export default function Home() {
   const navigate = useNavigate()
   const { recipes } = useRecipes()
-  const recent = recipes.slice(0, 3)
+  const { settings } = useSettings()
 
   return (
-    <div className="px-5 pt-14 pb-4">
-      {/* ヘッダー */}
-      <div className="mb-10">
-        <p className="text-[#c9a84c] tracking-[0.3em] text-[10px] uppercase mb-2">
-          Your Personal
-        </p>
+    <div className="relative min-h-[calc(100svh-80px)] flex flex-col items-center justify-center px-6 overflow-hidden">
+
+      {/* 煙グラデーション背景 */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(ellipse 70% 45% at 50% 30%, rgba(201,168,76,0.07) 0%, transparent 70%)',
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(ellipse 40% 30% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 60%)',
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(ellipse 30% 25% at 85% 65%, rgba(201,168,76,0.03) 0%, transparent 60%)',
+          }}
+        />
+      </div>
+
+      <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
+
+        {/* アプリ名 */}
         <h1
-          className="text-3xl text-[#f0ede8] leading-tight"
+          className="text-5xl font-bold tracking-[0.25em] text-[#c9a84c] mb-2"
           style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
         >
-          Shisha Mix<br />
-          <span className="text-[#c9a84c]">Recipe Lab</span>
+          SHISHA MIX
         </h1>
-      </div>
 
-      {/* クイックアクション */}
-      <div className="grid grid-cols-2 gap-3 mb-8">
-        <button
-          onClick={() => navigate('/recipes/new')}
-          className="flex flex-col items-start p-4 rounded-xl border border-[rgba(201,168,76,0.2)] bg-[#111] active:scale-[0.98] transition-all duration-200"
-          style={{ boxShadow: 'inset 0 1px 0 rgba(201,168,76,0.08)' }}
-        >
-          <PlusCircle size={20} className="text-[#c9a84c] mb-3" strokeWidth={1.5} />
-          <span className="text-[#f0ede8] text-sm font-medium">New Recipe</span>
-          <span className="text-[#5a5555] text-xs mt-0.5">レシピを作成</span>
-        </button>
+        {/* サブタイトル */}
+        <p className="text-[#6a6060] text-xs tracking-[0.2em] uppercase mb-8">
+          Your Flavor Recipe Book
+        </p>
 
-        <button
-          onClick={() => navigate('/recipes')}
-          className="flex flex-col items-start p-4 rounded-xl border border-[rgba(201,168,76,0.2)] bg-[#111] active:scale-[0.98] transition-all duration-200"
-          style={{ boxShadow: 'inset 0 1px 0 rgba(201,168,76,0.08)' }}
-        >
-          <BookOpen size={20} className="text-[#c9a84c] mb-3" strokeWidth={1.5} />
-          <span className="text-[#f0ede8] text-sm font-medium">All Recipes</span>
-          <span className="text-[#5a5555] text-xs mt-0.5">{recipes.length} 件保存済み</span>
-        </button>
-      </div>
+        {/* 区切り線 */}
+        <div
+          className="w-24 h-px mb-10"
+          style={{ background: 'linear-gradient(90deg, transparent, #c9a84c, transparent)' }}
+        />
 
-      {/* 区切り */}
-      <div className="flex items-center gap-3 mb-5">
-        <Clock size={13} className="text-[#c9a84c]" />
-        <span className="text-[#5a5555] text-xs tracking-widest uppercase">Recent</span>
-        <div className="flex-1 h-px bg-[rgba(201,168,76,0.1)]" />
-      </div>
+        {/* メニューカード */}
+        <div className="w-full space-y-3 mb-10">
+          {menuItems.map(({ label, sub, to, Icon }) => (
+            <button
+              key={to}
+              onClick={() => navigate(to)}
+              className="w-full flex items-center gap-4 px-5 py-4 text-left transition-all duration-200 active:scale-[0.98]"
+              style={{
+                background: 'rgba(255,255,255,0.02)',
+                border: '1px solid rgba(201,168,76,0.25)',
+              }}
+              onMouseDown={(e) => {
+                e.currentTarget.style.boxShadow = '0 0 24px rgba(201,168,76,0.25), inset 0 0 12px rgba(201,168,76,0.04)'
+                e.currentTarget.style.borderColor = 'rgba(201,168,76,0.55)'
+              }}
+              onMouseUp={(e) => {
+                e.currentTarget.style.boxShadow = ''
+                e.currentTarget.style.borderColor = 'rgba(201,168,76,0.25)'
+              }}
+              onTouchStart={(e) => {
+                e.currentTarget.style.boxShadow = '0 0 24px rgba(201,168,76,0.25), inset 0 0 12px rgba(201,168,76,0.04)'
+                e.currentTarget.style.borderColor = 'rgba(201,168,76,0.55)'
+              }}
+              onTouchEnd={(e) => {
+                e.currentTarget.style.boxShadow = ''
+                e.currentTarget.style.borderColor = 'rgba(201,168,76,0.25)'
+              }}
+            >
+              {/* アイコン */}
+              <div
+                className="w-10 h-10 flex items-center justify-center shrink-0"
+                style={{
+                  background: 'rgba(201,168,76,0.08)',
+                  border: '1px solid rgba(201,168,76,0.2)',
+                }}
+              >
+                <Icon size={18} className="text-[#c9a84c]" strokeWidth={1.5} />
+              </div>
 
-      {/* 最近のレシピ */}
-      {recent.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-[#5a5555] text-sm">まだレシピがありません</p>
-          <p className="text-[#3a3535] text-xs mt-1">最初のレシピを作成しましょう</p>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {recent.map((recipe) => (
-            <RecipeRow key={recipe.id} recipe={recipe} />
+              {/* テキスト */}
+              <div className="flex-1 min-w-0">
+                <p className="text-[#f0ede8] text-sm font-semibold tracking-widest uppercase">
+                  {label}
+                </p>
+                <p className="text-[#5a5555] text-xs mt-0.5 tracking-wide">{sub}</p>
+              </div>
+
+              {/* 矢印 */}
+              <ChevronRight size={16} className="text-[#c9a84c] opacity-50 shrink-0" />
+            </button>
           ))}
         </div>
-      )}
+
+        {/* 統計 */}
+        <div className="flex items-center gap-6">
+          <Stat value={recipes.length} label="Recipes" />
+          <div className="w-px h-6 bg-[rgba(201,168,76,0.15)]" />
+          <Stat value={settings.length} label="Settings" />
+        </div>
+      </div>
     </div>
   )
 }
 
-function RecipeRow({ recipe }) {
-  const navigate = useNavigate()
+function Stat({ value, label }) {
   return (
-    <button
-      onClick={() => navigate('/recipes')}
-      className="w-full flex items-center gap-4 p-4 rounded-xl bg-[#111] border border-[rgba(201,168,76,0.1)] active:scale-[0.98] transition-all duration-200 text-left"
-    >
-      <div
-        className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 text-lg"
-        style={{ background: 'rgba(201,168,76,0.1)' }}
+    <div className="flex flex-col items-center gap-0.5">
+      <span
+        className="text-xl text-[#c9a84c]"
+        style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
       >
-        {recipe.emoji || '🌿'}
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-[#f0ede8] text-sm font-medium truncate">{recipe.name}</p>
-        <p className="text-[#5a5555] text-xs mt-0.5">
-          {recipe.flavors?.length ?? 0} flavors
-        </p>
-      </div>
-      <span className="text-[#3a3535] text-xs shrink-0">
-        {new Date(recipe.createdAt).toLocaleDateString('ja-JP', { month: 'short', day: 'numeric' })}
+        {value}
       </span>
-    </button>
+      <span className="text-[#3a3535] text-[10px] tracking-widest uppercase">{label}</span>
+    </div>
   )
 }
