@@ -1,15 +1,11 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import jsQR from 'jsqr'
 import { useNavigate } from 'react-router-dom'
 import { Search, Trash2, PlusCircle, Pencil, X, ChevronDown, Plus, Check, Download, Copy, Send, QrCode, Camera } from 'lucide-react'
 import { useRecipes, useFlavors } from '../hooks/useStorage'
 import { encodeRecipe, decodeRecipe } from '../utils/shareCode'
 import QRCodeLib from 'qrcode'
-
-const SLICE_COLORS = [
-  '#c9a84c', '#e87d5a', '#7ec8a0', '#7ab8e8',
-  '#c87eb8', '#e8a84c', '#e87878', '#5ac8b0',
-]
+import { SLICE_COLORS } from '../constants/colors'
 
 export default function RecipeList() {
   const { recipes, deleteRecipe, addRecipe } = useRecipes()
@@ -97,35 +93,35 @@ export default function RecipeList() {
   const hasFilters = !!query || filterRows.some((r) => r.brandId || r.flavorId)
 
   // レシピで実際に使われているブランド・フレーバーのみ
-  const usedBrandIds  = new Set(recipes.flatMap((r) => r.flavors?.map((f) => f.brandId)  ?? []))
-  const usedFlavorIds = new Set(recipes.flatMap((r) => r.flavors?.map((f) => f.flavorId) ?? []))
-  const usedBrands  = brands.filter((b) => usedBrandIds.has(b.id))
-  const usedFlavors = allFlavors.filter((f) => usedFlavorIds.has(f.id))
+  const { usedBrands, usedFlavors } = useMemo(() => {
+    const usedBrandIds  = new Set(recipes.flatMap((r) => r.flavors?.map((f) => f.brandId)  ?? []))
+    const usedFlavorIds = new Set(recipes.flatMap((r) => r.flavors?.map((f) => f.flavorId) ?? []))
+    return {
+      usedBrands:  brands.filter((b) => usedBrandIds.has(b.id)),
+      usedFlavors: allFlavors.filter((f) => usedFlavorIds.has(f.id)),
+    }
+  }, [recipes, brands, allFlavors])
 
   // ── フィルタリングロジック（全行AND）─────────────────────
-  const q = query.toLowerCase()
-
-  const filtered = recipes.filter((r) => {
-    if (q) {
-      const nameMatch = r.name.toLowerCase().includes(q)
-      const flavorMatch = r.flavors?.some((item) => {
-        const fl = getFlavor(item.flavorId)
-        const br = brands.find((b) => b.id === item.brandId)
-        return (
-          fl?.name?.toLowerCase().includes(q) ||
-          fl?.name?.toLowerCase().includes(q) ||
-          br?.name?.toLowerCase().includes(q) ||
-          br?.name?.toLowerCase().includes(q)
-        )
-      })
-      if (!nameMatch && !flavorMatch) return false
-    }
-    for (const row of filterRows) {
-      if (row.brandId  && !r.flavors?.some((item) => item.brandId  === row.brandId))  return false
-      if (row.flavorId && !r.flavors?.some((item) => item.flavorId === row.flavorId)) return false
-    }
-    return true
-  })
+  const filtered = useMemo(() => {
+    const q = query.toLowerCase()
+    return recipes.filter((r) => {
+      if (q) {
+        const nameMatch = r.name.toLowerCase().includes(q)
+        const flavorMatch = r.flavors?.some((item) => {
+          const fl = getFlavor(item.flavorId)
+          const br = brands.find((b) => b.id === item.brandId)
+          return fl?.name?.toLowerCase().includes(q) || br?.name?.toLowerCase().includes(q)
+        })
+        if (!nameMatch && !flavorMatch) return false
+      }
+      for (const row of filterRows) {
+        if (row.brandId  && !r.flavors?.some((item) => item.brandId  === row.brandId))  return false
+        if (row.flavorId && !r.flavors?.some((item) => item.flavorId === row.flavorId)) return false
+      }
+      return true
+    })
+  }, [recipes, query, filterRows, getFlavor, brands])
 
   return (
     <div className="px-5 pt-14 pb-4">

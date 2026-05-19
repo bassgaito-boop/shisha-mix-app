@@ -1,12 +1,8 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Plus, X, ChevronRight, ChevronLeft } from 'lucide-react'
 import { useRecipes, useFlavors } from '../hooks/useStorage'
-
-const SLICE_COLORS = [
-  '#c9a84c', '#e87d5a', '#7ec8a0', '#7ab8e8',
-  '#c87eb8', '#e8a84c', '#e87878', '#5ac8b0',
-]
+import { SLICE_COLORS } from '../constants/colors'
 
 export default function RecipeCreate() {
   const navigate = useNavigate()
@@ -125,13 +121,16 @@ export default function RecipeCreate() {
   const selectedBrand = brands.find((b) => b.id === pickerBrandId)
 
   // チャート用スライス
-  const chartSlices = flavorItems
-    .filter((item) => item.flavorId && item.grams > 0)
-    .map((item, i) => ({
-      grams: item.grams,
-      label: getFlavor(item.flavorId)?.name ?? '',
-      color: SLICE_COLORS[i % SLICE_COLORS.length],
-    }))
+  const chartSlices = useMemo(() =>
+    flavorItems
+      .filter((item) => item.flavorId && item.grams > 0)
+      .map((item, i) => ({
+        grams: item.grams,
+        label: getFlavor(item.flavorId)?.name ?? '',
+        color: SLICE_COLORS[i % SLICE_COLORS.length],
+      })),
+    [flavorItems, getFlavor]
+  )
 
   return (
     <div className="px-5 pt-14 pb-8">
