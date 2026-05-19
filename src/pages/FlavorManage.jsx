@@ -165,6 +165,7 @@ function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose }) {
 
   // フレーバー
   const [flavorMode, setFlavorMode]             = useState('select')
+  const [selectedCategory, setSelectedCategory] = useState('')
   const [selectedFlavorId, setSelectedFlavorId] = useState('')
   const [flavorName, setFlavorName]             = useState('')
   const [flavorCat,  setFlavorCat]              = useState(CATEGORIES[0])
@@ -268,32 +269,29 @@ function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose }) {
             <p className="text-[#c9a84c] text-[10px] tracking-widest uppercase mb-3">フレーバー</p>
             <ModeToggle
               value={flavorMode}
-              onChange={setFlavorMode}
+              onChange={(v) => { setFlavorMode(v); setSelectedCategory(''); setSelectedFlavorId('') }}
               options={[{ value: 'select', label: '既存から選択' }, { value: 'new', label: '新規登録' }]}
             />
             <div className="mt-3">
               {flavorMode === 'select' ? (
-                <div className="relative">
-                  <select
-                    value={selectedFlavorId}
-                    onChange={(e) => setSelectedFlavorId(e.target.value)}
-                    className="w-full appearance-none px-3 pr-8 py-2.5 bg-[#0a0a0a] border border-[rgba(201,168,76,0.15)] text-sm outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors"
-                    style={{ color: selectedFlavorId ? '#f0ede8' : '#5a5555' }}
-                  >
-                    <option value="" style={{ background: '#111', color: '#5a5555' }}>
-                      フレーバーを選択
-                    </option>
-                    {CATEGORIES.filter((c) => uniqueFlavorsByCategory[c]).map((cat) => (
-                      <optgroup key={cat} label={cat} style={{ background: '#111', color: '#c9a84c' }}>
-                        {uniqueFlavorsByCategory[cat].map((f) => (
-                          <option key={f.id} value={f.id} style={{ background: '#111', color: '#f0ede8' }}>
-                            {f.name}
-                          </option>
-                        ))}
-                      </optgroup>
-                    ))}
-                  </select>
-                  <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#5a5555] pointer-events-none" />
+                <div className="space-y-2">
+                  <SelectField
+                    value={selectedCategory}
+                    onChange={(v) => { setSelectedCategory(v); setSelectedFlavorId('') }}
+                    placeholder="カテゴリーを選択"
+                    options={CATEGORIES
+                      .filter((c) => uniqueFlavorsByCategory[c])
+                      .map((c) => ({ value: c, label: c }))}
+                  />
+                  {selectedCategory && (
+                    <SelectField
+                      value={selectedFlavorId}
+                      onChange={setSelectedFlavorId}
+                      placeholder="フレーバーを選択"
+                      options={(uniqueFlavorsByCategory[selectedCategory] ?? [])
+                        .map((f) => ({ value: f.id, label: f.name }))}
+                    />
+                  )}
                 </div>
               ) : (
                 <div className="space-y-2">
