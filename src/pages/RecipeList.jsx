@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Search, Trash2, PlusCircle, Pencil, X, ChevronDown, Plus, Check, Download, Copy, Send, QrCode, Camera } from 'lucide-react'
 import { useRecipes, useFlavors } from '../hooks/useStorage'
 import { encodeRecipe, decodeRecipe } from '../utils/shareCode'
-import QRCode from 'react-qr-code'
+import QRCodeLib from 'qrcode'
 
 const SLICE_COLORS = [
   '#c9a84c', '#e87d5a', '#7ec8a0', '#7ab8e8',
@@ -376,9 +376,7 @@ export default function RecipeList() {
                 <X size={16} />
               </button>
             </div>
-            <div className="p-3 bg-white">
-              <QRCode value={encodeRecipe(qrRecipe, getFlavor, brands)} size={200} />
-            </div>
+            <QrCanvas value={encodeRecipe(qrRecipe, getFlavor, brands)} />
             <p className="text-[#5a5555] text-xs text-center">スクリーンショットを撮ってXに投稿、<br />または相手のアプリでスキャン</p>
           </div>
         </div>
@@ -622,6 +620,27 @@ function MiniDonut({ items, total }) {
       ))}
       <circle cx={cx} cy={cy} r={r - 1} fill="#111" />
     </svg>
+  )
+}
+
+// ─── QRコード表示（canvas） ───────────────────────────────────
+
+function QrCanvas({ value }) {
+  const canvasRef = useRef(null)
+
+  useEffect(() => {
+    if (!canvasRef.current) return
+    QRCodeLib.toCanvas(canvasRef.current, value, {
+      width: 200,
+      margin: 2,
+      color: { dark: '#000000', light: '#ffffff' },
+    })
+  }, [value])
+
+  return (
+    <div className="p-3 bg-white">
+      <canvas ref={canvasRef} />
+    </div>
   )
 }
 
