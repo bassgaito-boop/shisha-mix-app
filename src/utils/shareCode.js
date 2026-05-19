@@ -9,7 +9,7 @@ export function encodeRecipe(recipe, getFlavor, brands) {
       const br = brands.find((b) => b.id === item.brandId)
       return { b: br?.name ?? '', fl: fl?.name ?? '', g: item.grams }
     }),
-    t: recipe.tastingNote || recipe.memo || '',
+    t: '',
   }
   const json = JSON.stringify(data)
   const b64 = btoa(
