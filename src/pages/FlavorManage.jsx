@@ -168,11 +168,18 @@ function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose }) {
   const [flavorName, setFlavorName]             = useState('')
   const [flavorCat,  setFlavorCat]              = useState(CATEGORIES[0])
 
-  // 既存フレーバーを五十音順にソート
-  const sortedFlavors = useMemo(
-    () => [...flavors].sort((a, b) => a.name.localeCompare(b.name, 'en')),
-    [flavors]
-  )
+  // 重複名を除去してカテゴリー別に整理（各カテゴリー内はアルファベット順）
+  const uniqueFlavorsByCategory = useMemo(() => {
+    const seen = new Set()
+    const byCategory = {}
+    const sorted = [...flavors].sort((a, b) => a.name.localeCompare(b.name, 'en'))
+    for (const f of sorted) {
+      if (seen.has(f.name)) continue
+      seen.add(f.name)
+      ;(byCategory[f.category] ??= []).push(f)
+    }
+    return byCategory
+  }, [flavors])
 
   const handleSave = () => {
     // ── ブランドを確定 ──
@@ -269,19 +276,19 @@ function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose }) {
                     onChange={(e) => setSelectedFlavorId(e.target.value)}
                     className="w-full appearance-none px-3 pr-8 py-2.5 bg-[#0a0a0a] border border-[rgba(201,168,76,0.15)] text-sm outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors"
                     style={{ color: selectedFlavorId ? '#f0ede8' : '#5a5555' }}
-                    size={1}
                   >
                     <option value="" style={{ background: '#111', color: '#5a5555' }}>
-                      フレーバーを選択（アルファベット順）
+                      フレーバーを選択
                     </option>
-                    {sortedFlavors.map((f) => {
-                      const brand = brands.find((b) => b.id === f.brandId)
-                      return (
-                        <option key={f.id} value={f.id} style={{ background: '#111', color: '#f0ede8' }}>
-                          {f.name} ({brand?.name ?? ''})
-                        </option>
-                      )
-                    })}
+                    {CATEGORIES.filter((c) => uniqueFlavorsByCategory[c]).map((cat) => (
+                      <optgroup key={cat} label={cat} style={{ background: '#111', color: '#c9a84c' }}>
+                        {uniqueFlavorsByCategory[cat].map((f) => (
+                          <option key={f.id} value={f.id} style={{ background: '#111', color: '#f0ede8' }}>
+                            {f.name}
+                          </option>
+                        ))}
+                      </optgroup>
+                    ))}
                   </select>
                   <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#5a5555] pointer-events-none" />
                 </div>
