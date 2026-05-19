@@ -413,6 +413,121 @@ function FilterSelect({ value, onChange, placeholder, options, children }) {
 
 // ─── レシピカード ──────────────────────────────────────────────
 
+async function generateShareCard(recipe, getFlavor, brands) {
+  const code = encodeRecipe(recipe, getFlavor, brands)
+  const totalGrams = recipe.totalGrams ?? recipe.flavors?.reduce((s, f) => s + (f.grams || 0), 0) ?? 0
+  const flavors = recipe.flavors ?? []
+
+  const W = 420
+  const flavorH = Math.max(flavors.length * 38, 38)
+  const noteH = (recipe.tastingNote || recipe.memo) ? 36 : 0
+  const H = 96 + flavorH + 20 + noteH + 160
+
+  const canvas = document.createElement('canvas')
+  canvas.width = W
+  canvas.height = H
+  const ctx = canvas.getContext('2d')
+
+  // 背景
+  ctx.fillStyle = '#111111'
+  ctx.fillRect(0, 0, W, H)
+
+  // ボーダー
+  ctx.strokeStyle = 'rgba(201,168,76,0.3)'
+  ctx.lineWidth = 1
+  ctx.strokeRect(0.5, 0.5, W - 1, H - 1)
+
+  // アプリ名（右上）
+  ctx.fillStyle = 'rgba(201,168,76,0.6)'
+  ctx.font = '600 11px system-ui,sans-serif'
+  ctx.textAlign = 'right'
+  ctx.fillText('SHISHA MIX', W - 16, 22)
+  ctx.textAlign = 'left'
+
+  // レシピ名
+  ctx.fillStyle = '#f0ede8'
+  ctx.font = 'bold 20px Georgia,serif'
+  ctx.fillText(recipe.name, 16, 52)
+
+  // 合計・日付
+  ctx.fillStyle = '#5a5555'
+  ctx.font = '11px system-ui,sans-serif'
+  ctx.fillText(`${totalGrams}g · ${new Date(recipe.createdAt).toLocaleDateString('ja-JP')}`, 16, 70)
+
+  // 区切り線
+  ctx.strokeStyle = 'rgba(201,168,76,0.2)'
+  ctx.lineWidth = 1
+  ctx.beginPath(); ctx.moveTo(16, 82); ctx.lineTo(W - 16, 82); ctx.stroke()
+
+  // フレーバー一覧（QRの左側に収める）
+  const listMaxW = 255
+  flavors.forEach((item, i) => {
+    const fl = getFlavor(item.flavorId)
+    const br = brands.find((b) => b.id === item.brandId)
+    const pct = totalGrams > 0 ? Math.round((item.grams / totalGrams) * 100) : 0
+    const y = 105 + i * 38
+
+    ctx.fillStyle = SLICE_COLORS[i % SLICE_COLORS.length]
+    ctx.beginPath(); ctx.arc(24, y, 5, 0, Math.PI * 2); ctx.fill()
+
+    ctx.fillStyle = '#f0ede8'
+    ctx.font = '13px system-ui,sans-serif'
+    ctx.fillText(truncate(fl?.name ?? 'Unknown', ctx, listMaxW - 100), 38, y + 5)
+
+    ctx.fillStyle = '#5a5555'
+    ctx.font = '10px system-ui,sans-serif'
+    ctx.fillText(br?.name ?? '', 38, y + 20)
+
+    ctx.fillStyle = '#9a9090'
+    ctx.font = '11px system-ui,sans-serif'
+    ctx.textAlign = 'right'
+    ctx.fillText(`${item.grams}g / ${pct}%`, listMaxW, y + 5)
+    ctx.textAlign = 'left'
+  })
+
+  // テイスティングノート
+  const afterFlavorY = 105 + flavorH + 10
+  if (recipe.tastingNote || recipe.memo) {
+    ctx.strokeStyle = 'rgba(201,168,76,0.1)'
+    ctx.beginPath(); ctx.moveTo(16, afterFlavorY); ctx.lineTo(W - 16, afterFlavorY); ctx.stroke()
+    ctx.fillStyle = '#5a5555'
+    ctx.font = '11px system-ui,sans-serif'
+    ctx.fillText(truncate(recipe.tastingNote || recipe.memo, ctx, W - 32), 16, afterFlavorY + 20)
+  }
+
+  // QRコード（右側）
+  const qrSize = 130
+  const qrX = W - qrSize - 16
+  const qrY = 88
+  const qrCanvas = document.createElement('canvas')
+  await QRCodeLib.toCanvas(qrCanvas, code, { width: qrSize, margin: 1, color: { dark: '#000000', light: '#ffffff' } })
+  ctx.fillStyle = '#ffffff'
+  ctx.fillRect(qrX - 4, qrY - 4, qrSize + 8, qrSize + 8)
+  ctx.drawImage(qrCanvas, qrX, qrY)
+
+  ctx.fillStyle = '#5a5555'
+  ctx.font = '10px system-ui,sans-serif'
+  ctx.textAlign = 'center'
+  ctx.fillText('Scan to import', qrX + qrSize / 2, qrY + qrSize + 16)
+  ctx.textAlign = 'left'
+
+  // #ShishaMix（下部）
+  ctx.fillStyle = 'rgba(201,168,76,0.5)'
+  ctx.font = '11px system-ui,sans-serif'
+  ctx.textAlign = 'right'
+  ctx.fillText('#ShishaMix', W - 16, H - 10)
+  ctx.textAlign = 'left'
+
+  return new Promise((resolve) => canvas.toBlob(resolve, 'image/png'))
+}
+
+function truncate(text, ctx, maxWidth) {
+  if (ctx.measureText(text).width <= maxWidth) return text
+  let t = text
+  while (t.length > 0 && ctx.measureText(t + '…').width > maxWidth) t = t.slice(0, -1)
+  return t + '…'
+}
+
 function buildXPostText(recipe, getFlavor, brands) {
   const totalGrams =
     recipe.totalGrams ?? recipe.flavors?.reduce((s, f) => s + (f.grams || 0), 0) ?? 0
@@ -453,9 +568,26 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onQr }) {
   const handleShare = async (e) => {
     e.stopPropagation()
     const text = buildXPostText(recipe, getFlavor, brands)
-    await navigator.clipboard.writeText(text)
-    setShared(true)
-    setTimeout(() => setShared(false), 2000)
+    try {
+      const blob = await generateShareCard(recipe, getFlavor, brands)
+      const file = new File([blob], 'shisha-recipe.png', { type: 'image/png' })
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ title: recipe.name, text, files: [file] })
+      } else if (navigator.share) {
+        await navigator.share({ title: recipe.name, text })
+      } else {
+        await navigator.clipboard.writeText(text)
+        const a = document.createElement('a')
+        a.href = URL.createObjectURL(blob)
+        a.download = `${recipe.name}.png`
+        a.click()
+        URL.revokeObjectURL(a.href)
+      }
+      setShared(true)
+      setTimeout(() => setShared(false), 2000)
+    } catch {
+      // キャンセル時は何もしない
+    }
   }
 
   const handleCopyCode = async (e) => {
