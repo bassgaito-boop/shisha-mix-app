@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Trash2, PlusCircle, Pencil, X, ChevronDown, Plus, Check, Download, Copy, Send } from 'lucide-react'
+import { Search, Trash2, PlusCircle, Pencil, X, ChevronDown, Plus, Check, Download, Copy, Send, QrCode, Camera } from 'lucide-react'
 import { useRecipes, useFlavors } from '../hooks/useStorage'
 import { encodeRecipe, decodeRecipe } from '../utils/shareCode'
+import QRCode from 'react-qr-code'
 
 const SLICE_COLORS = [
   '#c9a84c', '#e87d5a', '#7ec8a0', '#7ab8e8',
@@ -16,16 +17,18 @@ export default function RecipeList() {
 
   // ── インポートモーダル ──────────────────────────────────────
   const [importOpen, setImportOpen] = useState(false)
+  const [importTab, setImportTab] = useState('code') // 'code' | 'qr'
   const [importCode, setImportCode] = useState('')
   const [importPreview, setImportPreview] = useState(null)
   const [importError, setImportError] = useState('')
   const [importDone, setImportDone] = useState(false)
 
-  const handlePreview = () => {
+  const handlePreview = (code) => {
+    const target = code ?? importCode
     setImportError('')
     setImportPreview(null)
     try {
-      const data = decodeRecipe(importCode)
+      const data = decodeRecipe(target)
       setImportPreview(data)
     } catch (e) {
       setImportError(e.message)
@@ -53,6 +56,7 @@ export default function RecipeList() {
 
   const closeImport = () => {
     setImportOpen(false)
+    setImportTab('code')
     setImportCode('')
     setImportPreview(null)
     setImportError('')
@@ -272,15 +276,40 @@ export default function RecipeList() {
               </button>
             </div>
 
-            {/* コード入力 */}
-            <p className="text-[#5a5555] text-xs mb-2">共有コードを貼り付けてください</p>
-            <textarea
-              value={importCode}
-              onChange={(e) => { setImportCode(e.target.value); setImportPreview(null); setImportError('') }}
-              placeholder="SHI-..."
-              rows={3}
-              className="w-full px-3 py-2.5 bg-[#0a0a0a] border border-[rgba(201,168,76,0.15)] text-[#f0ede8] text-xs font-mono placeholder-[#3a3535] outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors resize-none"
-            />
+            {/* タブ切り替え */}
+            <div className="flex mb-4 border border-[rgba(201,168,76,0.15)]">
+              {[{ id: 'code', icon: Copy, label: 'コード入力' }, { id: 'qr', icon: Camera, label: 'QRスキャン' }].map(({ id, icon: Icon, label }) => (
+                <button
+                  key={id}
+                  onClick={() => { setImportTab(id); setImportPreview(null); setImportError('') }}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs transition-colors"
+                  style={{ background: importTab === id ? 'rgba(201,168,76,0.15)' : 'transparent', color: importTab === id ? '#c9a84c' : '#5a5555' }}
+                >
+                  <Icon size={12} />
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            {importTab === 'code' ? (
+              <>
+                <p className="text-[#5a5555] text-xs mb-2">共有コードを貼り付けてください</p>
+                <textarea
+                  value={importCode}
+                  onChange={(e) => { setImportCode(e.target.value); setImportPreview(null); setImportError('') }}
+                  placeholder="SHI-..."
+                  rows={3}
+                  className="w-full px-3 py-2.5 bg-[#0a0a0a] border border-[rgba(201,168,76,0.15)] text-[#f0ede8] text-xs font-mono placeholder-[#3a3535] outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors resize-none"
+                />
+              </>
+            ) : (
+              !importPreview && (
+                <QrScanner
+                  onResult={(code) => handlePreview(code)}
+                  onError={(msg) => setImportError(msg)}
+                />
+              )
+            )}
 
             {importError && (
               <p className="text-red-400 text-xs mt-2">{importError}</p>
@@ -301,24 +330,21 @@ export default function RecipeList() {
                     </div>
                   ))}
                 </div>
-                {importPreview.t && (
-                  <p className="text-[#5a5555] text-xs border-t border-[rgba(201,168,76,0.08)] pt-2">{importPreview.t}</p>
-                )}
               </div>
             )}
 
             {/* ボタン */}
             <div className="flex gap-2 mt-4">
-              {!importPreview ? (
+              {importTab === 'code' && !importPreview ? (
                 <button
-                  onClick={handlePreview}
+                  onClick={() => handlePreview()}
                   disabled={!importCode.trim()}
                   className="flex-1 py-3 text-[#0a0a0a] text-sm font-semibold tracking-wide disabled:opacity-30 transition-opacity"
                   style={{ background: 'linear-gradient(135deg, #c9a84c, #e8c97a)' }}
                 >
                   確認する
                 </button>
-              ) : (
+              ) : importPreview ? (
                 <button
                   onClick={handleImport}
                   className="flex-1 py-3 text-sm font-semibold tracking-wide transition-all"
@@ -326,7 +352,7 @@ export default function RecipeList() {
                 >
                   {importDone ? '追加しました ✓' : 'このレシピを追加'}
                 </button>
-              )}
+              ) : null}
             </div>
           </div>
         </div>
@@ -392,6 +418,7 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete }) {
   const navigate = useNavigate()
   const [shared, setShared] = useState(false)
   const [codeCopied, setCodeCopied] = useState(false)
+  const [qrOpen, setQrOpen] = useState(false)
 
   const handleDelete = (e) => {
     e.stopPropagation()
@@ -419,6 +446,8 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete }) {
   const totalGrams =
     recipe.totalGrams ?? recipe.flavors?.reduce((s, f) => s + (f.grams || 0), 0) ?? 0
 
+  const shareCode = encodeRecipe(recipe, getFlavor, brands)
+
   return (
     <div className="p-4 bg-[#111] border border-[rgba(201,168,76,0.1)]">
 
@@ -431,6 +460,13 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete }) {
             {new Date(recipe.createdAt).toLocaleDateString('ja-JP')}
           </p>
         </div>
+        <button
+          onClick={(e) => { e.stopPropagation(); setQrOpen(true) }}
+          className="p-1.5 text-[#5a5555] hover:text-[#c9a84c] transition-colors shrink-0"
+          title="QRコードを表示"
+        >
+          <QrCode size={14} />
+        </button>
         <button
           onClick={handleCopyCode}
           className="p-1.5 text-[#5a5555] hover:text-[#c9a84c] transition-colors shrink-0"
@@ -492,6 +528,28 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete }) {
         <p className="mt-3 text-[#5a5555] text-xs leading-relaxed border-t border-[rgba(201,168,76,0.08)] pt-3">
           {recipe.tastingNote || recipe.memo}
         </p>
+      )}
+
+      {/* QRコードモーダル */}
+      {qrOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-5" onClick={() => setQrOpen(false)}>
+          <div className="absolute inset-0 bg-black/70" />
+          <div
+            className="relative bg-[#111] border border-[rgba(201,168,76,0.2)] p-6 flex flex-col items-center gap-4 w-full max-w-[300px]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between w-full">
+              <p className="text-[#f0ede8] text-sm font-medium truncate flex-1 mr-2">{recipe.name}</p>
+              <button onClick={() => setQrOpen(false)} className="text-[#5a5555] shrink-0">
+                <X size={16} />
+              </button>
+            </div>
+            <div className="p-3 bg-white">
+              <QRCode value={shareCode} size={200} />
+            </div>
+            <p className="text-[#5a5555] text-xs text-center">スクリーンショットを撮ってXに投稿、<br />または相手のアプリでスキャン</p>
+          </div>
+        </div>
       )}
     </div>
   )
@@ -563,5 +621,37 @@ function MiniDonut({ items, total }) {
       ))}
       <circle cx={cx} cy={cy} r={r - 1} fill="#111" />
     </svg>
+  )
+}
+
+// ─── QRスキャナー ──────────────────────────────────────────────
+
+function QrScanner({ onResult, onError }) {
+  const regionId = 'qr-reader-region'
+
+  useEffect(() => {
+    let scanner
+    import('html5-qrcode').then(({ Html5Qrcode }) => {
+      scanner = new Html5Qrcode(regionId)
+      scanner.start(
+        { facingMode: 'environment' },
+        { fps: 10, qrbox: { width: 220, height: 220 } },
+        (text) => {
+          scanner.stop().catch(() => {})
+          onResult(text)
+        },
+        () => {}
+      ).catch((err) => onError(err?.message ?? 'カメラを起動できませんでした'))
+    })
+    return () => {
+      scanner?.stop().catch(() => {})
+    }
+  }, [])
+
+  return (
+    <div className="relative w-full">
+      <div id={regionId} className="w-full overflow-hidden" />
+      <p className="text-[#5a5555] text-xs text-center mt-2">QRコードをカメラに向けてください</p>
+    </div>
   )
 }
