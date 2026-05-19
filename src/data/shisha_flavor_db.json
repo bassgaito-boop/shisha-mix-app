@@ -287,7 +287,7 @@
       "id": "brand-002",
       "name": "DOZAJ",
       "nameJa": "ドザジ",
-      "origin": "トルコ",
+      "origin": "Turkey",
       "isCustom": false
     },
     "flavors": [
@@ -2083,7 +2083,7 @@
       "id": "brand-006",
       "name": "LIRRA",
       "nameJa": "リラ",
-      "origin": "中東",
+      "origin": "Middle East",
       "isCustom": false
     },
     "flavors": [
@@ -2353,7 +2353,7 @@
       "id": "brand-008",
       "name": "Afzal",
       "nameJa": "アフザル",
-      "origin": "インド",
+      "origin": "India",
       "isCustom": false
     },
     "flavors": [
@@ -2508,7 +2508,7 @@
       "id": "brand-009",
       "name": "DARKSIDE",
       "nameJa": "ダークサイド",
-      "origin": "ロシア",
+      "origin": "Russia",
       "isCustom": false
     },
     "flavors": [
@@ -3032,7 +3032,7 @@
       "id": "brand-013",
       "name": "Al Waha",
       "nameJa": "アルワハ",
-      "origin": "ヨルダン",
+      "origin": "Jordan",
       "isCustom": false
     },
     "flavors": [

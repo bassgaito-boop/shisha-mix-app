@@ -1,80 +1,38 @@
 import { useNavigate, Link } from 'react-router-dom'
 import { PlusCircle, BookOpen, ChevronRight, Library } from 'lucide-react'
 import { useRecipes } from '../hooks/useStorage'
-
-const menuItems = [
-  {
-    label: 'CREATE MIX RECIPE',
-    sub: '新しいレシピを記録する',
-    to: '/recipes/new',
-    Icon: PlusCircle,
-  },
-  {
-    label: 'RECIPE LIST',
-    sub: '保存したレシピを見る',
-    to: '/recipes',
-    Icon: BookOpen,
-  },
-  {
-    label: 'FLAVOR LIST',
-    sub: 'フレーバーの管理・登録をする',
-    to: '/flavors',
-    Icon: Library,
-  },
-]
+import { useLang } from '../contexts/LangContext'
 
 export default function Home() {
   const navigate = useNavigate()
   const { recipes } = useRecipes()
+  const { t, toggleLang } = useLang()
+  const h = t.home
+
+  const menuItems = [
+    { label: h.createRecipe, sub: h.createRecipeSub, to: '/recipes/new', Icon: PlusCircle },
+    { label: h.recipeList,   sub: h.recipeListSub,   to: '/recipes',     Icon: BookOpen  },
+    { label: h.flavorList,   sub: h.flavorListSub,   to: '/flavors',     Icon: Library   },
+  ]
 
   return (
     <div className="relative min-h-[calc(100svh-80px)] flex flex-col items-center justify-center px-6 overflow-hidden">
 
       {/* 煙グラデーション背景 */}
       <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(ellipse 70% 45% at 50% 30%, rgba(201,168,76,0.07) 0%, transparent 70%)',
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(ellipse 40% 30% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 60%)',
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(ellipse 30% 25% at 85% 65%, rgba(201,168,76,0.03) 0%, transparent 60%)',
-          }}
-        />
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse 70% 45% at 50% 30%, rgba(201,168,76,0.07) 0%, transparent 70%)' }} />
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse 40% 30% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 60%)' }} />
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse 30% 25% at 85% 65%, rgba(201,168,76,0.03) 0%, transparent 60%)' }} />
       </div>
 
       <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
 
         {/* アプリ名 */}
-        <h1
-          className="text-5xl font-bold tracking-[0.25em] text-[#c9a84c] mb-2"
-          style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
-        >
+        <h1 className="text-5xl font-bold tracking-[0.25em] text-[#c9a84c] mb-2" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>
           SHISHA MIX
         </h1>
-
-        {/* サブタイトル */}
-        <p className="text-[#6a6060] text-xs tracking-[0.2em] uppercase mb-8">
-          Your Flavor Recipe Book
-        </p>
-
-        {/* 区切り線 */}
-        <div
-          className="w-24 h-px mb-10"
-          style={{ background: 'linear-gradient(90deg, transparent, #c9a84c, transparent)' }}
-        />
+        <p className="text-[#6a6060] text-xs tracking-[0.2em] uppercase mb-8">{h.subtitle}</p>
+        <div className="w-24 h-px mb-10" style={{ background: 'linear-gradient(90deg, transparent, #c9a84c, transparent)' }} />
 
         {/* メニューカード */}
         <div className="w-full space-y-3 mb-10">
@@ -83,47 +41,19 @@ export default function Home() {
               key={to}
               onClick={() => navigate(to)}
               className="w-full flex items-center gap-4 px-5 py-4 text-left transition-all duration-200 active:scale-[0.98]"
-              style={{
-                background: 'rgba(255,255,255,0.02)',
-                border: '1px solid rgba(201,168,76,0.25)',
-              }}
-              onMouseDown={(e) => {
-                e.currentTarget.style.boxShadow = '0 0 24px rgba(201,168,76,0.25), inset 0 0 12px rgba(201,168,76,0.04)'
-                e.currentTarget.style.borderColor = 'rgba(201,168,76,0.55)'
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.boxShadow = ''
-                e.currentTarget.style.borderColor = 'rgba(201,168,76,0.25)'
-              }}
-              onTouchStart={(e) => {
-                e.currentTarget.style.boxShadow = '0 0 24px rgba(201,168,76,0.25), inset 0 0 12px rgba(201,168,76,0.04)'
-                e.currentTarget.style.borderColor = 'rgba(201,168,76,0.55)'
-              }}
-              onTouchEnd={(e) => {
-                e.currentTarget.style.boxShadow = ''
-                e.currentTarget.style.borderColor = 'rgba(201,168,76,0.25)'
-              }}
+              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(201,168,76,0.25)' }}
+              onMouseDown={(e) => { e.currentTarget.style.boxShadow = '0 0 24px rgba(201,168,76,0.25), inset 0 0 12px rgba(201,168,76,0.04)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.55)' }}
+              onMouseUp={(e) => { e.currentTarget.style.boxShadow = ''; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.25)' }}
+              onTouchStart={(e) => { e.currentTarget.style.boxShadow = '0 0 24px rgba(201,168,76,0.25), inset 0 0 12px rgba(201,168,76,0.04)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.55)' }}
+              onTouchEnd={(e) => { e.currentTarget.style.boxShadow = ''; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.25)' }}
             >
-              {/* アイコン */}
-              <div
-                className="w-10 h-10 flex items-center justify-center shrink-0"
-                style={{
-                  background: 'rgba(201,168,76,0.08)',
-                  border: '1px solid rgba(201,168,76,0.2)',
-                }}
-              >
+              <div className="w-10 h-10 flex items-center justify-center shrink-0" style={{ background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.2)' }}>
                 <Icon size={18} className="text-[#c9a84c]" strokeWidth={1.5} />
               </div>
-
-              {/* テキスト */}
               <div className="flex-1 min-w-0">
-                <p className="text-[#f0ede8] text-sm font-semibold tracking-widest uppercase">
-                  {label}
-                </p>
+                <p className="text-[#f0ede8] text-sm font-semibold tracking-widest uppercase">{label}</p>
                 <p className="text-[#5a5555] text-xs mt-0.5 tracking-wide">{sub}</p>
               </div>
-
-              {/* 矢印 */}
               <ChevronRight size={16} className="text-[#c9a84c] opacity-50 shrink-0" />
             </button>
           ))}
@@ -131,15 +61,20 @@ export default function Home() {
 
         {/* 統計 */}
         <div className="flex items-center gap-6">
-          <Stat value={recipes.length} label="Recipes" />
+          <Stat value={recipes.length} label={h.stat} />
         </div>
 
-        {/* リーガルリンク */}
-        <Link
-          to="/legal"
-          className="mt-8 text-[#3a3535] text-[11px] tracking-wide underline underline-offset-2 active:opacity-60"
+        {/* 言語切り替え */}
+        <button
+          onClick={toggleLang}
+          className="mt-6 px-4 py-2 border border-[rgba(201,168,76,0.25)] text-[#c9a84c] text-xs tracking-widest uppercase active:opacity-60 transition-opacity"
         >
-          利用規約・プライバシーポリシー
+          {h.langSwitch}
+        </button>
+
+        {/* リーガルリンク */}
+        <Link to="/legal" className="mt-4 text-[#3a3535] text-[11px] tracking-wide underline underline-offset-2 active:opacity-60">
+          {h.legal}
         </Link>
       </div>
     </div>
@@ -148,13 +83,8 @@ export default function Home() {
 
 function Stat({ value, label }) {
   return (
-    <div className="flex flex-col items-center gap-0.5">
-      <span
-        className="text-xl text-[#c9a84c]"
-        style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
-      >
-        {value}
-      </span>
+    <div className="flex flex-col items-center gap-1">
+      <span className="text-[#c9a84c] text-2xl font-light" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>{value}</span>
       <span className="text-[#3a3535] text-[10px] tracking-widest uppercase">{label}</span>
     </div>
   )

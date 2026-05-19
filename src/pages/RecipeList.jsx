@@ -6,11 +6,14 @@ import { useRecipes, useFlavors } from '../hooks/useStorage'
 import { encodeRecipe, decodeRecipe } from '../utils/shareCode'
 import QRCodeLib from 'qrcode'
 import { SLICE_COLORS } from '../constants/colors'
+import { useLang } from '../contexts/LangContext'
 
 export default function RecipeList() {
   const { recipes, deleteRecipe, addRecipe } = useRecipes()
   const { getFlavor, brands, flavors: allFlavors, addBrand, addFlavor } = useFlavors()
   const navigate = useNavigate()
+  const { t } = useLang()
+  const rl = t.recipeList
 
   // ── QRモーダル ────────────────────────────────────────────
   const [qrRecipe, setQrRecipe] = useState(null)
@@ -127,12 +130,12 @@ export default function RecipeList() {
     <div className="px-5 pt-14 pb-4">
       <div className="flex items-start justify-between mb-5">
         <div>
-          <p className="text-[#c9a84c] tracking-[0.3em] text-[10px] uppercase mb-1">Collection</p>
+          <p className="text-[#c9a84c] tracking-[0.3em] text-[10px] uppercase mb-1">{rl.collection}</p>
           <h2
             className="text-2xl text-[#f0ede8]"
             style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
           >
-            My Recipes
+            {rl.title}
           </h2>
         </div>
         <button
@@ -140,7 +143,7 @@ export default function RecipeList() {
           className="flex items-center gap-1.5 px-3 py-2 border border-[rgba(201,168,76,0.25)] text-[#c9a84c] text-xs tracking-wide active:opacity-60 transition-opacity mt-1"
         >
           <Download size={12} />
-          インポート
+          {rl.importBtn}
         </button>
       </div>
 
@@ -149,7 +152,7 @@ export default function RecipeList() {
         <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#5a5555]" />
         <input
           type="text"
-          placeholder="レシピ名・フレーバー・ブランドで検索..."
+          placeholder={rl.searchPlaceholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="w-full pl-10 pr-4 py-3 bg-[#111] border border-[rgba(201,168,76,0.15)] text-[#f0ede8] placeholder-[#3a3535] text-sm outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors"
@@ -166,14 +169,14 @@ export default function RecipeList() {
               <FilterSelect
                 value={row.brandId}
                 onChange={(v) => updateRow(row.id, 'brandId', v)}
-                placeholder="ブランド"
+                placeholder={rl.brandPlaceholder}
                 options={usedBrands.map((b) => ({ value: b.id, label: b.name }))}
               />
               {/* フレーバー */}
               <FilterSelect
                 value={row.flavorId}
                 onChange={(v) => updateRow(row.id, 'flavorId', v)}
-                placeholder="フレーバー"
+                placeholder={rl.flavorPlaceholder}
               >
                 {!row.brandId
                   ? usedBrands.map((brand) => {
@@ -209,7 +212,7 @@ export default function RecipeList() {
           className="flex items-center gap-1.5 px-3 py-2 border border-dashed border-[rgba(201,168,76,0.25)] text-[#c9a84c] text-xs tracking-wide active:opacity-60 transition-opacity"
         >
           <Plus size={11} strokeWidth={2.5} />
-          ADD FILTER
+          {rl.addFilter}
         </button>
         {hasFilters && (
           <button
@@ -217,7 +220,7 @@ export default function RecipeList() {
             className="flex items-center gap-1 px-3 py-2 bg-[#111] border border-[rgba(201,168,76,0.15)] text-[#5a5555] text-xs active:opacity-60 transition-opacity"
           >
             <X size={11} />
-            クリア
+            {rl.clear}
           </button>
         )}
       </div>
@@ -225,7 +228,7 @@ export default function RecipeList() {
       {/* 件数バッジ（絞り込み中のみ） */}
       {hasFilters && (
         <p className="text-[#5a5555] text-xs mb-4">
-          <span className="text-[#c9a84c] font-medium">{filtered.length}</span> 件のレシピ
+          <span className="text-[#c9a84c] font-medium">{filtered.length}</span> {rl.countSuffix}
         </p>
       )}
 
@@ -233,7 +236,7 @@ export default function RecipeList() {
       {filtered.length === 0 ? (
         <div className="text-center py-16">
           <p className="text-[#5a5555] text-sm mb-6">
-            {hasFilters ? '該当するレシピが見つかりません' : 'レシピがまだありません'}
+            {hasFilters ? rl.noResults : rl.empty}
           </p>
           {!hasFilters && (
             <button
@@ -242,7 +245,7 @@ export default function RecipeList() {
               style={{ background: 'linear-gradient(135deg, #c9a84c, #e8c97a)' }}
             >
               <PlusCircle size={16} />
-              最初のレシピを作成
+              {rl.createFirst}
             </button>
           )}
         </div>
@@ -271,7 +274,7 @@ export default function RecipeList() {
           >
             {/* ヘッダー */}
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-[#f0ede8] font-medium text-sm tracking-wide">レシピをインポート</h3>
+              <h3 className="text-[#f0ede8] font-medium text-sm tracking-wide">{rl.importTitle}</h3>
               <button onClick={closeImport} className="text-[#5a5555] active:text-[#f0ede8]">
                 <X size={18} />
               </button>
@@ -279,7 +282,7 @@ export default function RecipeList() {
 
             {/* タブ切り替え */}
             <div className="flex mb-4 border border-[rgba(201,168,76,0.15)]">
-              {[{ id: 'code', icon: Copy, label: 'コード入力' }, { id: 'qr', icon: Camera, label: 'QRスキャン' }].map(({ id, icon: Icon, label }) => (
+              {[{ id: 'code', icon: Copy, label: rl.codeTab }, { id: 'qr', icon: Camera, label: rl.qrTab }].map(({ id, icon: Icon, label }) => (
                 <button
                   key={id}
                   onClick={() => { setImportTab(id); setImportPreview(null); setImportError('') }}
@@ -294,7 +297,7 @@ export default function RecipeList() {
 
             {importTab === 'code' ? (
               <>
-                <p className="text-[#5a5555] text-xs mb-2">共有コードを貼り付けてください</p>
+                <p className="text-[#5a5555] text-xs mb-2">{rl.codePasteHint}</p>
                 <textarea
                   value={importCode}
                   onChange={(e) => { setImportCode(e.target.value); setImportPreview(null); setImportError('') }}
@@ -347,7 +350,7 @@ export default function RecipeList() {
                   className="flex-1 py-3 text-[#0a0a0a] text-sm font-semibold tracking-wide disabled:opacity-30 transition-opacity"
                   style={{ background: 'linear-gradient(135deg, #c9a84c, #e8c97a)' }}
                 >
-                  確認する
+                  {rl.previewBtn}
                 </button>
               ) : importPreview ? (
                 <button
@@ -355,7 +358,7 @@ export default function RecipeList() {
                   className="flex-1 py-3 text-sm font-semibold tracking-wide transition-all"
                   style={{ background: importDone ? '#2a4a2a' : 'linear-gradient(135deg, #c9a84c, #e8c97a)', color: importDone ? '#7ec8a0' : '#0a0a0a' }}
                 >
-                  {importDone ? '追加しました ✓' : 'このレシピを追加'}
+                  {importDone ? rl.addedMsg : rl.addBtn}
                 </button>
               ) : null}
             </div>
@@ -378,7 +381,7 @@ export default function RecipeList() {
               </button>
             </div>
             <QrCanvas value={encodeRecipe(qrRecipe, getFlavor, brands)} />
-            <p className="text-[#5a5555] text-xs text-center">スクリーンショットを撮ってXに投稿、<br />または相手のアプリでスキャン</p>
+            <p className="text-[#5a5555] text-xs text-center whitespace-pre-line">{rl.qrScreenshotHint}</p>
           </div>
         </div>
       )}
@@ -413,7 +416,7 @@ function FilterSelect({ value, onChange, placeholder, options, children }) {
 
 // ─── レシピカード ──────────────────────────────────────────────
 
-async function generateShareCard(recipe, getFlavor, brands) {
+async function generateShareCard(recipe, getFlavor, brands, scanToImport = 'Scan to import') {
   const code = encodeRecipe(recipe, getFlavor, brands)
   const totalGrams = recipe.totalGrams ?? recipe.flavors?.reduce((s, f) => s + (f.grams || 0), 0) ?? 0
   const flavors = recipe.flavors ?? []
@@ -508,7 +511,7 @@ async function generateShareCard(recipe, getFlavor, brands) {
   ctx.fillStyle = '#5a5555'
   ctx.font = '10px system-ui,sans-serif'
   ctx.textAlign = 'center'
-  ctx.fillText('Scan to import', qrX + qrSize / 2, qrY + qrSize + 16)
+  ctx.fillText(scanToImport, qrX + qrSize / 2, qrY + qrSize + 16)
   ctx.textAlign = 'left'
 
   // #ShishaMix（下部）
@@ -555,12 +558,14 @@ function buildXPostText(recipe, getFlavor, brands) {
 
 function RecipeCard({ recipe, getFlavor, brands, onDelete, onQr }) {
   const navigate = useNavigate()
+  const { t } = useLang()
+  const rl = t.recipeList
   const [shared, setShared] = useState(false)
   const [codeCopied, setCodeCopied] = useState(false)
 
   const handleDelete = (e) => {
     e.stopPropagation()
-    if (confirm(`「${recipe.name}」を削除しますか？`)) {
+    if (confirm(rl.deleteConfirm(recipe.name))) {
       onDelete(recipe.id)
     }
   }
@@ -569,7 +574,7 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onQr }) {
     e.stopPropagation()
     const text = buildXPostText(recipe, getFlavor, brands)
     try {
-      const blob = await generateShareCard(recipe, getFlavor, brands)
+      const blob = await generateShareCard(recipe, getFlavor, brands, rl.scanToImport)
       const file = new File([blob], 'shisha-recipe.png', { type: 'image/png' })
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({ title: recipe.name, text, files: [file] })
@@ -616,21 +621,21 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onQr }) {
         <button
           onClick={(e) => { e.stopPropagation(); onQr(recipe) }}
           className="p-1.5 text-[#5a5555] hover:text-[#c9a84c] transition-colors shrink-0"
-          title="QRコードを表示"
+          title={rl.qrTooltip}
         >
           <QrCode size={14} />
         </button>
         <button
           onClick={handleCopyCode}
           className="p-1.5 text-[#5a5555] hover:text-[#c9a84c] transition-colors shrink-0"
-          title={codeCopied ? 'コードをコピーしました' : '共有コードをコピー'}
+          title={rl.copyCodeTooltip}
         >
           {codeCopied ? <Check size={14} className="text-[#c9a84c]" /> : <Copy size={14} />}
         </button>
         <button
           onClick={handleShare}
           className="p-1.5 text-[#5a5555] hover:text-[#c9a84c] transition-colors shrink-0"
-          title={shared ? 'コピーしました' : 'X投稿用テキストをコピー'}
+          title={rl.xPostTooltip}
         >
           {shared ? <Check size={14} className="text-[#c9a84c]" /> : <Send size={14} />}
         </button>
@@ -782,6 +787,7 @@ function QrCanvas({ value }) {
 function QrScanner({ onResult, onError }) {
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
+  const { t } = useLang()
 
   useEffect(() => {
     let active = true
@@ -795,7 +801,7 @@ function QrScanner({ onResult, onError }) {
         videoRef.current.srcObject = s
         videoRef.current.play().then(tick).catch(() => {})
       })
-      .catch(() => onError('カメラの起動に失敗しました。カメラへのアクセスを許可してください。'))
+      .catch(() => onError(t.recipeList.qrHint))
 
     function tick() {
       if (!active) return
@@ -830,7 +836,7 @@ function QrScanner({ onResult, onError }) {
     <div className="relative w-full">
       <video ref={videoRef} playsInline muted className="w-full" />
       <canvas ref={canvasRef} className="hidden" />
-      <p className="text-[#5a5555] text-xs text-center mt-2">QRコードをカメラに向けてください</p>
+      <p className="text-[#5a5555] text-xs text-center mt-2">{t.recipeList.qrHint}</p>
     </div>
   )
 }

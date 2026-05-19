@@ -3,11 +3,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Plus, X, ChevronRight, ChevronLeft } from 'lucide-react'
 import { useRecipes, useFlavors } from '../hooks/useStorage'
 import { SLICE_COLORS } from '../constants/colors'
+import { useLang } from '../contexts/LangContext'
 
 export default function RecipeCreate() {
   const navigate = useNavigate()
   const { id } = useParams()
   const { recipes, addRecipe, updateRecipe } = useRecipes()
+  const { t } = useLang()
+  const rc = t.recipeCreate
   const { brands, flavors: allFlavors, getFlavor } = useFlavors()
 
   const isEdit = !!id
@@ -45,7 +48,7 @@ export default function RecipeCreate() {
       (f, i) => i !== pickerIndex && f.flavorId === flavorId
     )
     if (isDuplicate) {
-      alert('このフレーバーはすでに追加されています')
+      alert(rc.alertDuplicate)
       return
     }
     setFlavorItems((prev) =>
@@ -78,8 +81,8 @@ export default function RecipeCreate() {
   const totalGrams = flavorItems.reduce((s, f) => s + (f.grams || 0), 0)
 
   const handleSave = () => {
-    if (!name.trim()) return alert('レシピ名を入力してください')
-    if (flavorItems.some((f) => !f.flavorId)) return alert('すべてのフレーバーを選択してください')
+    if (!name.trim()) return alert(rc.alertName)
+    if (flavorItems.some((f) => !f.flavorId)) return alert(rc.alertFlavors)
     if (isEdit) {
       updateRecipe(id, {
         name: name.trim(),
@@ -139,13 +142,13 @@ export default function RecipeCreate() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <p className="text-[#c9a84c] tracking-[0.3em] text-[10px] uppercase mb-1">
-            {isEdit ? 'Edit' : 'New'}
+            {isEdit ? rc.editLabel : rc.newLabel}
           </p>
           <h2
             className="text-2xl text-[#f0ede8]"
             style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
           >
-            {isEdit ? 'Edit Recipe' : 'Create Recipe'}
+            {isEdit ? rc.editTitle : rc.createTitle}
           </h2>
         </div>
         <button onClick={() => navigate(-1)} className="text-[#5a5555] p-2">
@@ -156,11 +159,11 @@ export default function RecipeCreate() {
       {/* レシピ名 */}
       <div className="mb-6">
         <label className="block text-[#5a5555] text-xs tracking-widest uppercase mb-2">
-          Recipe Name
+          {rc.recipeName}
         </label>
         <input
           type="text"
-          placeholder="例: Summer Breeze"
+          placeholder={rc.recipeNamePlaceholder}
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="w-full px-4 py-3 bg-[#111] border border-[rgba(201,168,76,0.15)] text-[#f0ede8] placeholder-[#3a3535] text-sm outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors"
@@ -170,9 +173,9 @@ export default function RecipeCreate() {
       {/* フレーバーセクション */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
-          <label className="text-[#5a5555] text-xs tracking-widest uppercase">Flavors</label>
+          <label className="text-[#5a5555] text-xs tracking-widest uppercase">{rc.flavors}</label>
           {totalGrams > 0 && (
-            <span className="text-[#c9a84c] text-xs font-mono">合計 {totalGrams}g</span>
+            <span className="text-[#c9a84c] text-xs font-mono">{rc.total} {totalGrams}g</span>
           )}
         </div>
 
@@ -193,7 +196,7 @@ export default function RecipeCreate() {
                       <p className="text-[#5a5555] text-[10px]">{label.brandName}</p>
                     </div>
                   ) : (
-                    <span className="text-[#3a3535] text-sm flex-1">フレーバーを選択...</span>
+                    <span className="text-[#3a3535] text-sm flex-1">{rc.selectFlavor}</span>
                   )}
                   <ChevronRight size={13} className="text-[#5a5555] shrink-0" />
                 </button>
@@ -223,18 +226,18 @@ export default function RecipeCreate() {
           className="mt-3 w-full py-3 border border-dashed border-[rgba(201,168,76,0.2)] text-[#5a5555] text-xs tracking-widest uppercase flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
         >
           <Plus size={14} />
-          Add Flavor
+          {rc.addFlavor}
         </button>
       </div>
 
       {/* テイスティングノート */}
       <div className="mb-6">
         <label className="block text-[#5a5555] text-xs tracking-widest uppercase mb-2">
-          Tasting Note
+          {rc.tastingNote}
         </label>
         <textarea
           rows={3}
-          placeholder="感想、温度設定、コツなど..."
+          placeholder={rc.tastingNotePlaceholder}
           value={tastingNote}
           onChange={(e) => setTastingNote(e.target.value)}
           className="w-full px-4 py-3 bg-[#111] border border-[rgba(201,168,76,0.15)] text-[#f0ede8] placeholder-[#3a3535] text-sm outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors resize-none"
@@ -257,7 +260,7 @@ export default function RecipeCreate() {
           boxShadow: '0 0 24px rgba(201,168,76,0.25)',
         }}
       >
-        {isEdit ? 'Update Recipe' : 'Save Recipe'}
+        {isEdit ? rc.update : rc.save}
       </button>
 
       {/* フレーバーピッカー（中央モーダル） */}
@@ -272,6 +275,7 @@ export default function RecipeCreate() {
           onSelectFlavor={handleSelectFlavor}
           onBack={() => setPickerStep('brand')}
           onClose={closePicker}
+          brandTitle={rc.brandTitle}
         />
       )}
     </div>
@@ -391,7 +395,7 @@ function Legend({ slices, total }) {
 // FlavorPicker（中央モーダル）
 // ---------------------------------------------------------------------------
 
-function FlavorPicker({ step, brands, flavorsByCategory, selectedBrand, usedFlavorIds, onSelectBrand, onSelectFlavor, onBack, onClose }) {
+function FlavorPicker({ step, brands, flavorsByCategory, selectedBrand, usedFlavorIds, onSelectBrand, onSelectFlavor, onBack, onClose, brandTitle }) {
   return (
     <div
       className="fixed inset-0 bg-black/70 z-40 flex items-center justify-center px-5"
@@ -418,7 +422,7 @@ function FlavorPicker({ step, brands, flavorsByCategory, selectedBrand, usedFlav
               {selectedBrand?.name}
             </button>
           ) : (
-            <h3 className="text-[#f0ede8] text-sm font-medium tracking-wide">ブランドを選択</h3>
+            <h3 className="text-[#f0ede8] text-sm font-medium tracking-wide">{brandTitle}</h3>
           )}
           <button onClick={onClose} className="text-[#5a5555] p-1">
             <X size={18} />

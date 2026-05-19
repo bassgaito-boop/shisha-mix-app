@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { X, Plus, ChevronDown } from 'lucide-react'
 import { useFlavors } from '../hooks/useStorage'
+import { useLang } from '../contexts/LangContext'
 
 const CATEGORIES = [
   'フルーツ', 'ミント', 'お菓子・スイーツ',
@@ -9,6 +10,8 @@ const CATEGORIES = [
 
 export default function FlavorManage() {
   const { brands, flavors, addBrand, addFlavor, deleteBrand, deleteFlavor } = useFlavors()
+  const { t } = useLang()
+  const fm = t.flavorManage
   const [activeBrandId, setActiveBrandId] = useState(brands[0]?.id ?? '')
   const [showModal, setShowModal] = useState(false)
 
@@ -26,7 +29,7 @@ export default function FlavorManage() {
   }
 
   const handleDeleteFlavor = (flavor) => {
-    if (!confirm(`「${flavor.name}」を削除しますか？`)) return
+    if (!confirm(fm.deleteConfirm(flavor.name))) return
     deleteFlavor(flavor.id)
     // フレーバーがなくなったらブランドも自動削除
     const remaining = flavors.filter(
@@ -45,12 +48,12 @@ export default function FlavorManage() {
       {/* ヘッダー */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <p className="text-[#c9a84c] tracking-[0.3em] text-[10px] uppercase mb-1">Library</p>
+          <p className="text-[#c9a84c] tracking-[0.3em] text-[10px] uppercase mb-1">{fm.library}</p>
           <h2
             className="text-2xl text-[#f0ede8]"
             style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
           >
-            Flavor List
+            {fm.title}
           </h2>
         </div>
         <button
@@ -59,14 +62,12 @@ export default function FlavorManage() {
           style={{ background: 'linear-gradient(135deg, #c9a84c, #e8c97a)' }}
         >
           <Plus size={13} strokeWidth={2.5} />
-          追加
+          {fm.addBtn}
         </button>
       </div>
 
       {brands.length === 0 ? (
-        <p className="text-center text-[#3a3535] text-sm py-16">
-          ブランドがありません。「追加」から登録してください。
-        </p>
+        <p className="text-center text-[#3a3535] text-sm py-16">{fm.empty}</p>
       ) : (
         <>
           {/* ── ブランドドロップダウン ── */}
@@ -90,7 +91,7 @@ export default function FlavorManage() {
               {/* ── ブランド情報バー ── */}
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-[#5a5555] text-xs">
-                  {activeBrand.name} · {activeBrand.origin} · {activeFlavors.length}種
+                  {activeBrand.name} · {activeBrand.origin} · {activeFlavors.length}
                 </span>
               </div>
 
@@ -102,15 +103,13 @@ export default function FlavorManage() {
 
               {/* ── フレーバー一覧（カテゴリ別） ── */}
               {activeFlavors.length === 0 ? (
-                <p className="text-[#3a3535] text-xs text-center py-8">
-                  このブランドにフレーバーがありません
-                </p>
+                <p className="text-[#3a3535] text-xs text-center py-8">{fm.flavorEmpty}</p>
               ) : (
                 <div className="space-y-5">
                   {CATEGORIES.filter((c) => byCategory[c]).map((cat) => (
                     <div key={cat}>
                       <p className="text-[#c9a84c] text-[10px] tracking-widest uppercase mb-2">
-                        {cat}
+                        {fm.categories[cat] ?? cat}
                       </p>
                       <div className="space-y-1">
                         {byCategory[cat].map((flavor) => (
@@ -148,6 +147,7 @@ export default function FlavorManage() {
           onAddBrand={addBrand}
           onAddFlavor={addFlavor}
           onClose={() => setShowModal(false)}
+          fm={fm}
         />
       )}
     </div>
@@ -156,7 +156,8 @@ export default function FlavorManage() {
 
 // ─── 追加モーダル ─────────────────────────────────────────────
 
-function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose }) {
+function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose, fm }) {
+  const m = fm.modal
   // ブランド
   const [brandMode, setBrandMode]           = useState('select')
   const [selectedBrandId, setSelectedBrandId] = useState(brands[0]?.id ?? '')
@@ -187,7 +188,7 @@ function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose }) {
     // ── ブランドを確定 ──
     let brandId = selectedBrandId
     if (brandMode === 'new') {
-      if (!newBrandName.trim()) return alert('ブランド名（英語）を入力してください')
+      if (!newBrandName.trim()) return alert(m.alertBrand)
       const nb = onAddBrand({
         name:   newBrandName.trim(),
         nameJa: newBrandName.trim(),
@@ -195,17 +196,17 @@ function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose }) {
       })
       brandId = nb.id
     } else {
-      if (!brandId) return alert('ブランドを選択してください')
+      if (!brandId) return alert(m.alertBrandSelect)
     }
 
     // ── フレーバーを確定 ──
     let name, category
     if (flavorMode === 'select') {
       const existing = flavors.find((f) => f.id === selectedFlavorId)
-      if (!existing) return alert('フレーバーを選択してください')
+      if (!existing) return alert(m.alertFlavor)
       ;({ name, category } = existing)
     } else {
-      if (!flavorName.trim()) return alert('フレーバー名を入力してください')
+      if (!flavorName.trim()) return alert(m.alertFlavorName)
       name     = flavorName.trim()
       category = flavorCat
     }
@@ -231,7 +232,7 @@ function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose }) {
       >
         {/* ヘッダー */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-[rgba(201,168,76,0.1)]">
-          <h3 className="text-[#f0ede8] text-sm font-medium">フレーバーを追加</h3>
+          <h3 className="text-[#f0ede8] text-sm font-medium">{m.title}</h3>
           <button onClick={onClose} className="text-[#5a5555] p-1"><X size={18} /></button>
         </div>
 
@@ -239,26 +240,26 @@ function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose }) {
 
           {/* ── ブランド ── */}
           <section>
-            <p className="text-[#c9a84c] text-[10px] tracking-widest uppercase mb-3">ブランド</p>
+            <p className="text-[#c9a84c] text-[10px] tracking-widest uppercase mb-3">{m.brand}</p>
             <ModeToggle
               value={brandMode}
               onChange={setBrandMode}
-              options={[{ value: 'select', label: '既存から選択' }, { value: 'new', label: '新規登録' }]}
+              options={[{ value: 'select', label: m.selectExisting }, { value: 'new', label: m.newRegister }]}
             />
             <div className="mt-3">
               {brandMode === 'select' ? (
                 <SelectField
                   value={selectedBrandId}
                   onChange={setSelectedBrandId}
-                  placeholder="ブランドを選択"
+                  placeholder={m.brand}
                   options={[...brands]
                     .sort((a, b) => a.name.localeCompare(b.name, 'en'))
                     .map((b) => ({ value: b.id, label: `${b.name} (${b.origin})` }))}
                 />
               ) : (
                 <div className="space-y-2">
-                  <ModalInput label="ブランド名 *" value={newBrandName}   onChange={setNewBrandName}   placeholder="例: Starbuzz" />
-                  <ModalInput label="原産国"       value={newBrandOrigin} onChange={setNewBrandOrigin} placeholder="例: USA" />
+                  <ModalInput label={m.brandName} value={newBrandName}   onChange={setNewBrandName}   placeholder={m.brandNamePlaceholder} />
+                  <ModalInput label={m.origin}    value={newBrandOrigin} onChange={setNewBrandOrigin} placeholder={m.originPlaceholder} />
                 </div>
               )}
             </div>
@@ -266,11 +267,11 @@ function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose }) {
 
           {/* ── フレーバー ── */}
           <section>
-            <p className="text-[#c9a84c] text-[10px] tracking-widest uppercase mb-3">フレーバー</p>
+            <p className="text-[#c9a84c] text-[10px] tracking-widest uppercase mb-3">{m.flavor}</p>
             <ModeToggle
               value={flavorMode}
               onChange={(v) => { setFlavorMode(v); setSelectedCategory(''); setSelectedFlavorId('') }}
-              options={[{ value: 'select', label: '既存から選択' }, { value: 'new', label: '新規登録' }]}
+              options={[{ value: 'select', label: m.selectExisting }, { value: 'new', label: m.newRegister }]}
             />
             <div className="mt-3">
               {flavorMode === 'select' ? (
@@ -278,16 +279,16 @@ function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose }) {
                   <SelectField
                     value={selectedCategory}
                     onChange={(v) => { setSelectedCategory(v); setSelectedFlavorId('') }}
-                    placeholder="カテゴリーを選択"
+                    placeholder={m.selectCategory}
                     options={CATEGORIES
                       .filter((c) => uniqueFlavorsByCategory[c])
-                      .map((c) => ({ value: c, label: c }))}
+                      .map((c) => ({ value: c, label: fm.categories[c] ?? c }))}
                   />
                   {selectedCategory && (
                     <SelectField
                       value={selectedFlavorId}
                       onChange={setSelectedFlavorId}
-                      placeholder="フレーバーを選択"
+                      placeholder={m.selectFlavor}
                       options={(uniqueFlavorsByCategory[selectedCategory] ?? [])
                         .map((f) => ({ value: f.id, label: f.name }))}
                     />
@@ -295,13 +296,13 @@ function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose }) {
                 </div>
               ) : (
                 <div className="space-y-2">
-                  <ModalInput label="フレーバー名 *" value={flavorName} onChange={setFlavorName} placeholder="例: Tropical Mix" />
+                  <ModalInput label={m.flavorName} value={flavorName} onChange={setFlavorName} placeholder={m.flavorNamePlaceholder} />
                   <div>
-                    <p className="text-[#5a5555] text-[10px] tracking-widest uppercase mb-1.5">カテゴリ</p>
+                    <p className="text-[#5a5555] text-[10px] tracking-widest uppercase mb-1.5">{m.category}</p>
                     <SelectField
                       value={flavorCat}
                       onChange={setFlavorCat}
-                      options={CATEGORIES.map((c) => ({ value: c, label: c }))}
+                      options={CATEGORIES.map((c) => ({ value: c, label: fm.categories[c] ?? c }))}
                     />
                   </div>
                 </div>
@@ -315,14 +316,14 @@ function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose }) {
               onClick={onClose}
               className="flex-1 py-2.5 border border-[rgba(201,168,76,0.2)] text-[#5a5555] text-sm active:opacity-70"
             >
-              キャンセル
+              {m.cancel}
             </button>
             <button
               onClick={handleSave}
               className="flex-1 py-2.5 text-[#0a0a0a] text-sm font-semibold active:opacity-80"
               style={{ background: 'linear-gradient(135deg, #c9a84c, #e8c97a)' }}
             >
-              追加する
+              {m.save}
             </button>
           </div>
         </div>
