@@ -65,16 +65,17 @@ export default function Home() {
         </div>
 
         {/* リーガルリンク + 言語切り替え */}
-        <div className="mt-6 flex items-center gap-3">
+        <div className="mt-6 flex items-center justify-between w-full">
           <Link to="/legal" className="text-[#3a3535] text-[11px] tracking-wide underline underline-offset-2 active:opacity-60">
             {h.legal}
           </Link>
-          <span className="text-[#3a3535] text-[11px]">·</span>
           <button
             onClick={toggleLang}
-            className="px-3 py-1.5 border border-[rgba(201,168,76,0.4)] text-[#c9a84c] text-xs font-semibold tracking-widest active:opacity-60 transition-opacity"
+            className="px-3 py-1.5 border border-[rgba(201,168,76,0.4)] text-xs font-semibold tracking-widest active:opacity-60 transition-opacity flex items-center gap-1"
           >
-            {lang === 'ja' ? 'EN' : 'JP'}
+            <span className={lang === 'ja' ? 'text-[#c9a84c]' : 'text-[#5a5555]'}>JP</span>
+            <span className="text-[#3a3535]">/</span>
+            <span className={lang === 'en' ? 'text-[#c9a84c]' : 'text-[#5a5555]'}>EN</span>
           </button>
         </div>
       </div>
