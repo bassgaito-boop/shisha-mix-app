@@ -434,8 +434,7 @@ function buildXPostText(recipe, getFlavor, brands) {
     lines.push('', recipe.tastingNote || recipe.memo)
   }
 
-  const code = encodeRecipe(recipe, getFlavor, brands)
-  lines.push('', '📲 インポートコード:', code, '', '#ShishaMix')
+  lines.push('', '#ShishaMix')
 
   return lines.join('\n')
 }
