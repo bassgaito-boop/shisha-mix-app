@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Trash2, PlusCircle, Pencil, X, ChevronDown, Plus, Share2, Check, Download, Copy } from 'lucide-react'
+import { Search, Trash2, PlusCircle, Pencil, X, ChevronDown, Plus, Check, Download, Copy, Send } from 'lucide-react'
 import { useRecipes, useFlavors } from '../hooks/useStorage'
 import { encodeRecipe, decodeRecipe } from '../utils/shareCode'
 
@@ -362,7 +362,7 @@ function FilterSelect({ value, onChange, placeholder, options, children }) {
 
 // ─── レシピカード ──────────────────────────────────────────────
 
-function buildShareText(recipe, getFlavor, brands) {
+function buildXPostText(recipe, getFlavor, brands) {
   const totalGrams =
     recipe.totalGrams ?? recipe.flavors?.reduce((s, f) => s + (f.grams || 0), 0) ?? 0
 
@@ -372,7 +372,7 @@ function buildShareText(recipe, getFlavor, brands) {
     const fl = getFlavor(item.flavorId)
     const br = brands.find((b) => b.id === item.brandId)
     const pct = totalGrams > 0 ? Math.round((item.grams / totalGrams) * 100) : 0
-    lines.push(`${fl?.name ?? 'Unknown'}（${br?.name ?? ''}）  ${item.grams}g / ${pct}%`)
+    lines.push(`${fl?.name ?? 'Unknown'}（${br?.name ?? ''}） ${item.grams}g / ${pct}%`)
   })
 
   lines.push('─'.repeat(20))
@@ -381,6 +381,9 @@ function buildShareText(recipe, getFlavor, brands) {
   if (recipe.tastingNote || recipe.memo) {
     lines.push('', recipe.tastingNote || recipe.memo)
   }
+
+  const code = encodeRecipe(recipe, getFlavor, brands)
+  lines.push('', '📲 インポートコード:', code, '', '#ShishaMix')
 
   return lines.join('\n')
 }
@@ -399,18 +402,10 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete }) {
 
   const handleShare = async (e) => {
     e.stopPropagation()
-    const code = encodeRecipe(recipe, getFlavor, brands)
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: recipe.name, text: code })
-      } catch {
-        // ユーザーがキャンセルした場合は何もしない
-      }
-    } else {
-      await navigator.clipboard.writeText(code)
-      setShared(true)
-      setTimeout(() => setShared(false), 2000)
-    }
+    const text = buildXPostText(recipe, getFlavor, brands)
+    await navigator.clipboard.writeText(text)
+    setShared(true)
+    setTimeout(() => setShared(false), 2000)
   }
 
   const handleCopyCode = async (e) => {
@@ -446,9 +441,9 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete }) {
         <button
           onClick={handleShare}
           className="p-1.5 text-[#5a5555] hover:text-[#c9a84c] transition-colors shrink-0"
-          title="シェアする"
+          title={shared ? 'コピーしました' : 'X投稿用テキストをコピー'}
         >
-          <Share2 size={14} />
+          {shared ? <Check size={14} className="text-[#c9a84c]" /> : <Send size={14} />}
         </button>
         <button
           onClick={() => navigate(`/recipes/${recipe.id}/edit`)}
