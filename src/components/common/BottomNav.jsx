@@ -1,11 +1,11 @@
 import { NavLink } from 'react-router-dom'
-import { Home, BookOpen, PlusCircle, Settings } from 'lucide-react'
+import { Home, BookOpen, PlusCircle, Library } from 'lucide-react'
 
 const navItems = [
   { to: '/', icon: Home, label: 'Home' },
-  { to: '/recipes', icon: BookOpen, label: 'Recipes' },
   { to: '/recipes/new', icon: PlusCircle, label: 'Create' },
-  { to: '/memo', icon: Settings, label: 'Memo' },
+  { to: '/recipes', icon: BookOpen, label: 'Recipes' },
+  { to: '/flavors', icon: Library, label: 'Flavors' },
 ]
 
 export default function BottomNav() {
@@ -23,7 +23,7 @@ export default function BottomNav() {
           <NavLink
             key={to}
             to={to}
-            end={to === '/'}
+            end={to === '/' || to === '/recipes'}
             className={({ isActive }) =>
               `flex flex-col items-center gap-0.5 px-4 py-1 transition-all duration-200 ${
                 isActive ? 'text-[#c9a84c]' : 'text-[#5a5555]'

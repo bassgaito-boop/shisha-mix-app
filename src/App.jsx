@@ -4,7 +4,7 @@ import AgeGate from './pages/AgeGate'
 import Home from './pages/Home'
 import RecipeCreate from './pages/RecipeCreate'
 import RecipeList from './pages/RecipeList'
-import SettingMemo from './pages/SettingMemo'
+import FlavorManage from './pages/FlavorManage'
 import Layout from './components/common/Layout'
 
 export default function App() {
@@ -27,7 +27,8 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/recipes" element={<RecipeList />} />
           <Route path="/recipes/new" element={<RecipeCreate />} />
-          <Route path="/memo" element={<SettingMemo />} />
+          <Route path="/recipes/:id/edit" element={<RecipeCreate />} />
+          <Route path="/flavors" element={<FlavorManage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

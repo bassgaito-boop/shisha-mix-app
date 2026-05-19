@@ -1,48 +1,237 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Trash2, PlusCircle, FlaskConical } from 'lucide-react'
+import { Search, Trash2, PlusCircle, Pencil, X, ChevronDown, Plus, Share2, Check, Download, Copy } from 'lucide-react'
 import { useRecipes, useFlavors } from '../hooks/useStorage'
+import { encodeRecipe, decodeRecipe } from '../utils/shareCode'
+
+const SLICE_COLORS = [
+  '#c9a84c', '#e87d5a', '#7ec8a0', '#7ab8e8',
+  '#c87eb8', '#e8a84c', '#e87878', '#5ac8b0',
+]
 
 export default function RecipeList() {
-  const { recipes, deleteRecipe } = useRecipes()
-  const { getFlavor } = useFlavors()
-  const [query, setQuery] = useState('')
+  const { recipes, deleteRecipe, addRecipe } = useRecipes()
+  const { getFlavor, brands, flavors: allFlavors, addBrand, addFlavor } = useFlavors()
   const navigate = useNavigate()
 
-  const filtered = recipes.filter((r) =>
-    r.name.toLowerCase().includes(query.toLowerCase())
-  )
+  // ── インポートモーダル ──────────────────────────────────────
+  const [importOpen, setImportOpen] = useState(false)
+  const [importCode, setImportCode] = useState('')
+  const [importPreview, setImportPreview] = useState(null)
+  const [importError, setImportError] = useState('')
+  const [importDone, setImportDone] = useState(false)
+
+  const handlePreview = () => {
+    setImportError('')
+    setImportPreview(null)
+    try {
+      const data = decodeRecipe(importCode)
+      setImportPreview(data)
+    } catch (e) {
+      setImportError(e.message)
+    }
+  }
+
+  const handleImport = () => {
+    if (!importPreview) return
+    const resolvedFlavors = importPreview.f.map((item) => {
+      let brand = brands.find((b) => b.name === item.b)
+      if (!brand) brand = addBrand({ name: item.b })
+      let flavor = allFlavors.find((f) => f.name === item.fl && f.brandId === brand.id)
+      if (!flavor) flavor = addFlavor({ name: item.fl, brandId: brand.id })
+      return { brandId: brand.id, flavorId: flavor.id, grams: item.g }
+    })
+    addRecipe({ name: importPreview.n, flavors: resolvedFlavors, tastingNote: importPreview.t })
+    setImportDone(true)
+    setTimeout(() => {
+      setImportOpen(false)
+      setImportCode('')
+      setImportPreview(null)
+      setImportDone(false)
+    }, 1200)
+  }
+
+  const closeImport = () => {
+    setImportOpen(false)
+    setImportCode('')
+    setImportPreview(null)
+    setImportError('')
+    setImportDone(false)
+  }
+
+  // ── テキスト検索 ──────────────────────────────────────────
+  const [query, setQuery] = useState('')
+
+  // ── フィルター行（初期1行、ADD FILTERで追加）─────────────
+  const [filterRows, setFilterRows] = useState([{ id: 0, brandId: '', flavorId: '' }])
+
+  const addFilterRow = () =>
+    setFilterRows((prev) => [...prev, { id: Date.now(), brandId: '', flavorId: '' }])
+
+  const updateRow = (id, field, val) =>
+    setFilterRows((prev) =>
+      prev.map((r) =>
+        r.id === id
+          ? { ...r, [field]: val, ...(field === 'brandId' ? { flavorId: '' } : {}) }
+          : r
+      )
+    )
+
+  const removeRow = (id) => {
+    setFilterRows((prev) => {
+      if (prev.length === 1) return [{ id: 0, brandId: '', flavorId: '' }] // 最後の1行はクリアのみ
+      return prev.filter((r) => r.id !== id)
+    })
+  }
+
+  const clearAll = () => { setQuery(''); setFilterRows([{ id: 0, brandId: '', flavorId: '' }]) }
+
+  const hasFilters = !!query || filterRows.some((r) => r.brandId || r.flavorId)
+
+  // レシピで実際に使われているブランド・フレーバーのみ
+  const usedBrandIds  = new Set(recipes.flatMap((r) => r.flavors?.map((f) => f.brandId)  ?? []))
+  const usedFlavorIds = new Set(recipes.flatMap((r) => r.flavors?.map((f) => f.flavorId) ?? []))
+  const usedBrands  = brands.filter((b) => usedBrandIds.has(b.id))
+  const usedFlavors = allFlavors.filter((f) => usedFlavorIds.has(f.id))
+
+  // ── フィルタリングロジック（全行AND）─────────────────────
+  const q = query.toLowerCase()
+
+  const filtered = recipes.filter((r) => {
+    if (q) {
+      const nameMatch = r.name.toLowerCase().includes(q)
+      const flavorMatch = r.flavors?.some((item) => {
+        const fl = getFlavor(item.flavorId)
+        const br = brands.find((b) => b.id === item.brandId)
+        return (
+          fl?.name?.toLowerCase().includes(q) ||
+          fl?.name?.toLowerCase().includes(q) ||
+          br?.name?.toLowerCase().includes(q) ||
+          br?.name?.toLowerCase().includes(q)
+        )
+      })
+      if (!nameMatch && !flavorMatch) return false
+    }
+    for (const row of filterRows) {
+      if (row.brandId  && !r.flavors?.some((item) => item.brandId  === row.brandId))  return false
+      if (row.flavorId && !r.flavors?.some((item) => item.flavorId === row.flavorId)) return false
+    }
+    return true
+  })
 
   return (
     <div className="px-5 pt-14 pb-4">
-      <div className="mb-6">
-        <p className="text-[#c9a84c] tracking-[0.3em] text-[10px] uppercase mb-1">Collection</p>
-        <h2
-          className="text-2xl text-[#f0ede8]"
-          style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+      <div className="flex items-start justify-between mb-5">
+        <div>
+          <p className="text-[#c9a84c] tracking-[0.3em] text-[10px] uppercase mb-1">Collection</p>
+          <h2
+            className="text-2xl text-[#f0ede8]"
+            style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+          >
+            My Recipes
+          </h2>
+        </div>
+        <button
+          onClick={() => setImportOpen(true)}
+          className="flex items-center gap-1.5 px-3 py-2 border border-[rgba(201,168,76,0.25)] text-[#c9a84c] text-xs tracking-wide active:opacity-60 transition-opacity mt-1"
         >
-          My Recipes
-        </h2>
+          <Download size={12} />
+          インポート
+        </button>
       </div>
 
-      {/* 検索 */}
-      <div className="relative mb-6">
+      {/* テキスト検索 */}
+      <div className="relative mb-2.5">
         <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#5a5555]" />
         <input
           type="text"
-          placeholder="Search recipes..."
+          placeholder="レシピ名・フレーバー・ブランドで検索..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="w-full pl-10 pr-4 py-3 bg-[#111] border border-[rgba(201,168,76,0.15)] text-[#f0ede8] placeholder-[#3a3535] text-sm outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors"
         />
       </div>
 
+      {/* フィルター行群 */}
+      <div className="space-y-2 mb-3">
+        {filterRows.map((row) => {
+          const rowFlavors = usedFlavors.filter((f) => !row.brandId || f.brandId === row.brandId)
+          return (
+            <div key={row.id} className="flex items-center gap-2">
+              {/* ブランド */}
+              <FilterSelect
+                value={row.brandId}
+                onChange={(v) => updateRow(row.id, 'brandId', v)}
+                placeholder="ブランド"
+                options={usedBrands.map((b) => ({ value: b.id, label: b.name }))}
+              />
+              {/* フレーバー */}
+              <FilterSelect
+                value={row.flavorId}
+                onChange={(v) => updateRow(row.id, 'flavorId', v)}
+                placeholder="フレーバー"
+              >
+                {!row.brandId
+                  ? usedBrands.map((brand) => {
+                      const bf = rowFlavors.filter((f) => f.brandId === brand.id)
+                      return bf.length > 0 ? (
+                        <optgroup key={brand.id} label={brand.name} style={{ background: '#111', color: '#c9a84c' }}>
+                          {bf.map((f) => (
+                            <option key={f.id} value={f.id} style={{ background: '#111', color: '#f0ede8' }}>{f.name}</option>
+                          ))}
+                        </optgroup>
+                      ) : null
+                    })
+                  : rowFlavors.map((f) => (
+                      <option key={f.id} value={f.id} style={{ background: '#111', color: '#f0ede8' }}>{f.name}</option>
+                    ))}
+              </FilterSelect>
+              {/* 行クリア／削除 */}
+              <button
+                onClick={() => removeRow(row.id)}
+                className="w-8 h-9 shrink-0 flex items-center justify-center text-[#3a3535] active:text-red-500 transition-colors"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* ADD FILTER / 全クリア */}
+      <div className="flex items-center gap-2 mb-5">
+        <button
+          onClick={addFilterRow}
+          className="flex items-center gap-1.5 px-3 py-2 border border-dashed border-[rgba(201,168,76,0.25)] text-[#c9a84c] text-xs tracking-wide active:opacity-60 transition-opacity"
+        >
+          <Plus size={11} strokeWidth={2.5} />
+          ADD FILTER
+        </button>
+        {hasFilters && (
+          <button
+            onClick={clearAll}
+            className="flex items-center gap-1 px-3 py-2 bg-[#111] border border-[rgba(201,168,76,0.15)] text-[#5a5555] text-xs active:opacity-60 transition-opacity"
+          >
+            <X size={11} />
+            クリア
+          </button>
+        )}
+      </div>
+
+      {/* 件数バッジ（絞り込み中のみ） */}
+      {hasFilters && (
+        <p className="text-[#5a5555] text-xs mb-4">
+          <span className="text-[#c9a84c] font-medium">{filtered.length}</span> 件のレシピ
+        </p>
+      )}
+
+      {/* レシピ一覧 */}
       {filtered.length === 0 ? (
         <div className="text-center py-16">
           <p className="text-[#5a5555] text-sm mb-6">
-            {query ? '該当するレシピが見つかりません' : 'レシピがまだありません'}
+            {hasFilters ? '該当するレシピが見つかりません' : 'レシピがまだありません'}
           </p>
-          {!query && (
+          {!hasFilters && (
             <button
               onClick={() => navigate('/recipes/new')}
               className="inline-flex items-center gap-2 px-6 py-3 text-[#0a0a0a] text-sm font-semibold tracking-wide"
@@ -60,16 +249,147 @@ export default function RecipeList() {
               key={recipe.id}
               recipe={recipe}
               getFlavor={getFlavor}
+              brands={brands}
               onDelete={deleteRecipe}
             />
           ))}
+        </div>
+      )}
+
+      {/* インポートモーダル */}
+      {importOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-5">
+          <div className="absolute inset-0 bg-black/70" onClick={closeImport} />
+          <div
+            className="relative w-full max-w-[390px] bg-[#111] border border-[rgba(201,168,76,0.2)] p-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* ヘッダー */}
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-[#f0ede8] font-medium text-sm tracking-wide">レシピをインポート</h3>
+              <button onClick={closeImport} className="text-[#5a5555] active:text-[#f0ede8]">
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* コード入力 */}
+            <p className="text-[#5a5555] text-xs mb-2">共有コードを貼り付けてください</p>
+            <textarea
+              value={importCode}
+              onChange={(e) => { setImportCode(e.target.value); setImportPreview(null); setImportError('') }}
+              placeholder="SHI-..."
+              rows={3}
+              className="w-full px-3 py-2.5 bg-[#0a0a0a] border border-[rgba(201,168,76,0.15)] text-[#f0ede8] text-xs font-mono placeholder-[#3a3535] outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors resize-none"
+            />
+
+            {importError && (
+              <p className="text-red-400 text-xs mt-2">{importError}</p>
+            )}
+
+            {/* プレビュー */}
+            {importPreview && (
+              <div className="mt-3 p-3 bg-[#0a0a0a] border border-[rgba(201,168,76,0.12)]">
+                <p className="text-[#c9a84c] text-xs tracking-wide mb-2">{importPreview.n}</p>
+                <div className="space-y-1 mb-2">
+                  {importPreview.f.map((item, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: SLICE_COLORS[i % SLICE_COLORS.length] }} />
+                      <p className="text-[#f0ede8] text-xs flex-1 truncate">
+                        {item.fl}<span className="text-[#5a5555]">：{item.b}</span>
+                      </p>
+                      <span className="text-[#9a9090] text-[10px]">{item.g}g</span>
+                    </div>
+                  ))}
+                </div>
+                {importPreview.t && (
+                  <p className="text-[#5a5555] text-xs border-t border-[rgba(201,168,76,0.08)] pt-2">{importPreview.t}</p>
+                )}
+              </div>
+            )}
+
+            {/* ボタン */}
+            <div className="flex gap-2 mt-4">
+              {!importPreview ? (
+                <button
+                  onClick={handlePreview}
+                  disabled={!importCode.trim()}
+                  className="flex-1 py-3 text-[#0a0a0a] text-sm font-semibold tracking-wide disabled:opacity-30 transition-opacity"
+                  style={{ background: 'linear-gradient(135deg, #c9a84c, #e8c97a)' }}
+                >
+                  確認する
+                </button>
+              ) : (
+                <button
+                  onClick={handleImport}
+                  className="flex-1 py-3 text-sm font-semibold tracking-wide transition-all"
+                  style={{ background: importDone ? '#2a4a2a' : 'linear-gradient(135deg, #c9a84c, #e8c97a)', color: importDone ? '#7ec8a0' : '#0a0a0a' }}
+                >
+                  {importDone ? '追加しました ✓' : 'このレシピを追加'}
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>
   )
 }
 
-function RecipeCard({ recipe, getFlavor, onDelete }) {
+// ─── フィルター用セレクト ──────────────────────────────────────
+
+// ─── フィルター用セレクト ─────────────────────────────────────
+
+function FilterSelect({ value, onChange, placeholder, options, children }) {
+  return (
+    <div className="relative flex-1 min-w-0">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full appearance-none pl-3 pr-7 py-2.5 bg-[#111] border border-[rgba(201,168,76,0.15)] text-xs outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors"
+        style={{ color: value ? '#f0ede8' : '#5a5555' }}
+      >
+        <option value="" style={{ background: '#111', color: '#5a5555' }}>{placeholder}</option>
+        {children ?? options?.map((opt) => (
+          <option key={opt.value} value={opt.value} style={{ background: '#111', color: '#f0ede8' }}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+      <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-[#5a5555] pointer-events-none" />
+    </div>
+  )
+}
+
+// ─── レシピカード ──────────────────────────────────────────────
+
+function buildShareText(recipe, getFlavor, brands) {
+  const totalGrams =
+    recipe.totalGrams ?? recipe.flavors?.reduce((s, f) => s + (f.grams || 0), 0) ?? 0
+
+  const lines = [`🍯 ${recipe.name}`, '─'.repeat(20)]
+
+  recipe.flavors?.forEach((item) => {
+    const fl = getFlavor(item.flavorId)
+    const br = brands.find((b) => b.id === item.brandId)
+    const pct = totalGrams > 0 ? Math.round((item.grams / totalGrams) * 100) : 0
+    lines.push(`${fl?.name ?? 'Unknown'}（${br?.name ?? ''}）  ${item.grams}g / ${pct}%`)
+  })
+
+  lines.push('─'.repeat(20))
+  lines.push(`合計: ${totalGrams}g`)
+
+  if (recipe.tastingNote || recipe.memo) {
+    lines.push('', recipe.tastingNote || recipe.memo)
+  }
+
+  return lines.join('\n')
+}
+
+function RecipeCard({ recipe, getFlavor, brands, onDelete }) {
+  const navigate = useNavigate()
+  const [shared, setShared] = useState(false)
+  const [codeCopied, setCodeCopied] = useState(false)
+
   const handleDelete = (e) => {
     e.stopPropagation()
     if (confirm(`「${recipe.name}」を削除しますか？`)) {
@@ -77,19 +397,38 @@ function RecipeCard({ recipe, getFlavor, onDelete }) {
     }
   }
 
-  const totalGrams = recipe.totalGrams ?? recipe.flavors?.reduce((s, f) => s + (f.grams || 0), 0) ?? 0
+  const handleShare = async (e) => {
+    e.stopPropagation()
+    const code = encodeRecipe(recipe, getFlavor, brands)
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: recipe.name, text: code })
+      } catch {
+        // ユーザーがキャンセルした場合は何もしない
+      }
+    } else {
+      await navigator.clipboard.writeText(code)
+      setShared(true)
+      setTimeout(() => setShared(false), 2000)
+    }
+  }
+
+  const handleCopyCode = async (e) => {
+    e.stopPropagation()
+    const code = encodeRecipe(recipe, getFlavor, brands)
+    await navigator.clipboard.writeText(code)
+    setCodeCopied(true)
+    setTimeout(() => setCodeCopied(false), 2000)
+  }
+
+  const totalGrams =
+    recipe.totalGrams ?? recipe.flavors?.reduce((s, f) => s + (f.grams || 0), 0) ?? 0
 
   return (
     <div className="p-4 bg-[#111] border border-[rgba(201,168,76,0.1)]">
 
       {/* ヘッダー */}
-      <div className="flex items-start gap-3 mb-3">
-        <div
-          className="w-9 h-9 flex items-center justify-center shrink-0"
-          style={{ background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.15)' }}
-        >
-          <FlaskConical size={16} className="text-[#c9a84c]" strokeWidth={1.5} />
-        </div>
+      <div className="flex items-start gap-2 mb-3">
         <div className="flex-1 min-w-0">
           <h3 className="text-[#f0ede8] font-medium text-sm truncate">{recipe.name}</h3>
           <p className="text-[#5a5555] text-xs mt-0.5">
@@ -98,39 +437,58 @@ function RecipeCard({ recipe, getFlavor, onDelete }) {
           </p>
         </div>
         <button
+          onClick={handleCopyCode}
+          className="p-1.5 text-[#5a5555] hover:text-[#c9a84c] transition-colors shrink-0"
+          title={codeCopied ? 'コードをコピーしました' : '共有コードをコピー'}
+        >
+          {codeCopied ? <Check size={14} className="text-[#c9a84c]" /> : <Copy size={14} />}
+        </button>
+        <button
+          onClick={handleShare}
+          className="p-1.5 text-[#5a5555] hover:text-[#c9a84c] transition-colors shrink-0"
+          title="シェアする"
+        >
+          <Share2 size={14} />
+        </button>
+        <button
+          onClick={() => navigate(`/recipes/${recipe.id}/edit`)}
+          className="p-1.5 text-[#5a5555] hover:text-[#c9a84c] transition-colors shrink-0"
+        >
+          <Pencil size={14} />
+        </button>
+        <button
           onClick={handleDelete}
-          className="p-1.5 text-[#3a3535] hover:text-red-500 transition-colors"
+          className="p-1.5 text-[#3a3535] hover:text-red-500 transition-colors shrink-0"
         >
           <Trash2 size={15} />
         </button>
       </div>
 
-      {/* フレーバーバー */}
+      {/* フレーバーリスト + ミニドーナツ */}
       {recipe.flavors && recipe.flavors.length > 0 && (
-        <div className="space-y-1.5">
-          {recipe.flavors.map((item, i) => {
-            const flavorData = getFlavor(item.flavorId)
-            const pct = totalGrams > 0 ? Math.round((item.grams / totalGrams) * 100) : 0
-            return (
-              <div key={i} className="flex items-center gap-2">
-                <span className="text-[#9a9090] text-xs w-24 truncate shrink-0">
-                  {flavorData?.nameJa ?? '不明'}
-                </span>
-                <div className="flex-1 h-1.5 bg-[#1a1a1a] rounded-full overflow-hidden">
+        <div className="flex items-center gap-3">
+          <div className="flex-1 space-y-1.5 min-w-0">
+            {recipe.flavors.map((item, i) => {
+              const fl = getFlavor(item.flavorId)
+              const br = brands.find((b) => b.id === item.brandId)
+              return (
+                <div key={i} className="flex items-center gap-2">
                   <div
-                    className="h-full rounded-full"
-                    style={{
-                      width: `${pct}%`,
-                      background: 'linear-gradient(90deg, #8a6f2e, #c9a84c)',
-                    }}
+                    className="w-2 h-2 rounded-full shrink-0"
+                    style={{ background: SLICE_COLORS[i % SLICE_COLORS.length] }}
                   />
+                  <p className="text-[#f0ede8] text-xs flex-1 truncate min-w-0">
+                    {fl?.name ?? 'Unknown'}
+                    <span className="text-[#5a5555]">：{br?.name ?? ''}</span>
+                  </p>
+                  <span className="text-[#9a9090] text-[10px] shrink-0">{item.grams}g</span>
                 </div>
-                <span className="text-[#5a5555] text-xs w-10 text-right shrink-0">
-                  {item.grams}g
-                </span>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
+          <div className="shrink-0">
+            <MiniDonut items={recipe.flavors} total={totalGrams} />
+          </div>
         </div>
       )}
 
@@ -141,5 +499,74 @@ function RecipeCard({ recipe, getFlavor, onDelete }) {
         </p>
       )}
     </div>
+  )
+}
+
+// ─── ミニドーナツチャート ──────────────────────────────────────
+
+function MiniDonut({ items, total }) {
+  const SIZE = 72
+  const R = 28
+  const r = 11
+  const cx = SIZE / 2
+  const cy = SIZE / 2
+  const textR = (R + r) / 2
+
+  const slices = items.filter((item) => item.grams > 0)
+  if (slices.length === 0) return null
+
+  if (slices.length === 1) {
+    return (
+      <svg width={SIZE} height={SIZE} className="shrink-0">
+        <circle cx={cx} cy={cy} r={R} fill={SLICE_COLORS[0]} />
+        <circle cx={cx} cy={cy} r={r} fill="#111" />
+        <text x={cx} y={cy + 3} textAnchor="middle" fill="rgba(255,255,255,0.92)" fontSize="7.5" fontWeight="bold">
+          100%
+        </text>
+      </svg>
+    )
+  }
+
+  let angle = -Math.PI / 2
+  const paths = slices.map((item, i) => {
+    const sweep = (item.grams / total) * 2 * Math.PI
+    const end = angle + sweep
+    const large = sweep > Math.PI ? 1 : 0
+    const mid = angle + sweep / 2
+
+    const ox1 = cx + R * Math.cos(angle), oy1 = cy + R * Math.sin(angle)
+    const ox2 = cx + R * Math.cos(end),   oy2 = cy + R * Math.sin(end)
+    const ix1 = cx + r * Math.cos(end),   iy1 = cy + r * Math.sin(end)
+    const ix2 = cx + r * Math.cos(angle), iy2 = cy + r * Math.sin(angle)
+    const d = `M ${ox1} ${oy1} A ${R} ${R} 0 ${large} 1 ${ox2} ${oy2} L ${ix1} ${iy1} A ${r} ${r} 0 ${large} 0 ${ix2} ${iy2} Z`
+
+    const pct = Math.round((item.grams / total) * 100)
+    const tx = cx + textR * Math.cos(mid)
+    const ty = cy + textR * Math.sin(mid)
+    angle = end
+    return { d, color: SLICE_COLORS[i % SLICE_COLORS.length], pct, tx, ty }
+  })
+
+  return (
+    <svg width={SIZE} height={SIZE} className="shrink-0">
+      {paths.map((p, i) => (
+        <g key={i}>
+          <path d={p.d} fill={p.color} />
+          {p.pct >= 8 && (
+            <text
+              x={p.tx}
+              y={p.ty + 2.5}
+              textAnchor="middle"
+              fill="rgba(255,255,255,0.92)"
+              fontSize="7.5"
+              fontWeight="bold"
+            >
+              {p.pct}%
+            </text>
+          )}
+        </g>
+      ))}
+      <circle cx={cx} cy={cy} r={r - 1} fill="#111" />
+    </svg>
   )
 }

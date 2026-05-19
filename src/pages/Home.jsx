@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom'
-import { PlusCircle, BookOpen, SlidersHorizontal, ChevronRight } from 'lucide-react'
-import { useRecipes, useSettings } from '../hooks/useStorage'
+import { PlusCircle, BookOpen, ChevronRight, Library } from 'lucide-react'
+import { useRecipes } from '../hooks/useStorage'
 
 const menuItems = [
   {
-    label: 'MIX RECIPE 作成',
+    label: 'CREATE MIX RECIPE',
     sub: '新しいレシピを記録する',
     to: '/recipes/new',
     Icon: PlusCircle,
@@ -16,17 +16,16 @@ const menuItems = [
     Icon: BookOpen,
   },
   {
-    label: 'SETTING MEMO',
-    sub: 'セッティングをメモする',
-    to: '/memo',
-    Icon: SlidersHorizontal,
+    label: 'FLAVOR LIST',
+    sub: 'フレーバーの管理・登録をする',
+    to: '/flavors',
+    Icon: Library,
   },
 ]
 
 export default function Home() {
   const navigate = useNavigate()
   const { recipes } = useRecipes()
-  const { settings } = useSettings()
 
   return (
     <div className="relative min-h-[calc(100svh-80px)] flex flex-col items-center justify-center px-6 overflow-hidden">
@@ -133,8 +132,6 @@ export default function Home() {
         {/* 統計 */}
         <div className="flex items-center gap-6">
           <Stat value={recipes.length} label="Recipes" />
-          <div className="w-px h-6 bg-[rgba(201,168,76,0.15)]" />
-          <Stat value={settings.length} label="Settings" />
         </div>
       </div>
     </div>

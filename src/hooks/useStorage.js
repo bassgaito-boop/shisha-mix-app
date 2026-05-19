@@ -110,36 +110,26 @@ export function useSettings() {
 
 /** @returns フレーバー・ブランドのCRUD操作 */
 export function useFlavors() {
+  // 全ブランド・全フレーバーをlocalStorageで一元管理（初回は初期データで初期化）
   const [brands, setBrands] = useLocalStorage('shisha_brands', initialBrands)
-  const [customFlavors, setCustomFlavors] = useLocalStorage('shisha_custom_flavors', [])
+  const [flavors, setFlavors] = useLocalStorage('shisha_flavors', initialFlavors)
 
-  // 組み込みフレーバーとカスタムフレーバーをマージ
-  const flavors = [...initialFlavors, ...customFlavors]
+  const getFlavor = (id) => flavors.find((f) => f.id === id) ?? null
 
   /** @param {Omit<import('../data/types').Flavor, 'id'|'isCustom'>} data */
   const addFlavor = (data) => {
-    const newFlavor = {
-      ...data,
-      id: crypto.randomUUID(),
-      isCustom: true,
-    }
-    setCustomFlavors((prev) => [...prev, newFlavor])
+    const newFlavor = { ...data, id: crypto.randomUUID(), isCustom: true }
+    setFlavors((prev) => [...prev, newFlavor])
     return newFlavor
   }
 
   const updateFlavor = (id, updates) => {
-    // 組み込みフレーバーは編集不可
-    setCustomFlavors((prev) =>
-      prev.map((f) => (f.id === id ? { ...f, ...updates, isCustom: true } : f))
-    )
+    setFlavors((prev) => prev.map((f) => (f.id === id ? { ...f, ...updates } : f)))
   }
 
   const deleteFlavor = (id) => {
-    // isCustom: true のみ削除可
-    setCustomFlavors((prev) => prev.filter((f) => f.id !== id))
+    setFlavors((prev) => prev.filter((f) => f.id !== id))
   }
-
-  const getFlavor = (id) => flavors.find((f) => f.id === id) ?? null
 
   /** @param {Omit<import('../data/types').Brand, 'id'|'isCustom'>} data */
   const addBrand = (data) => {
@@ -149,13 +139,12 @@ export function useFlavors() {
   }
 
   const updateBrand = (id, updates) => {
-    setBrands((prev) =>
-      prev.map((b) => (b.id === id && b.isCustom ? { ...b, ...updates } : b))
-    )
+    setBrands((prev) => prev.map((b) => (b.id === id ? { ...b, ...updates } : b)))
   }
 
   const deleteBrand = (id) => {
-    setBrands((prev) => prev.filter((b) => !(b.id === id && b.isCustom)))
+    setBrands((prev) => prev.filter((b) => b.id !== id))
+    setFlavors((prev) => prev.filter((f) => f.brandId !== id))
   }
 
   return {
