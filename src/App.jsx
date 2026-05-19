@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import RecipeCreate from './pages/RecipeCreate'
 import RecipeList from './pages/RecipeList'
 import FlavorManage from './pages/FlavorManage'
+import Legal from './pages/Legal'
 import Layout from './components/common/Layout'
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
     return (
       <BrowserRouter>
         <Routes>
+          <Route path="/legal" element={<Legal />} />
           <Route path="*" element={<AgeGate onVerify={() => setAgeVerified(true)} />} />
         </Routes>
       </BrowserRouter>
@@ -23,6 +25,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/legal" element={<Legal />} />
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/recipes" element={<RecipeList />} />

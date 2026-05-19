@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { PlusCircle, BookOpen, ChevronRight, Library } from 'lucide-react'
 import { useRecipes } from '../hooks/useStorage'
 
@@ -133,6 +133,14 @@ export default function Home() {
         <div className="flex items-center gap-6">
           <Stat value={recipes.length} label="Recipes" />
         </div>
+
+        {/* リーガルリンク */}
+        <Link
+          to="/legal"
+          className="mt-8 text-[#3a3535] text-[11px] tracking-wide underline underline-offset-2 active:opacity-60"
+        >
+          利用規約・プライバシーポリシー
+        </Link>
       </div>
     </div>
   )
