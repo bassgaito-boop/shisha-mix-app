@@ -12,6 +12,7 @@ export default function FlavorManage() {
   const [activeBrandId, setActiveBrandId] = useState(brands[0]?.id ?? '')
   const [showModal, setShowModal] = useState(false)
 
+  const sortedBrands  = [...brands].sort((a, b) => a.name.localeCompare(b.name, 'en'))
   const activeBrand   = brands.find((b) => b.id === activeBrandId)
   const activeFlavors = flavors.filter((f) => f.brandId === activeBrandId)
 
@@ -75,7 +76,7 @@ export default function FlavorManage() {
               onChange={(e) => setActiveBrandId(e.target.value)}
               className="w-full appearance-none px-4 pr-9 py-3 bg-[#111] border border-[rgba(201,168,76,0.15)] text-[#f0ede8] text-sm outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors"
             >
-              {brands.map((brand) => (
+              {sortedBrands.map((brand) => (
                 <option key={brand.id} value={brand.id} style={{ background: '#111', color: '#f0ede8' }}>
                   {brand.name}（{brand.origin}）
                 </option>
@@ -249,7 +250,9 @@ function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose }) {
                   value={selectedBrandId}
                   onChange={setSelectedBrandId}
                   placeholder="ブランドを選択"
-                  options={brands.map((b) => ({ value: b.id, label: `${b.name} (${b.origin})` }))}
+                  options={[...brands]
+                    .sort((a, b) => a.name.localeCompare(b.name, 'en'))
+                    .map((b) => ({ value: b.id, label: `${b.name} (${b.origin})` }))}
                 />
               ) : (
                 <div className="space-y-2">
