@@ -309,7 +309,11 @@ export default function RecipeList() {
             ) : (
               !importPreview && (
                 <QrScanner
-                  onResult={(code) => handlePreview(code)}
+                  onResult={(code) => {
+                    setImportCode(code)
+                    setImportTab('code')
+                    handlePreview(code)
+                  }}
                   onError={(msg) => setImportError(msg)}
                 />
               )
