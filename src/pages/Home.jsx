@@ -72,7 +72,7 @@ export default function Home() {
           <span className="text-[#3a3535] text-[11px]">·</span>
           <button
             onClick={toggleLang}
-            className="text-[#c9a84c] text-[11px] tracking-widest font-medium active:opacity-60 transition-opacity"
+            className="px-3 py-1.5 border border-[rgba(201,168,76,0.4)] text-[#c9a84c] text-xs font-semibold tracking-widest active:opacity-60 transition-opacity"
           >
             {lang === 'ja' ? 'EN' : 'JP'}
           </button>
