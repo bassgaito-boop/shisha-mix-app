@@ -15,6 +15,9 @@ export default function RecipeList() {
   const { getFlavor, brands, flavors: allFlavors, addBrand, addFlavor } = useFlavors()
   const navigate = useNavigate()
 
+  // ── QRモーダル ────────────────────────────────────────────
+  const [qrRecipe, setQrRecipe] = useState(null)
+
   // ── インポートモーダル ──────────────────────────────────────
   const [importOpen, setImportOpen] = useState(false)
   const [importTab, setImportTab] = useState('code') // 'code' | 'qr'
@@ -255,6 +258,7 @@ export default function RecipeList() {
               getFlavor={getFlavor}
               brands={brands}
               onDelete={deleteRecipe}
+              onQr={setQrRecipe}
             />
           ))}
         </div>
@@ -357,6 +361,28 @@ export default function RecipeList() {
           </div>
         </div>
       )}
+
+      {/* QRコードモーダル */}
+      {qrRecipe && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-5" onClick={() => setQrRecipe(null)}>
+          <div className="absolute inset-0 bg-black/70" />
+          <div
+            className="relative bg-[#111] border border-[rgba(201,168,76,0.2)] p-6 flex flex-col items-center gap-4 w-full max-w-[300px]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between w-full">
+              <p className="text-[#f0ede8] text-sm font-medium truncate flex-1 mr-2">{qrRecipe.name}</p>
+              <button onClick={() => setQrRecipe(null)} className="text-[#5a5555] shrink-0">
+                <X size={16} />
+              </button>
+            </div>
+            <div className="p-3 bg-white">
+              <QRCode value={encodeRecipe(qrRecipe, getFlavor, brands)} size={200} />
+            </div>
+            <p className="text-[#5a5555] text-xs text-center">スクリーンショットを撮ってXに投稿、<br />または相手のアプリでスキャン</p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -414,11 +440,10 @@ function buildXPostText(recipe, getFlavor, brands) {
   return lines.join('\n')
 }
 
-function RecipeCard({ recipe, getFlavor, brands, onDelete }) {
+function RecipeCard({ recipe, getFlavor, brands, onDelete, onQr }) {
   const navigate = useNavigate()
   const [shared, setShared] = useState(false)
   const [codeCopied, setCodeCopied] = useState(false)
-  const [qrOpen, setQrOpen] = useState(false)
 
   const handleDelete = (e) => {
     e.stopPropagation()
@@ -446,8 +471,6 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete }) {
   const totalGrams =
     recipe.totalGrams ?? recipe.flavors?.reduce((s, f) => s + (f.grams || 0), 0) ?? 0
 
-  const shareCode = encodeRecipe(recipe, getFlavor, brands)
-
   return (
     <div className="p-4 bg-[#111] border border-[rgba(201,168,76,0.1)]">
 
@@ -461,7 +484,7 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete }) {
           </p>
         </div>
         <button
-          onClick={(e) => { e.stopPropagation(); setQrOpen(true) }}
+          onClick={(e) => { e.stopPropagation(); onQr(recipe) }}
           className="p-1.5 text-[#5a5555] hover:text-[#c9a84c] transition-colors shrink-0"
           title="QRコードを表示"
         >
@@ -530,27 +553,6 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete }) {
         </p>
       )}
 
-      {/* QRコードモーダル */}
-      {qrOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-5" onClick={() => setQrOpen(false)}>
-          <div className="absolute inset-0 bg-black/70" />
-          <div
-            className="relative bg-[#111] border border-[rgba(201,168,76,0.2)] p-6 flex flex-col items-center gap-4 w-full max-w-[300px]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between w-full">
-              <p className="text-[#f0ede8] text-sm font-medium truncate flex-1 mr-2">{recipe.name}</p>
-              <button onClick={() => setQrOpen(false)} className="text-[#5a5555] shrink-0">
-                <X size={16} />
-              </button>
-            </div>
-            <div className="p-3 bg-white">
-              <QRCode value={shareCode} size={200} />
-            </div>
-            <p className="text-[#5a5555] text-xs text-center">スクリーンショットを撮ってXに投稿、<br />または相手のアプリでスキャン</p>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
