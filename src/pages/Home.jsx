@@ -6,7 +6,7 @@ import { useLang } from '../contexts/LangContext'
 export default function Home() {
   const navigate = useNavigate()
   const { recipes } = useRecipes()
-  const { t, toggleLang } = useLang()
+  const { lang, t, toggleLang } = useLang()
   const h = t.home
 
   const menuItems = [
@@ -64,18 +64,19 @@ export default function Home() {
           <Stat value={recipes.length} label={h.stat} />
         </div>
 
-        {/* 言語切り替え */}
-        <button
-          onClick={toggleLang}
-          className="mt-6 px-4 py-2 border border-[rgba(201,168,76,0.25)] text-[#c9a84c] text-xs tracking-widest uppercase active:opacity-60 transition-opacity"
-        >
-          {h.langSwitch}
-        </button>
-
-        {/* リーガルリンク */}
-        <Link to="/legal" className="mt-4 text-[#3a3535] text-[11px] tracking-wide underline underline-offset-2 active:opacity-60">
-          {h.legal}
-        </Link>
+        {/* リーガルリンク + 言語切り替え */}
+        <div className="mt-6 flex items-center gap-3">
+          <Link to="/legal" className="text-[#3a3535] text-[11px] tracking-wide underline underline-offset-2 active:opacity-60">
+            {h.legal}
+          </Link>
+          <span className="text-[#3a3535] text-[11px]">·</span>
+          <button
+            onClick={toggleLang}
+            className="text-[#c9a84c] text-[11px] tracking-widest font-medium active:opacity-60 transition-opacity"
+          >
+            {lang === 'ja' ? 'EN' : 'JP'}
+          </button>
+        </div>
       </div>
     </div>
   )
