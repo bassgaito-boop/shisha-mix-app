@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import jsQR from 'jsqr'
 import { useNavigate } from 'react-router-dom'
 import { Search, Trash2, PlusCircle, Pencil, X, ChevronDown, Plus, Check, Download, Copy, Send, QrCode, Camera } from 'lucide-react'
 import { useRecipes, useFlavors } from '../hooks/useStorage'
@@ -651,30 +652,56 @@ function QrCanvas({ value }) {
 // ─── QRスキャナー ──────────────────────────────────────────────
 
 function QrScanner({ onResult, onError }) {
-  const regionId = 'qr-reader-region'
+  const videoRef = useRef(null)
+  const canvasRef = useRef(null)
 
   useEffect(() => {
-    let scanner
-    import('html5-qrcode').then(({ Html5Qrcode }) => {
-      scanner = new Html5Qrcode(regionId)
-      scanner.start(
-        { facingMode: 'environment' },
-        { fps: 10, qrbox: { width: 220, height: 220 } },
-        (text) => {
-          scanner.stop().catch(() => {})
-          onResult(text)
-        },
-        () => {}
-      ).catch((err) => onError(err?.message ?? 'カメラを起動できませんでした'))
-    })
+    let active = true
+    let stream = null
+    let animFrame = null
+
+    navigator.mediaDevices?.getUserMedia({ video: { facingMode: 'environment' } })
+      .then((s) => {
+        if (!active) { s.getTracks().forEach((t) => t.stop()); return }
+        stream = s
+        videoRef.current.srcObject = s
+        videoRef.current.play().then(tick).catch(() => {})
+      })
+      .catch(() => onError('カメラの起動に失敗しました。カメラへのアクセスを許可してください。'))
+
+    function tick() {
+      if (!active) return
+      const video = videoRef.current
+      const canvas = canvasRef.current
+      if (!video || !canvas) return
+      if (video.readyState >= 2 && video.videoWidth > 0) {
+        canvas.width = video.videoWidth
+        canvas.height = video.videoHeight
+        const ctx = canvas.getContext('2d')
+        ctx.drawImage(video, 0, 0)
+        const img = ctx.getImageData(0, 0, canvas.width, canvas.height)
+        const code = jsQR(img.data, img.width, img.height)
+        if (code?.data) {
+          active = false
+          stream?.getTracks().forEach((t) => t.stop())
+          onResult(code.data)
+          return
+        }
+      }
+      animFrame = requestAnimationFrame(tick)
+    }
+
     return () => {
-      scanner?.stop().catch(() => {})
+      active = false
+      cancelAnimationFrame(animFrame)
+      stream?.getTracks().forEach((t) => t.stop())
     }
   }, [])
 
   return (
     <div className="relative w-full">
-      <div id={regionId} className="w-full overflow-hidden" />
+      <video ref={videoRef} playsInline muted className="w-full" />
+      <canvas ref={canvasRef} className="hidden" />
       <p className="text-[#5a5555] text-xs text-center mt-2">QRコードをカメラに向けてください</p>
     </div>
   )
