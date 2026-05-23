@@ -1,40 +1,31 @@
 import { useState, useMemo } from 'react'
-import { X, Plus, ChevronDown } from 'lucide-react'
-import { useFlavors } from '../hooks/useStorage'
+import { useNavigate } from 'react-router-dom'
+import { Plus, X, ChevronDown, ChevronRight } from 'lucide-react'
+import { useFlavors, useTags } from '../hooks/useStorage'
+import { getTags } from '../constants/categories'
 import { useLang } from '../contexts/LangContext'
 
-const CATEGORIES = [
-  'フルーツ', 'ミント', 'お菓子・スイーツ',
-  'フローラル', 'ドリンク', 'ナッツ', 'スパイス', '変わり種',
-]
-
 export default function FlavorManage() {
+  const navigate = useNavigate()
   const { brands, flavors, addBrand, addFlavor, deleteBrand, deleteFlavor } = useFlavors()
+  const { tags: globalTags } = useTags()
   const { t } = useLang()
   const fm = t.flavorManage
+
   const [activeBrandId, setActiveBrandId] = useState(brands[0]?.id ?? '')
   const [showModal, setShowModal] = useState(false)
 
   const sortedBrands  = [...brands].sort((a, b) => a.name.localeCompare(b.name, 'en'))
   const activeBrand   = brands.find((b) => b.id === activeBrandId)
-  const activeFlavors = flavors.filter((f) => f.brandId === activeBrandId)
+  const activeFlavors = flavors
+    .filter((f) => f.brandId === activeBrandId)
+    .sort((a, b) => a.name.localeCompare(b.name, 'en'))
 
-  // カテゴリ別にグループ化（各カテゴリ内はアルファベット順）
-  const byCategory = activeFlavors.reduce((acc, f) => {
-    ;(acc[f.category] ??= []).push(f)
-    return acc
-  }, {})
-  for (const arr of Object.values(byCategory)) {
-    arr.sort((a, b) => a.name.localeCompare(b.name, 'en'))
-  }
-
-  const handleDeleteFlavor = (flavor) => {
+  const handleDeleteFlavor = (e, flavor) => {
+    e.stopPropagation()
     if (!confirm(fm.deleteConfirm(flavor.name))) return
     deleteFlavor(flavor.id)
-    // フレーバーがなくなったらブランドも自動削除
-    const remaining = flavors.filter(
-      (f) => f.brandId === flavor.brandId && f.id !== flavor.id
-    )
+    const remaining = flavors.filter((f) => f.brandId === flavor.brandId && f.id !== flavor.id)
     if (remaining.length === 0) {
       const nextBrand = brands.find((b) => b.id !== flavor.brandId)
       deleteBrand(flavor.brandId)
@@ -48,18 +39,18 @@ export default function FlavorManage() {
       {/* ヘッダー */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <p className="text-[#c9a84c] tracking-[0.3em] text-[10px] uppercase mb-1">{fm.library}</p>
+          <p className="tracking-[0.3em] text-[10px] uppercase mb-1" style={{ color: 'var(--c-accent)' }}>{fm.library}</p>
           <h2
-            className="text-2xl text-[#f0ede8]"
-            style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+            className="text-2xl"
+            style={{ fontFamily: 'var(--font-display)', color: 'var(--c-text)' }}
           >
             {fm.title}
           </h2>
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-1.5 px-4 py-2.5 text-[#0a0a0a] text-xs font-semibold tracking-widest uppercase active:opacity-80"
-          style={{ background: 'linear-gradient(135deg, #c9a84c, #e8c97a)' }}
+          className="flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold tracking-widest uppercase active:opacity-80"
+          style={{ background: 'var(--ca-grad)', color: 'var(--c-btn-fg)' }}
         >
           <Plus size={13} strokeWidth={2.5} />
           {fm.addBtn}
@@ -67,71 +58,97 @@ export default function FlavorManage() {
       </div>
 
       {brands.length === 0 ? (
-        <p className="text-center text-[#3a3535] text-sm py-16">{fm.empty}</p>
+        <p className="text-center text-sm py-16" style={{ color: 'var(--c-dim)' }}>{fm.empty}</p>
       ) : (
         <>
-          {/* ── ブランドドロップダウン ── */}
+          {/* ブランドドロップダウン */}
           <div className="relative mb-5">
             <select
               value={activeBrandId}
               onChange={(e) => setActiveBrandId(e.target.value)}
-              className="w-full appearance-none px-4 pr-9 py-3 bg-[#111] border border-[rgba(201,168,76,0.15)] text-[#f0ede8] text-sm outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors"
+              className="w-full appearance-none px-4 pr-9 py-3 text-sm outline-none transition-colors"
+              style={{
+                background: 'var(--c-surf)',
+                border: '1px solid var(--ca-15)',
+                color: 'var(--c-text)',
+              }}
+              onFocus={(e) => { e.target.style.borderColor = 'var(--ca-40)' }}
+              onBlur={(e) => { e.target.style.borderColor = 'var(--ca-15)' }}
             >
               {sortedBrands.map((brand) => (
-                <option key={brand.id} value={brand.id} style={{ background: '#111', color: '#f0ede8' }}>
+                <option key={brand.id} value={brand.id} style={{ background: 'var(--c-surf)', color: 'var(--c-text)' }}>
                   {brand.name}（{brand.origin}）
                 </option>
               ))}
             </select>
-            <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5a5555] pointer-events-none" />
+            <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--c-muted)' }} />
           </div>
 
           {activeBrand && (
             <>
-              {/* ── ブランド情報バー ── */}
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-[#5a5555] text-xs">
+                <span className="text-xs" style={{ color: 'var(--c-muted)' }}>
                   {activeBrand.name} · {activeBrand.origin} · {activeFlavors.length}
                 </span>
               </div>
 
-              {/* ゴールド区切り線 */}
               <div
                 className="h-px mb-4"
-                style={{ background: 'linear-gradient(90deg, rgba(201,168,76,0.4), transparent)' }}
+                style={{ background: 'linear-gradient(90deg, var(--ca-40), transparent)' }}
               />
 
-              {/* ── フレーバー一覧（カテゴリ別） ── */}
               {activeFlavors.length === 0 ? (
-                <p className="text-[#3a3535] text-xs text-center py-8">{fm.flavorEmpty}</p>
+                <p className="text-xs text-center py-8" style={{ color: 'var(--c-dim)' }}>{fm.flavorEmpty}</p>
               ) : (
-                <div className="space-y-5">
-                  {CATEGORIES.filter((c) => byCategory[c]).map((cat) => (
-                    <div key={cat}>
-                      <p className="text-[#c9a84c] text-[10px] tracking-widest uppercase mb-2">
-                        {fm.categories[cat] ?? cat}
-                      </p>
-                      <div className="space-y-1">
-                        {byCategory[cat].map((flavor) => (
-                          <div
-                            key={flavor.id}
-                            className="flex items-center gap-2 px-3 py-2 bg-[#111] border border-[rgba(201,168,76,0.08)]"
-                          >
-                            <div className="w-1.5 h-1.5 rounded-full bg-[#c9a84c] shrink-0 opacity-50" />
-                            <div className="flex-1 min-w-0">
-                              <p className="text-[#f0ede8] text-xs">{flavor.name}</p>
+                <div className="space-y-1">
+                  {activeFlavors.map((flavor) => {
+                    const flavorTags = getTags(flavor)
+                    return (
+                      <div
+                        key={flavor.id}
+                        onClick={() => navigate(`/flavors/${flavor.id}/edit`)}
+                        className="flex items-center gap-2 px-3 py-2.5 transition-colors cursor-pointer"
+                        style={{
+                          background: 'var(--c-surf)',
+                          border: '1px solid var(--ca-08)',
+                          borderRadius: 'var(--radius)',
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--ca-30)' }}
+                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--ca-08)' }}
+                        onTouchStart={(e) => { e.currentTarget.style.borderColor = 'var(--ca-30)' }}
+                        onTouchEnd={(e) => { e.currentTarget.style.borderColor = 'var(--ca-08)' }}
+                      >
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs" style={{ color: 'var(--c-text)' }}>{flavor.name}</p>
+                          {flavorTags.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {flavorTags.map((tag) => (
+                                <span
+                                  key={tag}
+                                  className="px-1.5 py-0.5 text-[9px] border"
+                                  style={{
+                                    border: '1px solid var(--ca-20)',
+                                    color: 'var(--c-muted)',
+                                    borderRadius: 'var(--radius)',
+                                  }}
+                                >
+                                  {tag}
+                                </span>
+                              ))}
                             </div>
-                            <button
-                              onClick={() => handleDeleteFlavor(flavor)}
-                              className="shrink-0 text-[#3a3535] p-1 hover:text-red-500 transition-colors"
-                            >
-                              <X size={13} />
-                            </button>
-                          </div>
-                        ))}
+                          )}
+                        </div>
+                        <ChevronRight size={13} className="shrink-0" style={{ color: 'var(--c-dim)' }} />
+                        <button
+                          onClick={(e) => handleDeleteFlavor(e, flavor)}
+                          className="shrink-0 p-1 transition-colors active:text-red-500"
+                          style={{ color: 'var(--c-dim)' }}
+                        >
+                          <X size={13} />
+                        </button>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
             </>
@@ -139,11 +156,11 @@ export default function FlavorManage() {
         </>
       )}
 
-      {/* 追加モーダル */}
       {showModal && (
         <AddModal
           brands={brands}
           flavors={flavors}
+          globalTags={globalTags}
           onAddBrand={addBrand}
           onAddFlavor={addFlavor}
           onClose={() => setShowModal(false)}
@@ -156,41 +173,48 @@ export default function FlavorManage() {
 
 // ─── 追加モーダル ─────────────────────────────────────────────
 
-function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose, fm }) {
+function AddModal({ brands, flavors, globalTags, onAddBrand, onAddFlavor, onClose, fm }) {
   const m = fm.modal
-  // ブランド
-  const [brandMode, setBrandMode]           = useState('select')
+
+  const [brandMode, setBrandMode]             = useState('select')
   const [selectedBrandId, setSelectedBrandId] = useState(brands[0]?.id ?? '')
-  const [newBrandName,   setNewBrandName]   = useState('')
-  const [newBrandOrigin, setNewBrandOrigin] = useState('')
+  const [newBrandName,   setNewBrandName]     = useState('')
+  const [newBrandOrigin, setNewBrandOrigin]   = useState('')
 
-  // フレーバー
-  const [flavorMode, setFlavorMode]             = useState('select')
-  const [selectedCategory, setSelectedCategory] = useState('')
-  const [selectedFlavorId, setSelectedFlavorId] = useState('')
+  const [flavorMode, setFlavorMode]             = useState('new')
   const [flavorName, setFlavorName]             = useState('')
-  const [flavorCat,  setFlavorCat]              = useState(CATEGORIES[0])
+  const [selectedTags, setSelectedTags]         = useState([])
+  const [selectedTagFilter, setSelectedTagFilter] = useState('')
+  const [selectedFlavorId, setSelectedFlavorId] = useState('')
 
-  // 重複名を除去してカテゴリー別に整理（各カテゴリー内はアルファベット順）
-  const uniqueFlavorsByCategory = useMemo(() => {
+  const uniqueFlavorsByTag = useMemo(() => {
     const seen = new Set()
-    const byCategory = {}
+    const byTag = {}
     const sorted = [...flavors].sort((a, b) => a.name.localeCompare(b.name, 'en'))
     for (const f of sorted) {
       if (seen.has(f.name)) continue
       seen.add(f.name)
-      ;(byCategory[f.category] ??= []).push(f)
+      const tags = getTags(f)
+      if (tags.length === 0) {
+        ;(byTag[''] ??= []).push(f)
+      } else {
+        tags.forEach((tag) => { ;(byTag[tag] ??= []).push(f) })
+      }
     }
-    return byCategory
+    return byTag
   }, [flavors])
 
+  const toggleTag = (tag) =>
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    )
+
   const handleSave = () => {
-    // ── ブランドを確定 ──
     let brandId = selectedBrandId
     if (brandMode === 'new') {
       if (!newBrandName.trim()) return alert(m.alertBrand)
       const nb = onAddBrand({
-        name:   newBrandName.trim(),
+        name: newBrandName.trim(),
         nameJa: newBrandName.trim(),
         origin: newBrandOrigin.trim(),
       })
@@ -199,19 +223,14 @@ function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose, fm }) {
       if (!brandId) return alert(m.alertBrandSelect)
     }
 
-    // ── フレーバーを確定 ──
-    let name, category
     if (flavorMode === 'select') {
       const existing = flavors.find((f) => f.id === selectedFlavorId)
       if (!existing) return alert(m.alertFlavor)
-      ;({ name, category } = existing)
+      onAddFlavor({ brandId, name: existing.name, nameJa: existing.name, tags: getTags(existing) })
     } else {
       if (!flavorName.trim()) return alert(m.alertFlavorName)
-      name     = flavorName.trim()
-      category = flavorCat
+      onAddFlavor({ brandId, name: flavorName.trim(), nameJa: flavorName.trim(), tags: selectedTags })
     }
-
-    onAddFlavor({ brandId, name, nameJa: name, category })
     onClose()
   }
 
@@ -223,24 +242,26 @@ function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose, fm }) {
       <div
         className="w-full max-w-sm rounded-xl"
         style={{
-          background: '#161616',
-          border: '1px solid rgba(201,168,76,0.2)',
+          background: 'var(--c-surf-2)',
+          border: '1px solid var(--ca-20)',
           maxHeight: '88vh',
           overflowY: 'auto',
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* ヘッダー */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[rgba(201,168,76,0.1)]">
-          <h3 className="text-[#f0ede8] text-sm font-medium">{m.title}</h3>
-          <button onClick={onClose} className="text-[#5a5555] p-1"><X size={18} /></button>
+        <div
+          className="flex items-center justify-between px-5 py-4"
+          style={{ borderBottom: '1px solid var(--ca-10)' }}
+        >
+          <h3 className="text-sm font-medium" style={{ color: 'var(--c-text)' }}>{m.title}</h3>
+          <button onClick={onClose} className="p-1" style={{ color: 'var(--c-muted)' }}><X size={18} /></button>
         </div>
 
         <div className="px-5 py-5 space-y-6">
 
           {/* ── ブランド ── */}
           <section>
-            <p className="text-[#c9a84c] text-[10px] tracking-widest uppercase mb-3">{m.brand}</p>
+            <p className="text-[10px] tracking-widest uppercase mb-3" style={{ color: 'var(--c-accent)' }}>{m.brand}</p>
             <ModeToggle
               value={brandMode}
               onChange={setBrandMode}
@@ -258,8 +279,8 @@ function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose, fm }) {
                 />
               ) : (
                 <div className="space-y-2">
-                  <ModalInput label={m.brandName} value={newBrandName}   onChange={setNewBrandName}   placeholder={m.brandNamePlaceholder} />
-                  <ModalInput label={m.origin}    value={newBrandOrigin} onChange={setNewBrandOrigin} placeholder={m.originPlaceholder} />
+                  <ModalInput label={m.brandName} value={newBrandName} onChange={setNewBrandName} placeholder={m.brandNamePlaceholder} />
+                  <ModalInput label={m.origin} value={newBrandOrigin} onChange={setNewBrandOrigin} placeholder={m.originPlaceholder} />
                 </div>
               )}
             </div>
@@ -267,44 +288,58 @@ function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose, fm }) {
 
           {/* ── フレーバー ── */}
           <section>
-            <p className="text-[#c9a84c] text-[10px] tracking-widest uppercase mb-3">{m.flavor}</p>
+            <p className="text-[10px] tracking-widest uppercase mb-3" style={{ color: 'var(--c-accent)' }}>{m.flavor}</p>
             <ModeToggle
               value={flavorMode}
-              onChange={(v) => { setFlavorMode(v); setSelectedCategory(''); setSelectedFlavorId('') }}
-              options={[{ value: 'select', label: m.selectExisting }, { value: 'new', label: m.newRegister }]}
+              onChange={(v) => { setFlavorMode(v); setSelectedTagFilter(''); setSelectedFlavorId('') }}
+              options={[{ value: 'new', label: m.newRegister }, { value: 'select', label: m.selectExisting }]}
             />
             <div className="mt-3">
-              {flavorMode === 'select' ? (
+              {flavorMode === 'new' ? (
+                <div className="space-y-3">
+                  <ModalInput label={m.flavorName} value={flavorName} onChange={setFlavorName} placeholder={m.flavorNamePlaceholder} />
+                  <div>
+                    <p className="text-[10px] tracking-widest uppercase mb-2" style={{ color: 'var(--c-muted)' }}>{m.tags ?? 'タグ（任意）'}</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {globalTags.map((tag) => {
+                        const active = selectedTags.includes(tag)
+                        return (
+                          <button
+                            key={tag}
+                            onClick={() => toggleTag(tag)}
+                            className="px-2.5 py-1 text-[10px] border transition-colors"
+                            style={{
+                              background: active ? 'var(--ca-15)' : 'transparent',
+                              borderColor: active ? 'var(--c-accent)' : 'var(--ca-20)',
+                              color: active ? 'var(--c-accent)' : 'var(--c-muted)',
+                            }}
+                          >
+                            {tag}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
+              ) : (
                 <div className="space-y-2">
                   <SelectField
-                    value={selectedCategory}
-                    onChange={(v) => { setSelectedCategory(v); setSelectedFlavorId('') }}
+                    value={selectedTagFilter}
+                    onChange={(v) => { setSelectedTagFilter(v); setSelectedFlavorId('') }}
                     placeholder={m.selectCategory}
-                    options={CATEGORIES
-                      .filter((c) => uniqueFlavorsByCategory[c])
-                      .map((c) => ({ value: c, label: fm.categories[c] ?? c }))}
+                    options={globalTags
+                      .filter((tag) => uniqueFlavorsByTag[tag])
+                      .map((tag) => ({ value: tag, label: tag }))}
                   />
-                  {selectedCategory && (
+                  {selectedTagFilter && (
                     <SelectField
                       value={selectedFlavorId}
                       onChange={setSelectedFlavorId}
                       placeholder={m.selectFlavor}
-                      options={(uniqueFlavorsByCategory[selectedCategory] ?? [])
+                      options={(uniqueFlavorsByTag[selectedTagFilter] ?? [])
                         .map((f) => ({ value: f.id, label: f.name }))}
                     />
                   )}
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <ModalInput label={m.flavorName} value={flavorName} onChange={setFlavorName} placeholder={m.flavorNamePlaceholder} />
-                  <div>
-                    <p className="text-[#5a5555] text-[10px] tracking-widest uppercase mb-1.5">{m.category}</p>
-                    <SelectField
-                      value={flavorCat}
-                      onChange={setFlavorCat}
-                      options={CATEGORIES.map((c) => ({ value: c, label: fm.categories[c] ?? c }))}
-                    />
-                  </div>
                 </div>
               )}
             </div>
@@ -314,14 +349,18 @@ function AddModal({ brands, flavors, onAddBrand, onAddFlavor, onClose, fm }) {
           <div className="flex gap-2">
             <button
               onClick={onClose}
-              className="flex-1 py-2.5 border border-[rgba(201,168,76,0.2)] text-[#5a5555] text-sm active:opacity-70"
+              className="flex-1 py-2.5 text-sm active:opacity-70"
+              style={{
+                border: '1px solid var(--ca-20)',
+                color: 'var(--c-muted)',
+              }}
             >
               {m.cancel}
             </button>
             <button
               onClick={handleSave}
-              className="flex-1 py-2.5 text-[#0a0a0a] text-sm font-semibold active:opacity-80"
-              style={{ background: 'linear-gradient(135deg, #c9a84c, #e8c97a)' }}
+              className="flex-1 py-2.5 text-sm font-semibold active:opacity-80"
+              style={{ background: 'var(--ca-grad)', color: 'var(--c-btn-fg)' }}
             >
               {m.save}
             </button>
@@ -341,11 +380,12 @@ function ModeToggle({ value, onChange, options }) {
         <button
           key={opt.value}
           onClick={() => onChange(opt.value)}
-          className={`flex-1 py-1.5 text-xs border transition-colors ${
+          className="flex-1 py-1.5 text-xs border transition-colors"
+          style={
             value === opt.value
-              ? 'border-[#c9a84c] text-[#c9a84c] bg-[rgba(201,168,76,0.08)]'
-              : 'border-[rgba(201,168,76,0.15)] text-[#5a5555]'
-          }`}
+              ? { borderColor: 'var(--c-accent)', color: 'var(--c-accent)', background: 'var(--ca-08)' }
+              : { borderColor: 'var(--ca-15)', color: 'var(--c-muted)', background: 'transparent' }
+          }
         >
           {opt.label}
         </button>
@@ -357,13 +397,20 @@ function ModeToggle({ value, onChange, options }) {
 function ModalInput({ label, value, onChange, placeholder }) {
   return (
     <div>
-      <p className="text-[#5a5555] text-[10px] tracking-widest uppercase mb-1.5">{label}</p>
+      <p className="text-[10px] tracking-widest uppercase mb-1.5" style={{ color: 'var(--c-muted)' }}>{label}</p>
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full px-3 py-2.5 bg-[#0a0a0a] border border-[rgba(201,168,76,0.15)] text-[#f0ede8] placeholder-[#3a3535] text-sm outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors"
+        className="w-full px-3 py-2.5 text-sm outline-none transition-colors"
+        style={{
+          background: 'var(--c-surf-3)',
+          border: '1px solid var(--ca-15)',
+          color: 'var(--c-text)',
+        }}
+        onFocus={(e) => { e.target.style.borderColor = 'var(--ca-40)' }}
+        onBlur={(e) => { e.target.style.borderColor = 'var(--ca-15)' }}
       />
     </div>
   )
@@ -375,19 +422,25 @@ function SelectField({ value, onChange, options, placeholder }) {
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full appearance-none px-3 pr-8 py-2.5 bg-[#0a0a0a] border border-[rgba(201,168,76,0.15)] text-sm outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors"
-        style={{ color: value ? '#f0ede8' : '#5a5555' }}
+        className="w-full appearance-none px-3 pr-8 py-2.5 text-sm outline-none transition-colors"
+        style={{
+          background: 'var(--c-surf-3)',
+          border: '1px solid var(--ca-15)',
+          color: value ? 'var(--c-text)' : 'var(--c-muted)',
+        }}
+        onFocus={(e) => { e.target.style.borderColor = 'var(--ca-40)' }}
+        onBlur={(e) => { e.target.style.borderColor = 'var(--ca-15)' }}
       >
         {placeholder && (
-          <option value="" style={{ background: '#111', color: '#5a5555' }}>{placeholder}</option>
+          <option value="" style={{ background: 'var(--c-surf)', color: 'var(--c-muted)' }}>{placeholder}</option>
         )}
         {options.map((opt) => (
-          <option key={opt.value} value={opt.value} style={{ background: '#111', color: '#f0ede8' }}>
+          <option key={opt.value} value={opt.value} style={{ background: 'var(--c-surf)', color: 'var(--c-text)' }}>
             {opt.label}
           </option>
         ))}
       </select>
-      <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#5a5555] pointer-events-none" />
+      <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--c-muted)' }} />
     </div>
   )
 }

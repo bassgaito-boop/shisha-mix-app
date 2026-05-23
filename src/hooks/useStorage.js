@@ -1,5 +1,6 @@
 import { useLocalStorage } from './useLocalStorage'
 import { initialBrands, initialFlavors } from '../data/initialFlavors'
+import { INITIAL_TAGS } from '../constants/categories'
 
 /** @param {import('../data/types').FlavorItem[]} flavors */
 function calcRecipeMeta(flavors) {
@@ -158,4 +159,25 @@ export function useFlavors() {
     updateBrand,
     deleteBrand,
   }
+}
+
+// ---------------------------------------------------------------------------
+// Tags
+// ---------------------------------------------------------------------------
+
+export function useTags() {
+  const [tags, setTags] = useLocalStorage('shisha_tags', INITIAL_TAGS)
+
+  const addTag = (name) => {
+    const t = name.trim()
+    if (!t || tags.includes(t)) return t
+    setTags([...tags, t])
+    return t
+  }
+
+  const deleteTag = (name) => {
+    setTags(tags.filter((t) => t !== name))
+  }
+
+  return { tags, addTag, deleteTag }
 }
