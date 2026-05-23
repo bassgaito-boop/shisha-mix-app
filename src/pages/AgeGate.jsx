@@ -35,30 +35,36 @@ export default function AgeGate({ onVerify }) {
 
   if (denied) {
     return (
-      <div className="min-h-svh flex flex-col items-center justify-center px-8 bg-[#0a0a0a]">
-        <p className="text-[#9a9090] text-sm tracking-wide text-center leading-relaxed">{a.denied}</p>
-        <p className="text-[#5a5555] text-xs mt-3 text-center">{a.deniedSub}</p>
+      <div className="min-h-svh flex flex-col items-center justify-center px-8" style={{ background: 'var(--c-bg)' }}>
+        <p className="text-sm tracking-wide text-center leading-relaxed" style={{ color: 'var(--c-sub)' }}>{a.denied}</p>
+        <p className="text-xs mt-3 text-center" style={{ color: 'var(--c-muted)' }}>{a.deniedSub}</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-svh flex flex-col items-center justify-center px-8 bg-[#0a0a0a] relative overflow-hidden">
+    <div
+      className="min-h-svh flex flex-col items-center justify-center px-8 relative overflow-hidden"
+      style={{ background: 'var(--c-bg)' }}
+    >
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 60%, rgba(201,168,76,0.06) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 60%, var(--ca-06) 0%, transparent 70%)' }}
       />
       <div className="relative z-10 text-center max-w-xs w-full">
         <h1
           className="text-4xl font-bold tracking-[0.2em] mb-10"
-          style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", color: '#c9a84c' }}
+          style={{ fontFamily: 'var(--font-display)', color: 'var(--c-accent)' }}
         >
           SHISHA MIX
         </h1>
-        <div className="w-16 h-px mx-auto mb-10" style={{ background: 'linear-gradient(90deg, transparent, #c9a84c, transparent)' }} />
-        <p className="text-[#9a9090] text-sm leading-relaxed mb-2">{a.desc1}</p>
-        <p className="text-[#9a9090] text-sm leading-relaxed mb-8">{a.desc2}</p>
-        <p className="text-[#f0ede8] text-base font-medium mb-6 tracking-wide">{a.prompt}</p>
+        <div
+          className="w-16 h-px mx-auto mb-10"
+          style={{ background: 'linear-gradient(90deg, transparent, var(--c-accent), transparent)' }}
+        />
+        <p className="text-sm leading-relaxed mb-2" style={{ color: 'var(--c-sub)' }}>{a.desc1}</p>
+        <p className="text-sm leading-relaxed mb-8" style={{ color: 'var(--c-sub)' }}>{a.desc2}</p>
+        <p className="text-base font-medium mb-6 tracking-wide" style={{ color: 'var(--c-text)' }}>{a.prompt}</p>
 
         <div className="flex gap-2 mb-8">
           <BirthSelect value={year}  onChange={setYear}  placeholder={a.year}  options={years.map(y => ({ value: y, label: `${y}` }))} />
@@ -69,20 +75,25 @@ export default function AgeGate({ onVerify }) {
         <button
           onClick={handleConfirm}
           disabled={!ready}
-          className="w-full py-4 text-[#0a0a0a] font-semibold text-sm tracking-widest transition-all duration-300 active:scale-95 disabled:opacity-30"
-          style={{ background: 'linear-gradient(135deg, #c9a84c, #e8c97a)', boxShadow: ready ? '0 0 20px rgba(201,168,76,0.3)' : 'none' }}
+          className="w-full py-4 font-semibold text-sm tracking-widest transition-all duration-300 active:scale-95 disabled:opacity-30"
+          style={{
+            background: 'var(--ca-grad)',
+            color: 'var(--c-btn-fg)',
+            boxShadow: ready ? '0 0 20px var(--ca-30)' : 'none',
+          }}
         >
           {a.confirm}
         </button>
 
         <button
           onClick={() => navigate('/legal')}
-          className="mt-5 text-[#3a3535] text-[11px] tracking-wide underline underline-offset-2 active:opacity-60"
+          className="mt-5 text-[11px] tracking-wide underline underline-offset-2 active:opacity-60"
+          style={{ color: 'var(--c-dim)' }}
         >
           {a.legal}
         </button>
       </div>
-      <p className="absolute bottom-8 text-[#3a3535] text-xs tracking-wide">{a.footer}</p>
+      <p className="absolute bottom-8 text-xs tracking-wide" style={{ color: 'var(--c-dim)' }}>{a.footer}</p>
     </div>
   )
 }
@@ -93,12 +104,18 @@ function BirthSelect({ value, onChange, placeholder, options }) {
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full appearance-none px-2 py-3 bg-[#111] border text-xs text-center outline-none transition-colors"
-        style={{ borderColor: value ? 'rgba(201,168,76,0.4)' : 'rgba(201,168,76,0.15)', color: value ? '#f0ede8' : '#5a5555' }}
+        className="w-full appearance-none px-2 py-3 text-xs text-center outline-none transition-colors"
+        style={{
+          background: 'var(--c-surf)',
+          borderWidth: 1,
+          borderStyle: 'solid',
+          borderColor: value ? 'var(--ca-40)' : 'var(--ca-15)',
+          color: value ? 'var(--c-text)' : 'var(--c-muted)',
+        }}
       >
-        <option value="" style={{ background: '#111', color: '#5a5555' }}>{placeholder}</option>
+        <option value="" style={{ background: 'var(--c-surf)', color: 'var(--c-muted)' }}>{placeholder}</option>
         {options.map((opt) => (
-          <option key={opt.value} value={opt.value} style={{ background: '#111', color: '#f0ede8' }}>{opt.label}</option>
+          <option key={opt.value} value={opt.value} style={{ background: 'var(--c-surf)', color: 'var(--c-text)' }}>{opt.label}</option>
         ))}
       </select>
     </div>

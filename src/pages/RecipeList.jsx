@@ -86,7 +86,7 @@ export default function RecipeList() {
 
   const removeRow = (id) => {
     setFilterRows((prev) => {
-      if (prev.length === 1) return [{ id: 0, brandId: '', flavorId: '' }] // 最後の1行はクリアのみ
+      if (prev.length === 1) return [{ id: 0, brandId: '', flavorId: '' }]
       return prev.filter((r) => r.id !== id)
     })
   }
@@ -128,19 +128,23 @@ export default function RecipeList() {
 
   return (
     <div className="px-5 pt-14 pb-4">
-      <div className="flex items-start justify-between mb-5">
+      <div className="flex items-center justify-between mb-5">
         <div>
-          <p className="text-[#c9a84c] tracking-[0.3em] text-[10px] uppercase mb-1">{rl.collection}</p>
+          <p className="tracking-[0.3em] text-[10px] uppercase mb-1" style={{ color: 'var(--c-accent)' }}>{rl.collection}</p>
           <h2
-            className="text-2xl text-[#f0ede8]"
-            style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+            className="text-2xl"
+            style={{ fontFamily: 'var(--font-display)', color: 'var(--c-text)' }}
           >
             {rl.title}
           </h2>
         </div>
         <button
           onClick={() => setImportOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-2 border border-[rgba(201,168,76,0.25)] text-[#c9a84c] text-xs tracking-wide active:opacity-60 transition-opacity mt-1"
+          className="flex items-center gap-1.5 px-3 py-2.5 text-xs tracking-wide active:opacity-60 transition-opacity"
+          style={{
+            border: '1px solid var(--ca-25)',
+            color: 'var(--c-accent)',
+          }}
         >
           <Download size={12} />
           {rl.importBtn}
@@ -149,13 +153,20 @@ export default function RecipeList() {
 
       {/* テキスト検索 */}
       <div className="relative mb-2.5">
-        <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#5a5555]" />
+        <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: 'var(--c-muted)' }} />
         <input
           type="text"
           placeholder={rl.searchPlaceholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 bg-[#111] border border-[rgba(201,168,76,0.15)] text-[#f0ede8] placeholder-[#3a3535] text-sm outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors"
+          className="w-full pl-10 pr-4 py-3 text-sm outline-none transition-colors"
+          style={{
+            background: 'var(--c-surf)',
+            border: '1px solid var(--ca-15)',
+            color: 'var(--c-text)',
+          }}
+          onFocus={(e) => { e.target.style.borderColor = 'var(--ca-40)' }}
+          onBlur={(e) => { e.target.style.borderColor = 'var(--ca-15)' }}
         />
       </div>
 
@@ -182,21 +193,22 @@ export default function RecipeList() {
                   ? usedBrands.map((brand) => {
                       const bf = rowFlavors.filter((f) => f.brandId === brand.id)
                       return bf.length > 0 ? (
-                        <optgroup key={brand.id} label={brand.name} style={{ background: '#111', color: '#c9a84c' }}>
+                        <optgroup key={brand.id} label={brand.name} style={{ background: 'var(--c-surf)', color: 'var(--c-accent)' }}>
                           {bf.map((f) => (
-                            <option key={f.id} value={f.id} style={{ background: '#111', color: '#f0ede8' }}>{f.name}</option>
+                            <option key={f.id} value={f.id} style={{ background: 'var(--c-surf)', color: 'var(--c-text)' }}>{f.name}</option>
                           ))}
                         </optgroup>
                       ) : null
                     })
                   : rowFlavors.map((f) => (
-                      <option key={f.id} value={f.id} style={{ background: '#111', color: '#f0ede8' }}>{f.name}</option>
+                      <option key={f.id} value={f.id} style={{ background: 'var(--c-surf)', color: 'var(--c-text)' }}>{f.name}</option>
                     ))}
               </FilterSelect>
               {/* 行クリア／削除 */}
               <button
                 onClick={() => removeRow(row.id)}
-                className="w-8 h-9 shrink-0 flex items-center justify-center text-[#3a3535] active:text-red-500 transition-colors"
+                className="w-8 h-9 shrink-0 flex items-center justify-center transition-colors active:text-red-500"
+                style={{ color: 'var(--c-dim)' }}
               >
                 <X size={14} />
               </button>
@@ -209,7 +221,11 @@ export default function RecipeList() {
       <div className="flex items-center gap-2 mb-5">
         <button
           onClick={addFilterRow}
-          className="flex items-center gap-1.5 px-3 py-2 border border-dashed border-[rgba(201,168,76,0.25)] text-[#c9a84c] text-xs tracking-wide active:opacity-60 transition-opacity"
+          className="flex items-center gap-1.5 px-3 py-2 border-dashed border text-xs tracking-wide active:opacity-60 transition-opacity"
+          style={{
+            borderColor: 'var(--ca-25)',
+            color: 'var(--c-accent)',
+          }}
         >
           <Plus size={11} strokeWidth={2.5} />
           {rl.addFilter}
@@ -217,7 +233,12 @@ export default function RecipeList() {
         {hasFilters && (
           <button
             onClick={clearAll}
-            className="flex items-center gap-1 px-3 py-2 bg-[#111] border border-[rgba(201,168,76,0.15)] text-[#5a5555] text-xs active:opacity-60 transition-opacity"
+            className="flex items-center gap-1 px-3 py-2 text-xs active:opacity-60 transition-opacity"
+            style={{
+              background: 'var(--c-surf)',
+              border: '1px solid var(--ca-15)',
+              color: 'var(--c-muted)',
+            }}
           >
             <X size={11} />
             {rl.clear}
@@ -227,22 +248,22 @@ export default function RecipeList() {
 
       {/* 件数バッジ（絞り込み中のみ） */}
       {hasFilters && (
-        <p className="text-[#5a5555] text-xs mb-4">
-          <span className="text-[#c9a84c] font-medium">{filtered.length}</span> {rl.countSuffix}
+        <p className="text-xs mb-4" style={{ color: 'var(--c-muted)' }}>
+          <span className="font-medium" style={{ color: 'var(--c-accent)' }}>{filtered.length}</span> {rl.countSuffix}
         </p>
       )}
 
       {/* レシピ一覧 */}
       {filtered.length === 0 ? (
         <div className="text-center py-16">
-          <p className="text-[#5a5555] text-sm mb-6">
+          <p className="text-sm mb-6" style={{ color: 'var(--c-muted)' }}>
             {hasFilters ? rl.noResults : rl.empty}
           </p>
           {!hasFilters && (
             <button
               onClick={() => navigate('/recipes/new')}
-              className="inline-flex items-center gap-2 px-6 py-3 text-[#0a0a0a] text-sm font-semibold tracking-wide"
-              style={{ background: 'linear-gradient(135deg, #c9a84c, #e8c97a)' }}
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold tracking-wide"
+              style={{ background: 'var(--ca-grad)', color: 'var(--c-btn-fg)' }}
             >
               <PlusCircle size={16} />
               {rl.createFirst}
@@ -269,25 +290,33 @@ export default function RecipeList() {
         <div className="fixed inset-0 z-50 flex items-center justify-center px-5">
           <div className="absolute inset-0 bg-black/70" onClick={closeImport} />
           <div
-            className="relative w-full max-w-[390px] bg-[#111] border border-[rgba(201,168,76,0.2)] p-5"
+            className="relative w-full max-w-[390px] p-5"
+            style={{
+              background: 'var(--c-surf)',
+              border: '1px solid var(--ca-20)',
+              borderRadius: 'var(--radius)',
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* ヘッダー */}
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-[#f0ede8] font-medium text-sm tracking-wide">{rl.importTitle}</h3>
-              <button onClick={closeImport} className="text-[#5a5555] active:text-[#f0ede8]">
+              <h3 className="font-medium text-sm tracking-wide" style={{ color: 'var(--c-text)' }}>{rl.importTitle}</h3>
+              <button onClick={closeImport} className="transition-colors" style={{ color: 'var(--c-muted)' }}>
                 <X size={18} />
               </button>
             </div>
 
             {/* タブ切り替え */}
-            <div className="flex mb-4 border border-[rgba(201,168,76,0.15)]">
+            <div className="flex mb-4" style={{ border: '1px solid var(--ca-15)' }}>
               {[{ id: 'code', icon: Copy, label: rl.codeTab }, { id: 'qr', icon: Camera, label: rl.qrTab }].map(({ id, icon: Icon, label }) => (
                 <button
                   key={id}
                   onClick={() => { setImportTab(id); setImportPreview(null); setImportError('') }}
                   className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs transition-colors"
-                  style={{ background: importTab === id ? 'rgba(201,168,76,0.15)' : 'transparent', color: importTab === id ? '#c9a84c' : '#5a5555' }}
+                  style={{
+                    background: importTab === id ? 'var(--ca-15)' : 'transparent',
+                    color: importTab === id ? 'var(--c-accent)' : 'var(--c-muted)',
+                  }}
                 >
                   <Icon size={12} />
                   {label}
@@ -297,13 +326,20 @@ export default function RecipeList() {
 
             {importTab === 'code' ? (
               <>
-                <p className="text-[#5a5555] text-xs mb-2">{rl.codePasteHint}</p>
+                <p className="text-xs mb-2" style={{ color: 'var(--c-muted)' }}>{rl.codePasteHint}</p>
                 <textarea
                   value={importCode}
                   onChange={(e) => { setImportCode(e.target.value); setImportPreview(null); setImportError('') }}
                   placeholder="SHI-..."
                   rows={3}
-                  className="w-full px-3 py-2.5 bg-[#0a0a0a] border border-[rgba(201,168,76,0.15)] text-[#f0ede8] text-xs font-mono placeholder-[#3a3535] outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors resize-none"
+                  className="w-full px-3 py-2.5 text-xs font-mono outline-none transition-colors resize-none"
+                  style={{
+                    background: 'var(--c-surf-3)',
+                    border: '1px solid var(--ca-15)',
+                    color: 'var(--c-text)',
+                  }}
+                  onFocus={(e) => { e.target.style.borderColor = 'var(--ca-40)' }}
+                  onBlur={(e) => { e.target.style.borderColor = 'var(--ca-15)' }}
                 />
               </>
             ) : (
@@ -325,16 +361,23 @@ export default function RecipeList() {
 
             {/* プレビュー */}
             {importPreview && (
-              <div className="mt-3 p-3 bg-[#0a0a0a] border border-[rgba(201,168,76,0.12)]">
-                <p className="text-[#c9a84c] text-xs tracking-wide mb-2">{importPreview.n}</p>
+              <div
+                className="mt-3 p-3"
+                style={{
+                  background: 'var(--c-surf-3)',
+                  border: '1px solid var(--ca-12)',
+                  borderRadius: 'var(--radius)',
+                }}
+              >
+                <p className="text-xs tracking-wide mb-2" style={{ color: 'var(--c-accent)' }}>{importPreview.n}</p>
                 <div className="space-y-1 mb-2">
                   {importPreview.f.map((item, i) => (
                     <div key={i} className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: SLICE_COLORS[i % SLICE_COLORS.length] }} />
-                      <p className="text-[#f0ede8] text-xs flex-1 truncate">
-                        {item.fl}<span className="text-[#5a5555]">：{item.b}</span>
+                      <p className="text-xs flex-1 truncate" style={{ color: 'var(--c-text)' }}>
+                        {item.fl}<span style={{ color: 'var(--c-muted)' }}>：{item.b}</span>
                       </p>
-                      <span className="text-[#9a9090] text-[10px]">{item.g}g</span>
+                      <span className="text-[10px]" style={{ color: 'var(--c-sub)' }}>{item.g}g</span>
                     </div>
                   ))}
                 </div>
@@ -347,8 +390,8 @@ export default function RecipeList() {
                 <button
                   onClick={() => handlePreview()}
                   disabled={!importCode.trim()}
-                  className="flex-1 py-3 text-[#0a0a0a] text-sm font-semibold tracking-wide disabled:opacity-30 transition-opacity"
-                  style={{ background: 'linear-gradient(135deg, #c9a84c, #e8c97a)' }}
+                  className="flex-1 py-3 text-sm font-semibold tracking-wide disabled:opacity-30 transition-opacity"
+                  style={{ background: 'var(--ca-grad)', color: 'var(--c-btn-fg)' }}
                 >
                   {rl.previewBtn}
                 </button>
@@ -356,7 +399,10 @@ export default function RecipeList() {
                 <button
                   onClick={handleImport}
                   className="flex-1 py-3 text-sm font-semibold tracking-wide transition-all"
-                  style={{ background: importDone ? '#2a4a2a' : 'linear-gradient(135deg, #c9a84c, #e8c97a)', color: importDone ? '#7ec8a0' : '#0a0a0a' }}
+                  style={{
+                    background: importDone ? '#2a4a2a' : 'var(--ca-grad)',
+                    color: importDone ? '#7ec8a0' : 'var(--c-btn-fg)',
+                  }}
                 >
                   {importDone ? rl.addedMsg : rl.addBtn}
                 </button>
@@ -371,25 +417,28 @@ export default function RecipeList() {
         <div className="fixed inset-0 z-50 flex items-center justify-center px-5" onClick={() => setQrRecipe(null)}>
           <div className="absolute inset-0 bg-black/70" />
           <div
-            className="relative bg-[#111] border border-[rgba(201,168,76,0.2)] p-6 flex flex-col items-center gap-4 w-full max-w-[300px]"
+            className="relative p-6 flex flex-col items-center gap-4 w-full max-w-[300px]"
+            style={{
+              background: 'var(--c-surf)',
+              border: '1px solid var(--ca-20)',
+              borderRadius: 'var(--radius)',
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between w-full">
-              <p className="text-[#f0ede8] text-sm font-medium truncate flex-1 mr-2">{qrRecipe.name}</p>
-              <button onClick={() => setQrRecipe(null)} className="text-[#5a5555] shrink-0">
+              <p className="text-sm font-medium truncate flex-1 mr-2" style={{ color: 'var(--c-text)' }}>{qrRecipe.name}</p>
+              <button onClick={() => setQrRecipe(null)} className="shrink-0" style={{ color: 'var(--c-muted)' }}>
                 <X size={16} />
               </button>
             </div>
             <QrCanvas value={encodeRecipe(qrRecipe, getFlavor, brands)} />
-            <p className="text-[#5a5555] text-xs text-center whitespace-pre-line">{rl.qrScreenshotHint}</p>
+            <p className="text-xs text-center whitespace-pre-line" style={{ color: 'var(--c-muted)' }}>{rl.qrScreenshotHint}</p>
           </div>
         </div>
       )}
     </div>
   )
 }
-
-// ─── フィルター用セレクト ──────────────────────────────────────
 
 // ─── フィルター用セレクト ─────────────────────────────────────
 
@@ -399,17 +448,23 @@ function FilterSelect({ value, onChange, placeholder, options, children }) {
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full appearance-none pl-3 pr-7 py-2.5 bg-[#111] border border-[rgba(201,168,76,0.15)] text-xs outline-none focus:border-[rgba(201,168,76,0.4)] transition-colors"
-        style={{ color: value ? '#f0ede8' : '#5a5555' }}
+        className="w-full appearance-none pl-3 pr-7 py-2.5 text-xs outline-none transition-colors"
+        style={{
+          background: 'var(--c-surf)',
+          border: '1px solid var(--ca-15)',
+          color: value ? 'var(--c-text)' : 'var(--c-muted)',
+        }}
+        onFocus={(e) => { e.target.style.borderColor = 'var(--ca-40)' }}
+        onBlur={(e) => { e.target.style.borderColor = 'var(--ca-15)' }}
       >
-        <option value="" style={{ background: '#111', color: '#5a5555' }}>{placeholder}</option>
+        <option value="" style={{ background: 'var(--c-surf)', color: 'var(--c-muted)' }}>{placeholder}</option>
         {children ?? options?.map((opt) => (
-          <option key={opt.value} value={opt.value} style={{ background: '#111', color: '#f0ede8' }}>
+          <option key={opt.value} value={opt.value} style={{ background: 'var(--c-surf)', color: 'var(--c-text)' }}>
             {opt.label}
           </option>
         ))}
       </select>
-      <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-[#5a5555] pointer-events-none" />
+      <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--c-muted)' }} />
     </div>
   )
 }
@@ -431,38 +486,31 @@ async function generateShareCard(recipe, getFlavor, brands, scanToImport = 'Scan
   canvas.height = H
   const ctx = canvas.getContext('2d')
 
-  // 背景
   ctx.fillStyle = '#111111'
   ctx.fillRect(0, 0, W, H)
 
-  // ボーダー
   ctx.strokeStyle = 'rgba(201,168,76,0.3)'
   ctx.lineWidth = 1
   ctx.strokeRect(0.5, 0.5, W - 1, H - 1)
 
-  // アプリ名（右上）
   ctx.fillStyle = 'rgba(201,168,76,0.6)'
   ctx.font = '600 11px system-ui,sans-serif'
   ctx.textAlign = 'right'
   ctx.fillText('SHISHA MIX', W - 16, 22)
   ctx.textAlign = 'left'
 
-  // レシピ名
   ctx.fillStyle = '#f0ede8'
   ctx.font = 'bold 20px Georgia,serif'
   ctx.fillText(recipe.name, 16, 52)
 
-  // 合計・日付
   ctx.fillStyle = '#5a5555'
   ctx.font = '11px system-ui,sans-serif'
   ctx.fillText(`${totalGrams}g · ${new Date(recipe.createdAt).toLocaleDateString('ja-JP')}`, 16, 70)
 
-  // 区切り線
   ctx.strokeStyle = 'rgba(201,168,76,0.2)'
   ctx.lineWidth = 1
   ctx.beginPath(); ctx.moveTo(16, 82); ctx.lineTo(W - 16, 82); ctx.stroke()
 
-  // フレーバー一覧（QRの左側に収める）
   const listMaxW = 255
   flavors.forEach((item, i) => {
     const fl = getFlavor(item.flavorId)
@@ -488,7 +536,6 @@ async function generateShareCard(recipe, getFlavor, brands, scanToImport = 'Scan
     ctx.textAlign = 'left'
   })
 
-  // テイスティングノート
   const afterFlavorY = 105 + flavorH + 10
   if (recipe.tastingNote || recipe.memo) {
     ctx.strokeStyle = 'rgba(201,168,76,0.1)'
@@ -498,7 +545,6 @@ async function generateShareCard(recipe, getFlavor, brands, scanToImport = 'Scan
     ctx.fillText(truncate(recipe.tastingNote || recipe.memo, ctx, W - 32), 16, afterFlavorY + 20)
   }
 
-  // QRコード（右側）
   const qrSize = 130
   const qrX = W - qrSize - 16
   const qrY = 88
@@ -514,7 +560,6 @@ async function generateShareCard(recipe, getFlavor, brands, scanToImport = 'Scan
   ctx.fillText(scanToImport, qrX + qrSize / 2, qrY + qrSize + 16)
   ctx.textAlign = 'left'
 
-  // #ShishaMix（下部）
   ctx.fillStyle = 'rgba(201,168,76,0.5)'
   ctx.font = '11px system-ui,sans-serif'
   ctx.textAlign = 'right'
@@ -607,47 +652,59 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onQr }) {
     recipe.totalGrams ?? recipe.flavors?.reduce((s, f) => s + (f.grams || 0), 0) ?? 0
 
   return (
-    <div className="p-4 bg-[#111] border border-[rgba(201,168,76,0.1)]">
+    <div
+      className="p-4"
+      style={{
+        background: 'var(--c-surf)',
+        border: '1px solid var(--ca-10)',
+        borderRadius: 'var(--radius)',
+      }}
+    >
 
       {/* ヘッダー */}
       <div className="flex items-start gap-2 mb-3">
         <div className="flex-1 min-w-0">
-          <h3 className="text-[#f0ede8] font-medium text-sm truncate">{recipe.name}</h3>
-          <p className="text-[#5a5555] text-xs mt-0.5">
+          <h3 className="font-medium text-sm truncate" style={{ color: 'var(--c-text)' }}>{recipe.name}</h3>
+          <p className="text-xs mt-0.5" style={{ color: 'var(--c-muted)' }}>
             {totalGrams > 0 && <span>{totalGrams}g · </span>}
             {new Date(recipe.createdAt).toLocaleDateString('ja-JP')}
           </p>
         </div>
         <button
           onClick={(e) => { e.stopPropagation(); onQr(recipe) }}
-          className="p-1.5 text-[#5a5555] hover:text-[#c9a84c] transition-colors shrink-0"
+          className="p-1.5 transition-colors shrink-0"
+          style={{ color: 'var(--c-muted)' }}
           title={rl.qrTooltip}
         >
           <QrCode size={14} />
         </button>
         <button
           onClick={handleCopyCode}
-          className="p-1.5 text-[#5a5555] hover:text-[#c9a84c] transition-colors shrink-0"
+          className="p-1.5 transition-colors shrink-0"
+          style={{ color: 'var(--c-muted)' }}
           title={rl.copyCodeTooltip}
         >
-          {codeCopied ? <Check size={14} className="text-[#c9a84c]" /> : <Copy size={14} />}
+          {codeCopied ? <Check size={14} style={{ color: 'var(--c-accent)' }} /> : <Copy size={14} />}
         </button>
         <button
           onClick={handleShare}
-          className="p-1.5 text-[#5a5555] hover:text-[#c9a84c] transition-colors shrink-0"
+          className="p-1.5 transition-colors shrink-0"
+          style={{ color: 'var(--c-muted)' }}
           title={rl.xPostTooltip}
         >
-          {shared ? <Check size={14} className="text-[#c9a84c]" /> : <Send size={14} />}
+          {shared ? <Check size={14} style={{ color: 'var(--c-accent)' }} /> : <Send size={14} />}
         </button>
         <button
           onClick={() => navigate(`/recipes/${recipe.id}/edit`)}
-          className="p-1.5 text-[#5a5555] hover:text-[#c9a84c] transition-colors shrink-0"
+          className="p-1.5 transition-colors shrink-0"
+          style={{ color: 'var(--c-muted)' }}
         >
           <Pencil size={14} />
         </button>
         <button
           onClick={handleDelete}
-          className="p-1.5 text-[#3a3535] hover:text-red-500 transition-colors shrink-0"
+          className="p-1.5 transition-colors shrink-0 hover:text-red-500 active:text-red-500"
+          style={{ color: 'var(--c-dim)' }}
         >
           <Trash2 size={15} />
         </button>
@@ -666,11 +723,11 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onQr }) {
                     className="w-2 h-2 rounded-full shrink-0"
                     style={{ background: SLICE_COLORS[i % SLICE_COLORS.length] }}
                   />
-                  <p className="text-[#f0ede8] text-xs flex-1 truncate min-w-0">
+                  <p className="text-xs flex-1 truncate min-w-0" style={{ color: 'var(--c-text)' }}>
                     {fl?.name ?? 'Unknown'}
-                    <span className="text-[#5a5555]">：{br?.name ?? ''}</span>
+                    <span style={{ color: 'var(--c-muted)' }}>：{br?.name ?? ''}</span>
                   </p>
-                  <span className="text-[#9a9090] text-[10px] shrink-0">{item.grams}g</span>
+                  <span className="text-[10px] shrink-0" style={{ color: 'var(--c-sub)' }}>{item.grams}g</span>
                 </div>
               )
             })}
@@ -683,7 +740,13 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onQr }) {
 
       {/* テイスティングノート */}
       {(recipe.tastingNote || recipe.memo) && (
-        <p className="mt-3 text-[#5a5555] text-xs leading-relaxed border-t border-[rgba(201,168,76,0.08)] pt-3">
+        <p
+          className="mt-3 text-xs leading-relaxed pt-3"
+          style={{
+            color: 'var(--c-muted)',
+            borderTop: '1px solid var(--ca-08)',
+          }}
+        >
           {recipe.tastingNote || recipe.memo}
         </p>
       )}
@@ -709,7 +772,7 @@ function MiniDonut({ items, total }) {
     return (
       <svg width={SIZE} height={SIZE} className="shrink-0">
         <circle cx={cx} cy={cy} r={R} fill={SLICE_COLORS[0]} />
-        <circle cx={cx} cy={cy} r={r} fill="#111" />
+        <circle cx={cx} cy={cy} r={r} style={{ fill: 'var(--c-surf)' }} />
         <text x={cx} y={cy + 3} textAnchor="middle" fill="rgba(255,255,255,0.92)" fontSize="7.5" fontWeight="bold">
           100%
         </text>
@@ -756,7 +819,7 @@ function MiniDonut({ items, total }) {
           )}
         </g>
       ))}
-      <circle cx={cx} cy={cy} r={r - 1} fill="#111" />
+      <circle cx={cx} cy={cy} r={r - 1} style={{ fill: 'var(--c-surf)' }} />
     </svg>
   )
 }
@@ -836,7 +899,7 @@ function QrScanner({ onResult, onError }) {
     <div className="relative w-full">
       <video ref={videoRef} playsInline muted className="w-full" />
       <canvas ref={canvasRef} className="hidden" />
-      <p className="text-[#5a5555] text-xs text-center mt-2">{t.recipeList.qrHint}</p>
+      <p className="text-xs text-center mt-2" style={{ color: 'var(--c-muted)' }}>{t.recipeList.qrHint}</p>
     </div>
   )
 }
