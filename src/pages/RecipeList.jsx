@@ -135,16 +135,20 @@ export default function RecipeList() {
   // ── フィルター（ブランド・フレーバー・タグ）──────────────
   const [filterBrandId, setFilterBrandId] = useState('')
   const [filterFlavorId, setFilterFlavorId] = useState('')
-  const [filterTag, setFilterTag] = useState('')
+  const [filterTags, setFilterTags] = useState([])
+  const [tagFilterOpen, setTagFilterOpen] = useState(false)
+
+  const toggleTag = (tag) =>
+    setFilterTags((prev) => prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag])
 
   const clearAll = () => {
     setQuery('')
     setFilterBrandId('')
     setFilterFlavorId('')
-    setFilterTag('')
+    setFilterTags([])
   }
 
-  const hasFilters = !!query || !!filterBrandId || !!filterFlavorId || !!filterTag
+  const hasFilters = !!query || !!filterBrandId || !!filterFlavorId || filterTags.length > 0
 
   // レシピで実際に使われているブランド・フレーバーのみ
   const { usedBrands, usedFlavors } = useMemo(() => {
@@ -184,7 +188,7 @@ export default function RecipeList() {
       }
       if (filterBrandId && !r.flavors?.some((item) => item.brandId === filterBrandId)) return false
       if (filterFlavorId && !r.flavors?.some((item) => item.flavorId === filterFlavorId)) return false
-      if (filterTag && !(r.tags ?? []).includes(filterTag)) return false
+      if (filterTags.length > 0 && !filterTags.some((t) => (r.tags ?? []).includes(t))) return false
       if (stockOnly) {
         const canMake = r.flavors?.every((item) => {
           const fl = allFlavors.find((f) => f.id === item.flavorId)
@@ -200,7 +204,7 @@ export default function RecipeList() {
       return new Date(b.createdAt) - new Date(a.createdAt)
     })
     return result
-  }, [recipes, query, filterBrandId, filterFlavorId, filterTag, getFlavor, brands, allFlavors, stockOnly, sortBy])
+  }, [recipes, query, filterBrandId, filterFlavorId, filterTags, getFlavor, brands, allFlavors, stockOnly, sortBy])
 
   return (
     <div className="px-5 pt-14 pb-4">
@@ -292,24 +296,54 @@ export default function RecipeList() {
         )}
       </div>
 
-      {/* タグフィルター */}
+      {/* タグフィルター（折りたたみ） */}
       {allRecipeTags.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mb-3">
-          {allRecipeTags.map((tag) => (
-            <button
-              key={tag}
-              onClick={() => setFilterTag(filterTag === tag ? '' : tag)}
-              className="px-2.5 py-1 text-[10px] border transition-colors"
+        <div className="mb-3">
+          <button
+            onClick={() => setTagFilterOpen((v) => !v)}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs transition-colors"
+            style={{
+              border: `1px solid ${filterTags.length > 0 ? 'var(--c-accent)' : 'var(--ca-20)'}`,
+              background: filterTags.length > 0 ? 'var(--ca-10)' : 'transparent',
+              color: filterTags.length > 0 ? 'var(--c-accent)' : 'var(--c-muted)',
+            }}
+          >
+            <ChevronDown
+              size={11}
               style={{
-                background: filterTag === tag ? 'var(--ca-15)' : 'transparent',
-                borderColor: filterTag === tag ? 'var(--c-accent)' : 'var(--ca-20)',
-                color: filterTag === tag ? 'var(--c-accent)' : 'var(--c-muted)',
-                borderRadius: 'var(--radius)',
+                transform: tagFilterOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 0.2s',
               }}
-            >
-              {tag}
-            </button>
-          ))}
+            />
+            {rl.tagFilterBtn}
+            {filterTags.length > 0 && (
+              <span
+                className="ml-0.5 px-1.5 py-0.5 text-[9px] font-semibold rounded-full"
+                style={{ background: 'var(--c-accent)', color: 'var(--c-btn-fg)' }}
+              >
+                {filterTags.length}
+              </span>
+            )}
+          </button>
+          {tagFilterOpen && (
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {allRecipeTags.map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => toggleTag(tag)}
+                  className="px-2.5 py-1 text-[10px] border transition-colors"
+                  style={{
+                    background: filterTags.includes(tag) ? 'var(--ca-15)' : 'transparent',
+                    borderColor: filterTags.includes(tag) ? 'var(--c-accent)' : 'var(--ca-20)',
+                    color: filterTags.includes(tag) ? 'var(--c-accent)' : 'var(--c-muted)',
+                    borderRadius: 'var(--radius)',
+                  }}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
