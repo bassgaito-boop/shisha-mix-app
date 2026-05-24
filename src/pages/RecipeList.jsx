@@ -778,6 +778,7 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onQr }) 
   const [shared, setShared] = useState(false)
   const [codeCopied, setCodeCopied] = useState(false)
   const [duplicated, setDuplicated] = useState(false)
+  const [noteOpen, setNoteOpen] = useState(false)
 
   const handleDuplicate = (e) => {
     e.stopPropagation()
@@ -828,6 +829,7 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onQr }) 
 
   const totalGrams =
     recipe.totalGrams ?? recipe.flavors?.reduce((s, f) => s + (f.grams || 0), 0) ?? 0
+  const note = recipe.tastingNote || recipe.memo || ''
 
   return (
     <div
@@ -838,19 +840,16 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onQr }) 
         borderRadius: 'var(--radius)',
       }}
     >
+      {/* 名前（単独行） */}
+      <h3 className="font-medium text-sm mb-2 leading-snug" style={{ color: 'var(--c-text)' }}>
+        {recipe.name}
+      </h3>
 
-      {/* ヘッダー */}
-      <div className="flex items-start gap-2 mb-3">
-        <div className="flex-1 min-w-0">
-          <h3 className="font-medium text-sm truncate" style={{ color: 'var(--c-text)' }}>{recipe.name}</h3>
-          <p className="text-xs mt-0.5" style={{ color: 'var(--c-muted)' }}>
-            {totalGrams > 0 && <span>{totalGrams}g · </span>}
-            {new Date(recipe.createdAt).toLocaleDateString('ja-JP')}
-          </p>
-        </div>
+      {/* アイコン行 */}
+      <div className="flex items-center gap-0 mb-3" style={{ marginLeft: '-6px' }}>
         <button
           onClick={(e) => { e.stopPropagation(); onQr(recipe) }}
-          className="p-1.5 transition-colors shrink-0"
+          className="p-1.5 transition-colors"
           style={{ color: 'var(--c-muted)' }}
           title={rl.qrTooltip}
         >
@@ -858,7 +857,7 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onQr }) 
         </button>
         <button
           onClick={handleCopyCode}
-          className="p-1.5 transition-colors shrink-0"
+          className="p-1.5 transition-colors"
           style={{ color: 'var(--c-muted)' }}
           title={rl.copyCodeTooltip}
         >
@@ -866,7 +865,7 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onQr }) 
         </button>
         <button
           onClick={handleShare}
-          className="p-1.5 transition-colors shrink-0"
+          className="p-1.5 transition-colors"
           style={{ color: 'var(--c-muted)' }}
           title={rl.xPostTooltip}
         >
@@ -874,7 +873,7 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onQr }) 
         </button>
         <button
           onClick={handleDuplicate}
-          className="p-1.5 transition-colors shrink-0"
+          className="p-1.5 transition-colors"
           style={{ color: 'var(--c-muted)' }}
           title={rl.duplicateTooltip}
         >
@@ -882,14 +881,14 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onQr }) 
         </button>
         <button
           onClick={() => navigate(`/recipes/${recipe.id}/edit`)}
-          className="p-1.5 transition-colors shrink-0"
+          className="p-1.5 transition-colors"
           style={{ color: 'var(--c-muted)' }}
         >
           <Pencil size={14} />
         </button>
         <button
           onClick={handleDelete}
-          className="p-1.5 transition-colors shrink-0 hover:text-red-500 active:text-red-500"
+          className="p-1.5 transition-colors active:text-red-500"
           style={{ color: 'var(--c-dim)' }}
         >
           <Trash2 size={15} />
@@ -911,9 +910,8 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onQr }) 
                   />
                   <p className="text-xs flex-1 truncate min-w-0" style={{ color: 'var(--c-text)' }}>
                     {fl?.name ?? 'Unknown'}
-                    <span style={{ color: 'var(--c-muted)' }}>：{br?.name ?? ''}</span>
+                    <span style={{ color: 'var(--c-muted)' }}>　{br?.name ?? ''}</span>
                   </p>
-                  <span className="text-[10px] shrink-0" style={{ color: 'var(--c-sub)' }}>{item.grams}g</span>
                 </div>
               )
             })}
@@ -924,19 +922,31 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onQr }) 
         </div>
       )}
 
-      {/* テイスティングノート */}
-      {(recipe.tastingNote || recipe.memo) && (
-        <p
-          className="mt-3 text-xs leading-relaxed pt-3"
-          style={{
-            color: 'var(--c-muted)',
-            borderTop: '1px solid var(--ca-08)',
-          }}
-        >
-          {recipe.tastingNote || recipe.memo}
-        </p>
+      {/* テイスティングノート（折り畳み） */}
+      {note && (
+        <div className="mt-3 pt-3" style={{ borderTop: '1px solid var(--ca-08)' }}>
+          <button
+            onClick={() => setNoteOpen((v) => !v)}
+            className="flex items-center gap-1.5 text-xs w-full text-left active:opacity-60 transition-opacity"
+            style={{ color: 'var(--c-muted)' }}
+          >
+            <ChevronDown
+              size={12}
+              style={{
+                transform: noteOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 0.2s',
+                color: 'var(--c-dim)',
+              }}
+            />
+            Tasting Note
+          </button>
+          {noteOpen && (
+            <p className="mt-2 text-xs leading-relaxed" style={{ color: 'var(--c-muted)' }}>
+              {note}
+            </p>
+          )}
+        </div>
       )}
-
     </div>
   )
 }
