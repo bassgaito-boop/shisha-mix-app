@@ -1,10 +1,8 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
-import jsQR from 'jsqr'
 import { useNavigate } from 'react-router-dom'
 import { Search, Trash2, PlusCircle, Pencil, X, ChevronDown, Plus, Check, Download, Upload, Copy, CopyPlus, Send, QrCode, Camera, FileText } from 'lucide-react'
 import { useRecipes, useFlavors } from '../hooks/useStorage'
 import { encodeRecipe, decodeRecipe } from '../utils/shareCode'
-import QRCodeLib from 'qrcode'
 import { SLICE_COLORS } from '../constants/colors'
 import { useLang } from '../contexts/LangContext'
 
@@ -14,6 +12,15 @@ export default function RecipeList() {
   const navigate = useNavigate()
   const { t } = useLang()
   const rl = t.recipeList
+
+  const importTabs = useMemo(
+    () => [
+      { id: 'code', icon: Copy,     label: rl.codeTab },
+      { id: 'qr',   icon: Camera,   label: rl.qrTab   },
+      { id: 'json', icon: FileText, label: rl.jsonTab  },
+    ],
+    [rl]
+  )
 
   // ── QRモーダル ────────────────────────────────────────────
   const [qrRecipe, setQrRecipe] = useState(null)
@@ -423,7 +430,7 @@ export default function RecipeList() {
 
             {/* タブ切り替え */}
             <div className="flex mb-4" style={{ border: '1px solid var(--ca-15)' }}>
-              {[{ id: 'code', icon: Copy, label: rl.codeTab }, { id: 'qr', icon: Camera, label: rl.qrTab }, { id: 'json', icon: FileText, label: rl.jsonTab }].map(({ id, icon: Icon, label }) => (
+              {importTabs.map(({ id, icon: Icon, label }) => (
                 <button
                   key={id}
                   onClick={() => { setImportTab(id); setImportPreview(null); setImportError(''); setJsonPreview(null); setJsonDone(false) }}
@@ -519,8 +526,8 @@ export default function RecipeList() {
               >
                 <p className="text-xs tracking-wide mb-2" style={{ color: 'var(--c-accent)' }}>{importPreview.n}</p>
                 <div className="space-y-1 mb-2">
-                  {importPreview.f.map((item, i) => (
-                    <div key={i} className="flex items-center gap-2">
+                  {importPreview.f.map((item) => (
+                    <div key={item.fl + item.b} className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: SLICE_COLORS[i % SLICE_COLORS.length] }} />
                       <p className="text-xs flex-1 truncate" style={{ color: 'var(--c-text)' }}>
                         {item.fl}<span style={{ color: 'var(--c-muted)' }}>：{item.b}</span>
@@ -978,13 +985,13 @@ function MiniDonut({ items, total }) {
     const tx = cx + textR * Math.cos(mid)
     const ty = cy + textR * Math.sin(mid)
     angle = end
-    return { d, color: SLICE_COLORS[i % SLICE_COLORS.length], pct, tx, ty }
+    return { d, color: SLICE_COLORS[i % SLICE_COLORS.length], pct, tx, ty, key: item.flavorId ?? i }
   })
 
   return (
     <svg width={SIZE} height={SIZE} className="shrink-0">
-      {paths.map((p, i) => (
-        <g key={i}>
+      {paths.map((p) => (
+        <g key={p.key}>
           <path d={p.d} fill={p.color} />
           {p.pct >= 8 && (
             <text
@@ -1012,10 +1019,12 @@ function QrCanvas({ value }) {
 
   useEffect(() => {
     if (!canvasRef.current) return
-    QRCodeLib.toCanvas(canvasRef.current, value, {
-      width: 200,
-      margin: 2,
-      color: { dark: '#000000', light: '#ffffff' },
+    import('qrcode').then(({ default: QRCodeLib }) => {
+      QRCodeLib.toCanvas(canvasRef.current, value, {
+        width: 200,
+        margin: 2,
+        color: { dark: '#000000', light: '#ffffff' },
+      })
     })
   }, [value])
 
@@ -1038,6 +1047,9 @@ function QrScanner({ onResult, onError }) {
     let stream = null
     let animFrame = null
 
+    let jsQR = null
+    import('jsqr').then((m) => { jsQR = m.default })
+
     navigator.mediaDevices?.getUserMedia({ video: { facingMode: 'environment' } })
       .then((s) => {
         if (!active) { s.getTracks().forEach((t) => t.stop()); return }
@@ -1052,7 +1064,7 @@ function QrScanner({ onResult, onError }) {
       const video = videoRef.current
       const canvas = canvasRef.current
       if (!video || !canvas) return
-      if (video.readyState >= 2 && video.videoWidth > 0) {
+      if (jsQR && video.readyState >= 2 && video.videoWidth > 0) {
         canvas.width = video.videoWidth
         canvas.height = video.videoHeight
         const ctx = canvas.getContext('2d')

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { PlusCircle, BookOpen, ChevronRight, Library } from 'lucide-react'
 import { useRecipes } from '../hooks/useStorage'
@@ -11,11 +11,11 @@ export default function Home() {
   const { lang, t, toggleLang } = useLang()
   const h = t.home
 
-  const menuItems = [
+  const menuItems = useMemo(() => [
     { label: h.createRecipe, sub: h.createRecipeSub, to: '/recipes/new', Icon: PlusCircle },
     { label: h.recipeList,   sub: h.recipeListSub,   to: '/recipes',     Icon: BookOpen  },
     { label: h.flavorList,   sub: h.flavorListSub,   to: '/flavors',     Icon: Library   },
-  ]
+  ], [h])
 
   return (
     <div className="relative min-h-[calc(100svh-80px)] flex flex-col items-center justify-center px-6 overflow-hidden">
