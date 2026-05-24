@@ -1,16 +1,63 @@
-# React + Vite
+# Shisha Mix
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+シーシャ（水タバコ）のフレーバーミックスレシピを記録・管理・共有する PWA アプリです。
 
-Currently, two official plugins are available:
+**URL**: https://shisha-mix-app.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 主な機能
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **レシピ管理**: フレーバー・ブランド・グラム数を記録。テイスティングノートやタグも付けられる
+- **フレーバー管理**: ブランド・カテゴリ別に整理。在庫の有無をトグルで管理
+- **絞り込み検索**: レシピ名・フレーバー・ブランド・タグで検索。複数タグのOR検索に対応
+- **レシピ共有**: QRコード・共有コード・画像でレシピを共有
+- **エクスポート / インポート**: JSON形式でバックアップ・復元
+- **PWA対応**: ホーム画面に追加してネイティブアプリのように使える
+- **多言語対応**: 日本語 / 英語の切り替えに対応
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 技術スタック
+
+| 項目 | 内容 |
+|---|---|
+| フレームワーク | React 19 + Vite |
+| スタイル | Tailwind CSS v4 |
+| ルーティング | React Router v7 |
+| PWA | vite-plugin-pwa (Workbox) |
+| データ保存 | localStorage（サーバー不要） |
+| デプロイ | Vercel |
+
+---
+
+## ローカル開発
+
+```bash
+npm install
+npm run dev
+```
+
+`http://localhost:5173` で起動します。
+
+```bash
+npm run build   # 本番ビルド
+npm run preview # ビルド結果をプレビュー
+```
+
+---
+
+## デプロイ
+
+Vercel CLI でデプロイ:
+
+```bash
+vercel --prod
+```
+
+---
+
+## データについて
+
+全データはブラウザの **localStorage** に保存されます。サーバーへの送信は一切行いません。
+ブラウザデータを削除するとレシピが消えるため、定期的に **Export** からバックアップを保存してください。

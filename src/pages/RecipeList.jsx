@@ -22,6 +22,20 @@ export default function RecipeList() {
     [rl]
   )
 
+  // ── バックアップリマインダー ───────────────────────────────
+  const userRecipeCount = useMemo(
+    () => recipes.filter((r) => !r.id.startsWith('sample-')).length,
+    [recipes]
+  )
+  const [backupDismissed, setBackupDismissed] = useState(
+    () => !!localStorage.getItem('backup_reminded')
+  )
+  const showBackupReminder = userRecipeCount >= 5 && !backupDismissed
+  const dismissBackup = () => {
+    localStorage.setItem('backup_reminded', '1')
+    setBackupDismissed(true)
+  }
+
   // ── インポートモーダル ──────────────────────────────────────
   const [importOpen, setImportOpen] = useState(false)
   const [importTab, setImportTab] = useState('code')
@@ -237,6 +251,35 @@ export default function RecipeList() {
           </button>
         </div>
       </div>
+
+      {/* バックアップリマインダー */}
+      {showBackupReminder && (
+        <div
+          className="flex items-start gap-3 p-3 mb-4"
+          style={{ background: 'var(--ca-08)', border: '1px solid var(--ca-20)', borderRadius: 'var(--radius)' }}
+        >
+          <span className="text-base shrink-0 mt-0.5">💾</span>
+          <p className="text-[11px] leading-relaxed flex-1" style={{ color: 'var(--c-muted)' }}>
+            {rl.backupReminder}
+          </p>
+          <div className="flex flex-col gap-1.5 shrink-0">
+            <button
+              onClick={() => { handleExport(); dismissBackup() }}
+              className="px-2.5 py-1 text-[10px] font-semibold tracking-wide active:opacity-60"
+              style={{ background: 'var(--ca-grad)', color: 'var(--c-btn-fg)' }}
+            >
+              {rl.backupExportBtn}
+            </button>
+            <button
+              onClick={dismissBackup}
+              className="px-2.5 py-1 text-[10px] active:opacity-60"
+              style={{ border: '1px solid var(--ca-15)', color: 'var(--c-dim)' }}
+            >
+              {rl.backupDismiss}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* テキスト検索 */}
       <div className="relative mb-2.5">
