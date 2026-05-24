@@ -61,7 +61,15 @@ export function useRecipes() {
 
   const getRecipe = (id) => recipes.find((r) => r.id === id) ?? null
 
-  return { recipes, addRecipe, updateRecipe, deleteRecipe, getRecipe }
+  const bulkAddRecipes = (incoming) => {
+    setRecipes((prev) => {
+      const existingIds = new Set(prev.map((r) => r.id))
+      const toAdd = incoming.filter((r) => r.id && r.name && !existingIds.has(r.id))
+      return [...toAdd, ...prev]
+    })
+  }
+
+  return { recipes, addRecipe, updateRecipe, deleteRecipe, getRecipe, bulkAddRecipes }
 }
 
 // ---------------------------------------------------------------------------

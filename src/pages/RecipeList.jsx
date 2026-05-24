@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import jsQR from 'jsqr'
 import { useNavigate } from 'react-router-dom'
-import { Search, Trash2, PlusCircle, Pencil, X, ChevronDown, Plus, Check, Download, Copy, Send, QrCode, Camera } from 'lucide-react'
+import { Search, Trash2, PlusCircle, Pencil, X, ChevronDown, Plus, Check, Download, Upload, Copy, Send, QrCode, Camera, FileText } from 'lucide-react'
 import { useRecipes, useFlavors } from '../hooks/useStorage'
 import { encodeRecipe, decodeRecipe } from '../utils/shareCode'
 import QRCodeLib from 'qrcode'
@@ -9,7 +9,7 @@ import { SLICE_COLORS } from '../constants/colors'
 import { useLang } from '../contexts/LangContext'
 
 export default function RecipeList() {
-  const { recipes, deleteRecipe, addRecipe } = useRecipes()
+  const { recipes, deleteRecipe, addRecipe, bulkAddRecipes } = useRecipes()
   const { getFlavor, brands, flavors: allFlavors, addBrand, addFlavor } = useFlavors()
   const navigate = useNavigate()
   const { t } = useLang()
@@ -20,11 +20,14 @@ export default function RecipeList() {
 
   // ── インポートモーダル ──────────────────────────────────────
   const [importOpen, setImportOpen] = useState(false)
-  const [importTab, setImportTab] = useState('code') // 'code' | 'qr'
+  const [importTab, setImportTab] = useState('code') // 'code' | 'qr' | 'json'
   const [importCode, setImportCode] = useState('')
   const [importPreview, setImportPreview] = useState(null)
   const [importError, setImportError] = useState('')
   const [importDone, setImportDone] = useState(false)
+  const [jsonPreview, setJsonPreview] = useState(null) // { toAdd, skipped }
+  const [jsonDone, setJsonDone] = useState(false)
+  const jsonFileRef = useRef(null)
 
   const handlePreview = (code) => {
     const target = code ?? importCode
@@ -57,6 +60,55 @@ export default function RecipeList() {
     }, 1200)
   }
 
+  // ── エクスポート ──────────────────────────────────────────
+  const handleExport = () => {
+    const data = {
+      meta: { version: '1.0', exportedAt: new Date().toISOString(), totalRecipes: recipes.length },
+      recipes,
+    }
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `shisha-mix-backup-${new Date().toISOString().slice(0, 10)}.json`
+    a.click()
+    URL.revokeObjectURL(a.href)
+  }
+
+  // ── JSONファイルインポート ─────────────────────────────────
+  const handleJsonFile = (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setImportError('')
+    setJsonPreview(null)
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      try {
+        const parsed = JSON.parse(ev.target.result)
+        const list = Array.isArray(parsed) ? parsed : parsed.recipes
+        if (!Array.isArray(list)) throw new Error('レシピデータが見つかりません')
+        const existingIds = new Set(recipes.map((r) => r.id))
+        const toAdd = list.filter((r) => r.id && r.name && !existingIds.has(r.id))
+        const skipped = list.length - toAdd.length
+        setJsonPreview({ toAdd, skipped })
+      } catch (err) {
+        setImportError('読み込みに失敗しました: ' + err.message)
+      }
+    }
+    reader.readAsText(file)
+  }
+
+  const handleJsonImport = () => {
+    if (!jsonPreview?.toAdd.length) return
+    bulkAddRecipes(jsonPreview.toAdd)
+    setJsonDone(true)
+    setTimeout(() => {
+      setImportOpen(false)
+      setJsonPreview(null)
+      setJsonDone(false)
+      if (jsonFileRef.current) jsonFileRef.current.value = ''
+    }, 1200)
+  }
+
   const closeImport = () => {
     setImportOpen(false)
     setImportTab('code')
@@ -64,6 +116,9 @@ export default function RecipeList() {
     setImportPreview(null)
     setImportError('')
     setImportDone(false)
+    setJsonPreview(null)
+    setJsonDone(false)
+    if (jsonFileRef.current) jsonFileRef.current.value = ''
   }
 
   // ── テキスト検索 ──────────────────────────────────────────
@@ -138,17 +193,24 @@ export default function RecipeList() {
             {rl.title}
           </h2>
         </div>
-        <button
-          onClick={() => setImportOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-2.5 text-xs tracking-wide active:opacity-60 transition-opacity"
-          style={{
-            border: '1px solid var(--ca-25)',
-            color: 'var(--c-accent)',
-          }}
-        >
-          <Download size={12} />
-          {rl.importBtn}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExport}
+            className="flex items-center gap-1.5 px-3 py-2.5 text-xs tracking-wide active:opacity-60 transition-opacity"
+            style={{ border: '1px solid var(--ca-25)', color: 'var(--c-accent)' }}
+          >
+            <Upload size={12} />
+            {rl.exportBtn}
+          </button>
+          <button
+            onClick={() => setImportOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-2.5 text-xs tracking-wide active:opacity-60 transition-opacity"
+            style={{ border: '1px solid var(--ca-25)', color: 'var(--c-accent)' }}
+          >
+            <Download size={12} />
+            {rl.importBtn}
+          </button>
+        </div>
       </div>
 
       {/* テキスト検索 */}
@@ -308,10 +370,10 @@ export default function RecipeList() {
 
             {/* タブ切り替え */}
             <div className="flex mb-4" style={{ border: '1px solid var(--ca-15)' }}>
-              {[{ id: 'code', icon: Copy, label: rl.codeTab }, { id: 'qr', icon: Camera, label: rl.qrTab }].map(({ id, icon: Icon, label }) => (
+              {[{ id: 'code', icon: Copy, label: rl.codeTab }, { id: 'qr', icon: Camera, label: rl.qrTab }, { id: 'json', icon: FileText, label: rl.jsonTab }].map(({ id, icon: Icon, label }) => (
                 <button
                   key={id}
-                  onClick={() => { setImportTab(id); setImportPreview(null); setImportError('') }}
+                  onClick={() => { setImportTab(id); setImportPreview(null); setImportError(''); setJsonPreview(null); setJsonDone(false) }}
                   className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs transition-colors"
                   style={{
                     background: importTab === id ? 'var(--ca-15)' : 'transparent',
@@ -342,7 +404,7 @@ export default function RecipeList() {
                   onBlur={(e) => { e.target.style.borderColor = 'var(--ca-15)' }}
                 />
               </>
-            ) : (
+            ) : importTab === 'qr' ? (
               !importPreview && (
                 <QrScanner
                   onResult={(code) => {
@@ -353,6 +415,39 @@ export default function RecipeList() {
                   onError={(msg) => setImportError(msg)}
                 />
               )
+            ) : (
+              /* JSONファイルタブ */
+              <div>
+                <p className="text-xs mb-3" style={{ color: 'var(--c-muted)' }}>{rl.jsonHint}</p>
+                <input
+                  ref={jsonFileRef}
+                  type="file"
+                  accept=".json,application/json"
+                  onChange={handleJsonFile}
+                  className="hidden"
+                  id="json-file-input"
+                />
+                <label
+                  htmlFor="json-file-input"
+                  className="flex items-center justify-center gap-2 w-full py-3 text-xs tracking-wide cursor-pointer active:opacity-60 transition-opacity"
+                  style={{ border: '1px dashed var(--ca-30)', color: 'var(--c-accent)' }}
+                >
+                  <FileText size={13} />
+                  {rl.jsonSelectBtn}
+                </label>
+                {jsonPreview && (
+                  <div className="mt-3 p-3 space-y-1" style={{ background: 'var(--c-surf-3)', border: '1px solid var(--ca-12)', borderRadius: 'var(--radius)' }}>
+                    <p className="text-xs font-medium" style={{ color: 'var(--c-accent)' }}>
+                      {rl.jsonPreviewAdd(jsonPreview.toAdd.length)}
+                    </p>
+                    {jsonPreview.skipped > 0 && (
+                      <p className="text-xs" style={{ color: 'var(--c-muted)' }}>
+                        {rl.jsonPreviewSkip(jsonPreview.skipped)}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
             )}
 
             {importError && (
@@ -386,7 +481,24 @@ export default function RecipeList() {
 
             {/* ボタン */}
             <div className="flex gap-2 mt-4">
-              {importTab === 'code' && !importPreview ? (
+              {importTab === 'json' ? (
+                jsonPreview?.toAdd.length > 0 ? (
+                  <button
+                    onClick={handleJsonImport}
+                    className="flex-1 py-3 text-sm font-semibold tracking-wide transition-all"
+                    style={{
+                      background: jsonDone ? '#2a4a2a' : 'var(--ca-grad)',
+                      color: jsonDone ? '#7ec8a0' : 'var(--c-btn-fg)',
+                    }}
+                  >
+                    {jsonDone ? rl.jsonDoneMsg : rl.jsonAddBtn}
+                  </button>
+                ) : jsonPreview ? (
+                  <p className="flex-1 text-center text-xs py-3" style={{ color: 'var(--c-muted)' }}>
+                    {rl.jsonNoNew}
+                  </p>
+                ) : null
+              ) : importTab === 'code' && !importPreview ? (
                 <button
                   onClick={() => handlePreview()}
                   disabled={!importCode.trim()}
