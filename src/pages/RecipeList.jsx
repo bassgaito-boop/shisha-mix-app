@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Trash2, PlusCircle, Pencil, X, ChevronDown, Plus, Check, Download, Upload, Copy, CopyPlus, Send, QrCode, Camera, FileText } from 'lucide-react'
+import { Search, Trash2, PlusCircle, Pencil, X, ChevronDown, Check, Download, Upload, Copy, CopyPlus, Send, QrCode, Camera, FileText } from 'lucide-react'
 import { useRecipes, useFlavors } from '../hooks/useStorage'
 import { encodeRecipe, decodeRecipe } from '../utils/shareCode'
 import { SLICE_COLORS } from '../constants/colors'
@@ -22,17 +22,14 @@ export default function RecipeList() {
     [rl]
   )
 
-  // ── QRモーダル ────────────────────────────────────────────
-  const [qrRecipe, setQrRecipe] = useState(null)
-
   // ── インポートモーダル ──────────────────────────────────────
   const [importOpen, setImportOpen] = useState(false)
-  const [importTab, setImportTab] = useState('code') // 'code' | 'qr' | 'json'
+  const [importTab, setImportTab] = useState('code')
   const [importCode, setImportCode] = useState('')
   const [importPreview, setImportPreview] = useState(null)
   const [importError, setImportError] = useState('')
   const [importDone, setImportDone] = useState(false)
-  const [jsonPreview, setJsonPreview] = useState(null) // { toAdd, skipped }
+  const [jsonPreview, setJsonPreview] = useState(null)
   const [jsonDone, setJsonDone] = useState(false)
   const jsonFileRef = useRef(null)
 
@@ -135,31 +132,19 @@ export default function RecipeList() {
   // ── テキスト検索 ──────────────────────────────────────────
   const [query, setQuery] = useState('')
 
-  // ── フィルター行（初期1行、ADD FILTERで追加）─────────────
-  const [filterRows, setFilterRows] = useState([{ id: 0, brandId: '', flavorId: '' }])
+  // ── フィルター（ブランド・フレーバー・タグ）──────────────
+  const [filterBrandId, setFilterBrandId] = useState('')
+  const [filterFlavorId, setFilterFlavorId] = useState('')
+  const [filterTag, setFilterTag] = useState('')
 
-  const addFilterRow = () =>
-    setFilterRows((prev) => [...prev, { id: Date.now(), brandId: '', flavorId: '' }])
-
-  const updateRow = (id, field, val) =>
-    setFilterRows((prev) =>
-      prev.map((r) =>
-        r.id === id
-          ? { ...r, [field]: val, ...(field === 'brandId' ? { flavorId: '' } : {}) }
-          : r
-      )
-    )
-
-  const removeRow = (id) => {
-    setFilterRows((prev) => {
-      if (prev.length === 1) return [{ id: 0, brandId: '', flavorId: '' }]
-      return prev.filter((r) => r.id !== id)
-    })
+  const clearAll = () => {
+    setQuery('')
+    setFilterBrandId('')
+    setFilterFlavorId('')
+    setFilterTag('')
   }
 
-  const clearAll = () => { setQuery(''); setFilterRows([{ id: 0, brandId: '', flavorId: '' }]) }
-
-  const hasFilters = !!query || filterRows.some((r) => r.brandId || r.flavorId)
+  const hasFilters = !!query || !!filterBrandId || !!filterFlavorId || !!filterTag
 
   // レシピで実際に使われているブランド・フレーバーのみ
   const { usedBrands, usedFlavors } = useMemo(() => {
@@ -170,6 +155,19 @@ export default function RecipeList() {
       usedFlavors: allFlavors.filter((f) => usedFlavorIds.has(f.id)),
     }
   }, [recipes, brands, allFlavors])
+
+  // 全レシピタグ（タグフィルター用）
+  const allRecipeTags = useMemo(() => {
+    const tagSet = new Set()
+    recipes.forEach((r) => (r.tags ?? []).forEach((t) => tagSet.add(t)))
+    return [...tagSet].sort()
+  }, [recipes])
+
+  // ブランド選択後のフレーバー候補
+  const filterFlavors = useMemo(
+    () => usedFlavors.filter((f) => !filterBrandId || f.brandId === filterBrandId),
+    [usedFlavors, filterBrandId]
+  )
 
   // ── フィルタリング・ソートロジック ────────────────────────
   const filtered = useMemo(() => {
@@ -184,10 +182,9 @@ export default function RecipeList() {
         })
         if (!nameMatch && !flavorMatch) return false
       }
-      for (const row of filterRows) {
-        if (row.brandId  && !r.flavors?.some((item) => item.brandId  === row.brandId))  return false
-        if (row.flavorId && !r.flavors?.some((item) => item.flavorId === row.flavorId)) return false
-      }
+      if (filterBrandId && !r.flavors?.some((item) => item.brandId === filterBrandId)) return false
+      if (filterFlavorId && !r.flavors?.some((item) => item.flavorId === filterFlavorId)) return false
+      if (filterTag && !(r.tags ?? []).includes(filterTag)) return false
       if (stockOnly) {
         const canMake = r.flavors?.every((item) => {
           const fl = allFlavors.find((f) => f.id === item.flavorId)
@@ -203,7 +200,7 @@ export default function RecipeList() {
       return new Date(b.createdAt) - new Date(a.createdAt)
     })
     return result
-  }, [recipes, query, filterRows, getFlavor, brands, allFlavors, stockOnly, sortBy])
+  }, [recipes, query, filterBrandId, filterFlavorId, filterTag, getFlavor, brands, allFlavors, stockOnly, sortBy])
 
   return (
     <div className="px-5 pt-14 pb-4">
@@ -256,67 +253,96 @@ export default function RecipeList() {
         />
       </div>
 
-      {/* フィルター行群 */}
-      <div className="space-y-2 mb-3">
-        {filterRows.map((row) => {
-          const rowFlavors = usedFlavors.filter((f) => !row.brandId || f.brandId === row.brandId)
-          return (
-            <div key={row.id} className="flex items-center gap-2">
-              {/* ブランド */}
-              <FilterSelect
-                value={row.brandId}
-                onChange={(v) => updateRow(row.id, 'brandId', v)}
-                placeholder={rl.brandPlaceholder}
-                options={usedBrands.map((b) => ({ value: b.id, label: b.name }))}
-              />
-              {/* フレーバー */}
-              <FilterSelect
-                value={row.flavorId}
-                onChange={(v) => updateRow(row.id, 'flavorId', v)}
-                placeholder={rl.flavorPlaceholder}
-              >
-                {!row.brandId
-                  ? usedBrands.map((brand) => {
-                      const bf = rowFlavors.filter((f) => f.brandId === brand.id)
-                      return bf.length > 0 ? (
-                        <optgroup key={brand.id} label={brand.name} style={{ background: 'var(--c-surf)', color: 'var(--c-accent)' }}>
-                          {bf.map((f) => (
-                            <option key={f.id} value={f.id} style={{ background: 'var(--c-surf)', color: 'var(--c-text)' }}>{f.name}</option>
-                          ))}
-                        </optgroup>
-                      ) : null
-                    })
-                  : rowFlavors.map((f) => (
+      {/* ブランド・フレーバーフィルター（1行） */}
+      <div className="flex items-center gap-2 mb-2.5">
+        <FilterSelect
+          value={filterBrandId}
+          onChange={(v) => { setFilterBrandId(v); setFilterFlavorId('') }}
+          placeholder={rl.brandPlaceholder}
+          options={usedBrands.map((b) => ({ value: b.id, label: b.name }))}
+        />
+        <FilterSelect
+          value={filterFlavorId}
+          onChange={(v) => setFilterFlavorId(v)}
+          placeholder={rl.flavorPlaceholder}
+        >
+          {!filterBrandId
+            ? usedBrands.map((brand) => {
+                const bf = filterFlavors.filter((f) => f.brandId === brand.id)
+                return bf.length > 0 ? (
+                  <optgroup key={brand.id} label={brand.name} style={{ background: 'var(--c-surf)', color: 'var(--c-accent)' }}>
+                    {bf.map((f) => (
                       <option key={f.id} value={f.id} style={{ background: 'var(--c-surf)', color: 'var(--c-text)' }}>{f.name}</option>
                     ))}
-              </FilterSelect>
-              {/* 行クリア／削除 */}
-              <button
-                onClick={() => removeRow(row.id)}
-                className="w-8 h-9 shrink-0 flex items-center justify-center transition-colors active:text-red-500"
-                style={{ color: 'var(--c-dim)' }}
-              >
-                <X size={14} />
-              </button>
-            </div>
-          )
-        })}
+                  </optgroup>
+                ) : null
+              })
+            : filterFlavors.map((f) => (
+                <option key={f.id} value={f.id} style={{ background: 'var(--c-surf)', color: 'var(--c-text)' }}>{f.name}</option>
+              ))}
+        </FilterSelect>
+        {(filterBrandId || filterFlavorId) && (
+          <button
+            onClick={() => { setFilterBrandId(''); setFilterFlavorId('') }}
+            className="w-8 h-9 shrink-0 flex items-center justify-center transition-colors active:text-red-500"
+            style={{ color: 'var(--c-dim)' }}
+          >
+            <X size={14} />
+          </button>
+        )}
       </div>
+
+      {/* タグフィルター */}
+      {allRecipeTags.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mb-3">
+          {allRecipeTags.map((tag) => (
+            <button
+              key={tag}
+              onClick={() => setFilterTag(filterTag === tag ? '' : tag)}
+              className="px-2.5 py-1 text-[10px] border transition-colors"
+              style={{
+                background: filterTag === tag ? 'var(--ca-15)' : 'transparent',
+                borderColor: filterTag === tag ? 'var(--c-accent)' : 'var(--ca-20)',
+                color: filterTag === tag ? 'var(--c-accent)' : 'var(--c-muted)',
+                borderRadius: 'var(--radius)',
+              }}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* 並べ替え・在庫フィルター */}
       <div className="flex items-center justify-between mb-3">
-        <button
-          onClick={() => setStockOnly((v) => !v)}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs transition-colors"
-          style={{
-            border: `1px solid ${stockOnly ? 'var(--c-accent)' : 'var(--ca-20)'}`,
-            background: stockOnly ? 'var(--ca-10)' : 'transparent',
-            color: stockOnly ? 'var(--c-accent)' : 'var(--c-muted)',
-          }}
-        >
-          <div className="w-1.5 h-1.5 rounded-full" style={{ background: stockOnly ? 'var(--c-accent)' : 'var(--c-dim)' }} />
-          {rl.stockFilter}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setStockOnly((v) => !v)}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs transition-colors"
+            style={{
+              border: `1px solid ${stockOnly ? 'var(--c-accent)' : 'var(--ca-20)'}`,
+              background: stockOnly ? 'var(--ca-10)' : 'transparent',
+              color: stockOnly ? 'var(--c-accent)' : 'var(--c-muted)',
+            }}
+          >
+            <div className="w-1.5 h-1.5 rounded-full" style={{ background: stockOnly ? 'var(--c-accent)' : 'var(--c-dim)' }} />
+            {rl.stockFilter}
+          </button>
+          {hasFilters && (
+            <button
+              onClick={clearAll}
+              className="flex items-center gap-1 px-2.5 py-1.5 text-xs active:opacity-60 transition-opacity"
+              style={{
+                background: 'var(--c-surf)',
+                border: '1px solid var(--ca-15)',
+                color: 'var(--c-muted)',
+              }}
+            >
+              <X size={11} />
+              {rl.clear}
+            </button>
+          )}
+        </div>
         <div className="relative">
           <select
             value={sortBy}
@@ -334,35 +360,6 @@ export default function RecipeList() {
           </select>
           <ChevronDown size={11} className="absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--c-dim)' }} />
         </div>
-      </div>
-
-      {/* ADD FILTER / 全クリア */}
-      <div className="flex items-center gap-2 mb-5">
-        <button
-          onClick={addFilterRow}
-          className="flex items-center gap-1.5 px-3 py-2 border-dashed border text-xs tracking-wide active:opacity-60 transition-opacity"
-          style={{
-            borderColor: 'var(--ca-25)',
-            color: 'var(--c-accent)',
-          }}
-        >
-          <Plus size={11} strokeWidth={2.5} />
-          {rl.addFilter}
-        </button>
-        {hasFilters && (
-          <button
-            onClick={clearAll}
-            className="flex items-center gap-1 px-3 py-2 text-xs active:opacity-60 transition-opacity"
-            style={{
-              background: 'var(--c-surf)',
-              border: '1px solid var(--ca-15)',
-              color: 'var(--c-muted)',
-            }}
-          >
-            <X size={11} />
-            {rl.clear}
-          </button>
-        )}
       </div>
 
       {/* 件数バッジ（絞り込み中のみ） */}
@@ -399,7 +396,6 @@ export default function RecipeList() {
               brands={brands}
               onDelete={deleteRecipe}
               onDuplicate={duplicateRecipe}
-              onQr={setQrRecipe}
             />
           ))}
         </div>
@@ -418,7 +414,6 @@ export default function RecipeList() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* ヘッダー */}
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-medium text-sm tracking-wide" style={{ color: 'var(--c-text)' }}>{rl.importTitle}</h3>
               <button onClick={closeImport} className="transition-colors" style={{ color: 'var(--c-muted)' }}>
@@ -426,7 +421,6 @@ export default function RecipeList() {
               </button>
             </div>
 
-            {/* タブ切り替え */}
             <div className="flex mb-4" style={{ border: '1px solid var(--ca-15)' }}>
               {importTabs.map(({ id, icon: Icon, label }) => (
                 <button
@@ -474,7 +468,6 @@ export default function RecipeList() {
                 />
               )
             ) : (
-              /* JSONファイルタブ */
               <div>
                 <p className="text-xs mb-3" style={{ color: 'var(--c-muted)' }}>{rl.jsonHint}</p>
                 <input
@@ -512,7 +505,6 @@ export default function RecipeList() {
               <p className="text-red-400 text-xs mt-2">{importError}</p>
             )}
 
-            {/* プレビュー */}
             {importPreview && (
               <div
                 className="mt-3 p-3"
@@ -524,7 +516,7 @@ export default function RecipeList() {
               >
                 <p className="text-xs tracking-wide mb-2" style={{ color: 'var(--c-accent)' }}>{importPreview.n}</p>
                 <div className="space-y-1 mb-2">
-                  {importPreview.f.map((item) => (
+                  {importPreview.f.map((item, i) => (
                     <div key={item.fl + item.b} className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: SLICE_COLORS[i % SLICE_COLORS.length] }} />
                       <p className="text-xs flex-1 truncate" style={{ color: 'var(--c-text)' }}>
@@ -537,7 +529,6 @@ export default function RecipeList() {
               </div>
             )}
 
-            {/* ボタン */}
             <div className="flex gap-2 mt-4">
               {importTab === 'json' ? (
                 jsonPreview?.toAdd.length > 0 ? (
@@ -578,31 +569,6 @@ export default function RecipeList() {
                 </button>
               ) : null}
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* QRコードモーダル */}
-      {qrRecipe && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-5" onClick={() => setQrRecipe(null)}>
-          <div className="absolute inset-0 bg-black/70" />
-          <div
-            className="relative p-6 flex flex-col items-center gap-4 w-full max-w-[300px]"
-            style={{
-              background: 'var(--c-surf)',
-              border: '1px solid var(--ca-20)',
-              borderRadius: 'var(--radius)',
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between w-full">
-              <p className="text-sm font-medium truncate flex-1 mr-2" style={{ color: 'var(--c-text)' }}>{qrRecipe.name}</p>
-              <button onClick={() => setQrRecipe(null)} className="shrink-0" style={{ color: 'var(--c-muted)' }}>
-                <X size={16} />
-              </button>
-            </div>
-            <QrCanvas value={encodeRecipe(qrRecipe, getFlavor, brands)} />
-            <p className="text-xs text-center whitespace-pre-line" style={{ color: 'var(--c-muted)' }}>{rl.qrScreenshotHint}</p>
           </div>
         </div>
       )}
@@ -772,14 +738,16 @@ function buildXPostText(recipe, getFlavor, brands) {
   return lines.join('\n')
 }
 
-function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onQr }) {
+function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate }) {
   const navigate = useNavigate()
   const { t } = useLang()
   const rl = t.recipeList
-  const [shared, setShared] = useState(false)
+  const [shareOpen, setShareOpen] = useState(false)
+  const [qrOpen, setQrOpen] = useState(false)
   const [codeCopied, setCodeCopied] = useState(false)
   const [duplicated, setDuplicated] = useState(false)
   const [noteOpen, setNoteOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
 
   const handleDuplicate = (e) => {
     e.stopPropagation()
@@ -788,15 +756,22 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onQr }) 
     setTimeout(() => setDuplicated(false), 1500)
   }
 
-  const handleDelete = (e) => {
-    e.stopPropagation()
-    if (confirm(rl.deleteConfirm(recipe.name))) {
-      onDelete(recipe.id)
-    }
+  const handleDelete = () => {
+    onDelete(recipe.id)
+    setDeleteOpen(false)
   }
 
-  const handleShare = async (e) => {
-    e.stopPropagation()
+  const handleCopyCode = async () => {
+    const code = encodeRecipe(recipe, getFlavor, brands)
+    await navigator.clipboard.writeText(code)
+    setCodeCopied(true)
+    setTimeout(() => {
+      setCodeCopied(false)
+      setShareOpen(false)
+    }, 1500)
+  }
+
+  const handleShareImg = async () => {
     const text = buildXPostText(recipe, getFlavor, brands)
     try {
       const blob = await generateShareCard(recipe, getFlavor, brands, rl.scanToImport)
@@ -813,24 +788,16 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onQr }) 
         a.click()
         URL.revokeObjectURL(a.href)
       }
-      setShared(true)
-      setTimeout(() => setShared(false), 2000)
+      setShareOpen(false)
     } catch {
       // キャンセル時は何もしない
     }
   }
 
-  const handleCopyCode = async (e) => {
-    e.stopPropagation()
-    const code = encodeRecipe(recipe, getFlavor, brands)
-    await navigator.clipboard.writeText(code)
-    setCodeCopied(true)
-    setTimeout(() => setCodeCopied(false), 2000)
-  }
-
   const totalGrams =
     recipe.totalGrams ?? recipe.flavors?.reduce((s, f) => s + (f.grams || 0), 0) ?? 0
   const note = recipe.tastingNote || recipe.memo || ''
+  const tags = recipe.tags ?? []
 
   return (
     <div
@@ -846,31 +813,15 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onQr }) 
         {recipe.name}
       </h3>
 
-      {/* アイコン行 */}
+      {/* アイコン行（4つ） */}
       <div className="flex items-center gap-0 mb-3" style={{ marginLeft: '-6px' }}>
         <button
-          onClick={(e) => { e.stopPropagation(); onQr(recipe) }}
+          onClick={(e) => { e.stopPropagation(); setShareOpen(true) }}
           className="p-1.5 transition-colors"
           style={{ color: 'var(--c-muted)' }}
-          title={rl.qrTooltip}
+          title={rl.shareBtn}
         >
-          <QrCode size={14} />
-        </button>
-        <button
-          onClick={handleCopyCode}
-          className="p-1.5 transition-colors"
-          style={{ color: 'var(--c-muted)' }}
-          title={rl.copyCodeTooltip}
-        >
-          {codeCopied ? <Check size={14} style={{ color: 'var(--c-accent)' }} /> : <Copy size={14} />}
-        </button>
-        <button
-          onClick={handleShare}
-          className="p-1.5 transition-colors"
-          style={{ color: 'var(--c-muted)' }}
-          title={rl.xPostTooltip}
-        >
-          {shared ? <Check size={14} style={{ color: 'var(--c-accent)' }} /> : <Send size={14} />}
+          <Send size={14} />
         </button>
         <button
           onClick={handleDuplicate}
@@ -888,7 +839,7 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onQr }) 
           <Pencil size={14} />
         </button>
         <button
-          onClick={handleDelete}
+          onClick={(e) => { e.stopPropagation(); setDeleteOpen(true) }}
           className="p-1.5 transition-colors active:text-red-500"
           style={{ color: 'var(--c-dim)' }}
         >
@@ -923,6 +874,25 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onQr }) 
         </div>
       )}
 
+      {/* タグ */}
+      {tags.length > 0 && (
+        <div className="flex flex-wrap gap-1 mt-2.5">
+          {tags.map((tag) => (
+            <span
+              key={tag}
+              className="px-2 py-0.5 text-[9px]"
+              style={{
+                border: '1px solid var(--ca-20)',
+                color: 'var(--c-muted)',
+                borderRadius: 'var(--radius)',
+              }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+
       {/* テイスティングノート（折り畳み） */}
       {note && (
         <div className="mt-3 pt-3" style={{ borderTop: '1px solid var(--ca-08)' }}>
@@ -946,6 +916,132 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onQr }) 
               {note}
             </p>
           )}
+        </div>
+      )}
+
+      {/* 共有ボトムシート */}
+      {shareOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center"
+          onClick={() => setShareOpen(false)}
+        >
+          <div className="absolute inset-0 bg-black/70" />
+          <div
+            className="relative w-full max-w-[430px] pb-8 pt-5 px-5"
+            style={{
+              background: 'var(--c-surf)',
+              border: '1px solid var(--ca-20)',
+              borderRadius: 'var(--radius)',
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <p className="text-xs tracking-widest uppercase mb-0.5" style={{ color: 'var(--c-accent)' }}>{rl.shareBtn}</p>
+                <p className="text-sm font-medium truncate" style={{ color: 'var(--c-text)', maxWidth: '260px' }}>{recipe.name}</p>
+              </div>
+              <button onClick={() => setShareOpen(false)} style={{ color: 'var(--c-muted)' }}>
+                <X size={18} />
+              </button>
+            </div>
+            <div className="space-y-2">
+              <button
+                onClick={() => { setShareOpen(false); setQrOpen(true) }}
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-left transition-colors active:opacity-70"
+                style={{ background: 'var(--c-surf-2)', border: '1px solid var(--ca-12)', borderRadius: 'var(--radius)' }}
+              >
+                <QrCode size={16} style={{ color: 'var(--c-accent)', flexShrink: 0 }} />
+                <span style={{ color: 'var(--c-text)' }}>{rl.shareQr}</span>
+              </button>
+              <button
+                onClick={handleCopyCode}
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-left transition-colors active:opacity-70"
+                style={{ background: 'var(--c-surf-2)', border: '1px solid var(--ca-12)', borderRadius: 'var(--radius)' }}
+              >
+                {codeCopied
+                  ? <Check size={16} style={{ color: 'var(--c-accent)', flexShrink: 0 }} />
+                  : <Copy size={16} style={{ color: 'var(--c-accent)', flexShrink: 0 }} />}
+                <span style={{ color: 'var(--c-text)' }}>{codeCopied ? rl.shareCopied : rl.shareCopyCode}</span>
+              </button>
+              <button
+                onClick={handleShareImg}
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-left transition-colors active:opacity-70"
+                style={{ background: 'var(--c-surf-2)', border: '1px solid var(--ca-12)', borderRadius: 'var(--radius)' }}
+              >
+                <Send size={16} style={{ color: 'var(--c-accent)', flexShrink: 0 }} />
+                <span style={{ color: 'var(--c-text)' }}>{rl.shareImg}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* QRコードモーダル */}
+      {qrOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-5" onClick={() => setQrOpen(false)}>
+          <div className="absolute inset-0 bg-black/70" />
+          <div
+            className="relative p-6 flex flex-col items-center gap-4 w-full max-w-[300px]"
+            style={{
+              background: 'var(--c-surf)',
+              border: '1px solid var(--ca-20)',
+              borderRadius: 'var(--radius)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between w-full">
+              <p className="text-sm font-medium truncate flex-1 mr-2" style={{ color: 'var(--c-text)' }}>{recipe.name}</p>
+              <button onClick={() => setQrOpen(false)} className="shrink-0" style={{ color: 'var(--c-muted)' }}>
+                <X size={16} />
+              </button>
+            </div>
+            <QrCanvas value={encodeRecipe(recipe, getFlavor, brands)} />
+            <p className="text-xs text-center whitespace-pre-line" style={{ color: 'var(--c-muted)' }}>{rl.qrScreenshotHint}</p>
+          </div>
+        </div>
+      )}
+
+      {/* 削除確認モーダル */}
+      {deleteOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center px-6"
+          onClick={() => setDeleteOpen(false)}
+        >
+          <div className="absolute inset-0 bg-black/70" />
+          <div
+            className="relative w-full max-w-[320px] p-5"
+            style={{
+              background: 'var(--c-surf)',
+              border: '1px solid var(--ca-20)',
+              borderRadius: 'var(--radius)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-sm font-semibold mb-2" style={{ color: 'var(--c-text)' }}>
+              {rl.deleteTitle}
+            </h3>
+            <p className="text-xs mb-5 leading-relaxed" style={{ color: 'var(--c-muted)' }}>
+              {rl.deleteConfirm(recipe.name)}
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setDeleteOpen(false)}
+                className="flex-1 py-2.5 text-sm active:opacity-70"
+                style={{ border: '1px solid var(--ca-20)', color: 'var(--c-muted)' }}
+              >
+                {rl.deleteCancelBtn}
+              </button>
+              <button
+                onClick={handleDelete}
+                className="flex-1 py-2.5 text-sm font-semibold active:opacity-80"
+                style={{ background: '#4a2a2a', color: '#e07070' }}
+              >
+                {rl.deleteOkBtn}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

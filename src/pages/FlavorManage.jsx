@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, X, ChevronDown, ChevronRight } from 'lucide-react'
+import { Plus, X, ChevronDown, ChevronRight, Search } from 'lucide-react'
 import { useFlavors, useTags } from '../hooks/useStorage'
 import { getTags } from '../constants/categories'
 import { useLang } from '../contexts/LangContext'
@@ -14,23 +14,37 @@ export default function FlavorManage() {
 
   const [activeBrandId, setActiveBrandId] = useState(brands[0]?.id ?? '')
   const [showModal, setShowModal] = useState(false)
+  const [flavorSearch, setFlavorSearch] = useState('')
+  const [deleteTarget, setDeleteTarget] = useState(null)
 
-  const sortedBrands  = [...brands].sort((a, b) => a.name.localeCompare(b.name, 'en'))
-  const activeBrand   = brands.find((b) => b.id === activeBrandId)
+  const sortedBrands = [...brands].sort((a, b) => a.name.localeCompare(b.name, 'en'))
+  const activeBrand  = brands.find((b) => b.id === activeBrandId)
+
   const activeFlavors = flavors
-    .filter((f) => f.brandId === activeBrandId)
+    .filter((f) => {
+      if (f.brandId !== activeBrandId) return false
+      if (flavorSearch.trim()) return f.name.toLowerCase().includes(flavorSearch.toLowerCase())
+      return true
+    })
     .sort((a, b) => a.name.localeCompare(b.name, 'en'))
+
+  const totalFlavorsForBrand = flavors.filter((f) => f.brandId === activeBrandId).length
 
   const handleDeleteFlavor = (e, flavor) => {
     e.stopPropagation()
-    if (!confirm(fm.deleteConfirm(flavor.name))) return
-    deleteFlavor(flavor.id)
-    const remaining = flavors.filter((f) => f.brandId === flavor.brandId && f.id !== flavor.id)
+    setDeleteTarget({ id: flavor.id, name: flavor.name, brandId: flavor.brandId })
+  }
+
+  const confirmDelete = () => {
+    if (!deleteTarget) return
+    deleteFlavor(deleteTarget.id)
+    const remaining = flavors.filter((f) => f.brandId === deleteTarget.brandId && f.id !== deleteTarget.id)
     if (remaining.length === 0) {
-      const nextBrand = brands.find((b) => b.id !== flavor.brandId)
-      deleteBrand(flavor.brandId)
+      const nextBrand = brands.find((b) => b.id !== deleteTarget.brandId)
+      deleteBrand(deleteTarget.brandId)
       setActiveBrandId(nextBrand?.id ?? '')
     }
+    setDeleteTarget(null)
   }
 
   return (
@@ -62,10 +76,10 @@ export default function FlavorManage() {
       ) : (
         <>
           {/* ブランドドロップダウン */}
-          <div className="relative mb-5">
+          <div className="relative mb-4">
             <select
               value={activeBrandId}
-              onChange={(e) => setActiveBrandId(e.target.value)}
+              onChange={(e) => { setActiveBrandId(e.target.value); setFlavorSearch('') }}
               className="w-full appearance-none px-4 pr-9 py-3 text-sm outline-none transition-colors"
               style={{
                 background: 'var(--c-surf)',
@@ -86,10 +100,38 @@ export default function FlavorManage() {
 
           {activeBrand && (
             <>
-              <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center gap-2 mb-3">
                 <span className="text-xs" style={{ color: 'var(--c-muted)' }}>
-                  {activeBrand.name} · {activeBrand.origin} · {activeFlavors.length}
+                  {activeBrand.name} · {activeBrand.origin} · {totalFlavorsForBrand}
                 </span>
+              </div>
+
+              {/* フレーバー検索 */}
+              <div className="relative mb-4">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--c-muted)' }} />
+                <input
+                  type="text"
+                  placeholder={fm.flavorSearch}
+                  value={flavorSearch}
+                  onChange={(e) => setFlavorSearch(e.target.value)}
+                  className="w-full pl-9 pr-4 py-2.5 text-xs outline-none transition-colors"
+                  style={{
+                    background: 'var(--c-surf)',
+                    border: '1px solid var(--ca-15)',
+                    color: 'var(--c-text)',
+                  }}
+                  onFocus={(e) => { e.target.style.borderColor = 'var(--ca-40)' }}
+                  onBlur={(e) => { e.target.style.borderColor = 'var(--ca-15)' }}
+                />
+                {flavorSearch && (
+                  <button
+                    onClick={() => setFlavorSearch('')}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2"
+                    style={{ color: 'var(--c-dim)' }}
+                  >
+                    <X size={13} />
+                  </button>
+                )}
               </div>
 
               <div
@@ -98,7 +140,9 @@ export default function FlavorManage() {
               />
 
               {activeFlavors.length === 0 ? (
-                <p className="text-xs text-center py-8" style={{ color: 'var(--c-dim)' }}>{fm.flavorEmpty}</p>
+                <p className="text-xs text-center py-8" style={{ color: 'var(--c-dim)' }}>
+                  {flavorSearch ? `"${flavorSearch}" — 0` : fm.flavorEmpty}
+                </p>
               ) : (
                 <div className="space-y-1">
                   {activeFlavors.map((flavor) => {
@@ -138,15 +182,18 @@ export default function FlavorManage() {
                             </div>
                           )}
                         </div>
+                        {/* 在庫トグル（テキストラベル付き） */}
                         <button
                           onClick={(e) => { e.stopPropagation(); toggleStock(flavor.id) }}
-                          className="shrink-0 p-1 transition-colors"
-                          title={flavor.inStock === false ? fm.stockOff : fm.stockOn}
+                          className="shrink-0 px-2 py-0.5 text-[9px] font-medium transition-colors"
+                          style={{
+                            background: flavor.inStock === false ? 'transparent' : 'var(--ca-10)',
+                            border: `1px solid ${flavor.inStock === false ? 'var(--ca-20)' : 'var(--c-accent)'}`,
+                            color: flavor.inStock === false ? 'var(--c-dim)' : 'var(--c-accent)',
+                            borderRadius: 'var(--radius)',
+                          }}
                         >
-                          <div
-                            className="w-2.5 h-2.5 rounded-full transition-colors"
-                            style={{ background: flavor.inStock === false ? 'var(--c-dim)' : 'var(--c-accent)' }}
-                          />
+                          {flavor.inStock === false ? fm.stockOff : fm.stockOn}
                         </button>
                         <ChevronRight size={13} className="shrink-0" style={{ color: 'var(--c-dim)' }} />
                         <button
@@ -176,6 +223,48 @@ export default function FlavorManage() {
           onClose={() => setShowModal(false)}
           fm={fm}
         />
+      )}
+
+      {/* 削除確認モーダル */}
+      {deleteTarget && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center px-6"
+          onClick={() => setDeleteTarget(null)}
+        >
+          <div className="absolute inset-0 bg-black/70" />
+          <div
+            className="relative w-full max-w-[320px] p-5"
+            style={{
+              background: 'var(--c-surf)',
+              border: '1px solid var(--ca-20)',
+              borderRadius: 'var(--radius)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-sm font-semibold mb-2" style={{ color: 'var(--c-text)' }}>
+              {fm.deleteTitle}
+            </h3>
+            <p className="text-xs mb-5 leading-relaxed" style={{ color: 'var(--c-muted)' }}>
+              {fm.deleteConfirm(deleteTarget.name)}
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setDeleteTarget(null)}
+                className="flex-1 py-2.5 text-sm active:opacity-70"
+                style={{ border: '1px solid var(--ca-20)', color: 'var(--c-muted)' }}
+              >
+                {fm.deleteCancelBtn}
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="flex-1 py-2.5 text-sm font-semibold active:opacity-80"
+                style={{ background: '#4a2a2a', color: '#e07070' }}
+              >
+                {fm.deleteOkBtn}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
