@@ -258,3 +258,24 @@ export function useTags() {
 
   return { tags, addTag, deleteTag }
 }
+
+// ---------------------------------------------------------------------------
+// Recipe Tags (フレーバーカテゴリとは別管理)
+// ---------------------------------------------------------------------------
+
+export function useRecipeTags() {
+  const [recipeTags, setRecipeTags] = useLocalStorage('shisha_recipe_tags', [])
+
+  const addRecipeTag = (name) => {
+    const t = name.trim()
+    if (!t || recipeTags.includes(t)) return t
+    setRecipeTags([...recipeTags, t])
+    return t
+  }
+
+  const deleteRecipeTag = (name) => {
+    setRecipeTags(recipeTags.filter((t) => t !== name))
+  }
+
+  return { recipeTags, addRecipeTag, deleteRecipeTag }
+}

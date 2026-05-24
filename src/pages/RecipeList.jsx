@@ -199,7 +199,6 @@ export default function RecipeList() {
     })
     result = [...result].sort((a, b) => {
       if (sortBy === 'oldest') return new Date(a.createdAt) - new Date(b.createdAt)
-      if (sortBy === 'rating') return (b.rating ?? 0) - (a.rating ?? 0)
       if (sortBy === 'name')   return a.name.localeCompare(b.name, 'ja')
       return new Date(b.createdAt) - new Date(a.createdAt)
     })
@@ -331,7 +330,6 @@ export default function RecipeList() {
           >
             <option value="newest">{rl.sortNewest}</option>
             <option value="oldest">{rl.sortOldest}</option>
-            <option value="rating">{rl.sortRating}</option>
             <option value="name">{rl.sortName}</option>
           </select>
           <ChevronDown size={11} className="absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--c-dim)' }} />

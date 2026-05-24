@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Plus, X, ChevronRight, ChevronLeft, ChevronDown, Search } from 'lucide-react'
-import { useRecipes, useFlavors } from '../hooks/useStorage'
+import { useRecipes, useFlavors, useRecipeTags } from '../hooks/useStorage'
 import { SLICE_COLORS } from '../constants/colors'
 import { CATEGORIES, getTags } from '../constants/categories'
 import { useLang } from '../contexts/LangContext'
@@ -22,6 +22,9 @@ export default function RecipeCreate() {
     existing?.flavors?.length ? existing.flavors : [{ brandId: '', flavorId: '', grams: 5 }]
   )
   const [tastingNote, setTastingNote] = useState(existing?.tastingNote ?? existing?.memo ?? '')
+  const [recipeTags, setRecipeTags] = useState(existing?.tags ?? [])
+  const [tagInput, setTagInput] = useState('')
+  const { recipeTags: allRecipeTags, addRecipeTag } = useRecipeTags()
 
   const [pickerIndex, setPickerIndex] = useState(null)
 
@@ -64,6 +67,16 @@ export default function RecipeCreate() {
 
   const totalGrams = flavorItems.reduce((s, f) => s + (f.grams || 0), 0)
 
+  const commitTag = () => {
+    const t = tagInput.trim()
+    if (!t || recipeTags.includes(t)) { setTagInput(''); return }
+    addRecipeTag(t)
+    setRecipeTags((prev) => [...prev, t])
+    setTagInput('')
+  }
+
+  const removeTag = (tag) => setRecipeTags((prev) => prev.filter((t) => t !== tag))
+
   const handleSave = () => {
     if (!name.trim()) return alert(rc.alertName)
     if (flavorItems.some((f) => !f.flavorId)) return alert(rc.alertFlavors)
@@ -72,13 +85,14 @@ export default function RecipeCreate() {
         name: name.trim(),
         flavors: flavorItems,
         tastingNote: tastingNote.trim(),
+        tags: recipeTags,
       })
     } else {
       addRecipe({
         name: name.trim(),
         flavors: flavorItems,
         tastingNote: tastingNote.trim(),
-        tags: [],
+        tags: recipeTags,
         rating: 0,
         settingId: null,
       })
@@ -230,6 +244,90 @@ export default function RecipeCreate() {
           onFocus={(e) => { e.target.style.borderColor = 'var(--ca-40)' }}
           onBlur={(e) => { e.target.style.borderColor = 'var(--ca-15)' }}
         />
+      </div>
+
+      {/* タグ */}
+      <div className="mb-6">
+        <label className="block text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--c-muted)' }}>
+          {rc.recipeTags}
+        </label>
+        {/* 付けたタグ一覧 */}
+        {recipeTags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-2">
+            {recipeTags.map((tag) => (
+              <span
+                key={tag}
+                className="flex items-center gap-1 px-2.5 py-1 text-xs"
+                style={{
+                  background: 'var(--ca-10)',
+                  border: '1px solid var(--ca-25)',
+                  color: 'var(--c-accent)',
+                }}
+              >
+                {tag}
+                <button onClick={() => removeTag(tag)} className="ml-0.5 active:opacity-60" style={{ color: 'var(--c-muted)' }}>
+                  <X size={10} />
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+        {/* 入力欄 + サジェスト */}
+        <div className="relative">
+          <input
+            type="text"
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); commitTag() } }}
+            placeholder={rc.recipeTagPlaceholder}
+            className="w-full px-4 py-3 text-sm outline-none transition-colors"
+            style={{
+              background: 'var(--c-surf)',
+              border: '1px solid var(--ca-15)',
+              color: 'var(--c-text)',
+            }}
+            onFocus={(e) => { e.target.style.borderColor = 'var(--ca-40)' }}
+            onBlur={(e) => { e.target.style.borderColor = 'var(--ca-15)' }}
+          />
+          {/* 既存タグのサジェスト */}
+          {tagInput.trim() === '' && allRecipeTags.filter((t) => !recipeTags.includes(t)).length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {allRecipeTags.filter((t) => !recipeTags.includes(t)).map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => { addRecipeTag(tag); setRecipeTags((prev) => [...prev, tag]) }}
+                  className="px-2 py-0.5 text-xs active:opacity-60 transition-opacity"
+                  style={{
+                    border: '1px solid var(--ca-15)',
+                    color: 'var(--c-muted)',
+                  }}
+                >
+                  + {tag}
+                </button>
+              ))}
+            </div>
+          )}
+          {/* 入力中のサジェスト */}
+          {tagInput.trim() !== '' && (
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {allRecipeTags
+                .filter((t) => t.toLowerCase().includes(tagInput.toLowerCase()) && !recipeTags.includes(t))
+                .map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={() => { addRecipeTag(tag); setRecipeTags((prev) => [...prev, tag]); setTagInput('') }}
+                    className="px-2 py-0.5 text-xs active:opacity-60 transition-opacity"
+                    style={{
+                      border: '1px solid var(--ca-25)',
+                      color: 'var(--c-accent)',
+                    }}
+                  >
+                    {tag}
+                  </button>
+                ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* 円グラフ */}
