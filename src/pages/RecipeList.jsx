@@ -719,6 +719,7 @@ async function generateShareCard(recipe, getFlavor, brands, scanToImport = 'Scan
   const qrX = W - qrSize - 16
   const qrY = 88
   const qrCanvas = document.createElement('canvas')
+  const { default: QRCodeLib } = await import('qrcode')
   await QRCodeLib.toCanvas(qrCanvas, code, { width: qrSize, margin: 1, color: { dark: '#000000', light: '#ffffff' } })
   ctx.fillStyle = '#ffffff'
   ctx.fillRect(qrX - 4, qrY - 4, qrSize + 8, qrSize + 8)
