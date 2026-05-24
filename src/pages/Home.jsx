@@ -1,9 +1,8 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { PlusCircle, BookOpen, ChevronRight, Library } from 'lucide-react'
 import { useRecipes } from '../hooks/useStorage'
 import { useLang } from '../contexts/LangContext'
-import { useTheme, THEMES } from '../contexts/ThemeContext'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -92,7 +91,7 @@ export default function Home() {
           <Stat value={recipes.length} label={h.stat} />
         </div>
 
-        {/* リーガルリンク + テーマ切り替え + 言語切り替え */}
+        {/* リーガルリンク + 言語切り替え */}
         <div className="mt-6 flex items-center justify-between w-full">
           <Link
             to="/legal"
@@ -101,89 +100,17 @@ export default function Home() {
           >
             {h.legal}
           </Link>
-          <div className="flex items-center gap-2">
-            <ThemeButton />
-            <button
-              onClick={toggleLang}
-              className="px-3 py-1.5 text-xs font-semibold tracking-widest active:opacity-60 transition-opacity flex items-center gap-1"
-              style={{ border: '1px solid var(--ca-40)' }}
-            >
-              <span style={{ color: lang === 'ja' ? 'var(--c-accent)' : 'var(--c-muted)' }}>JP</span>
-              <span style={{ color: 'var(--c-dim)' }}>/</span>
-              <span style={{ color: lang === 'en' ? 'var(--c-accent)' : 'var(--c-muted)' }}>EN</span>
-            </button>
-          </div>
+          <button
+            onClick={toggleLang}
+            className="px-3 py-1.5 text-xs font-semibold tracking-widest active:opacity-60 transition-opacity flex items-center gap-1"
+            style={{ border: '1px solid var(--ca-40)' }}
+          >
+            <span style={{ color: lang === 'ja' ? 'var(--c-accent)' : 'var(--c-muted)' }}>JP</span>
+            <span style={{ color: 'var(--c-dim)' }}>/</span>
+            <span style={{ color: lang === 'en' ? 'var(--c-accent)' : 'var(--c-muted)' }}>EN</span>
+          </button>
         </div>
       </div>
-    </div>
-  )
-}
-
-function ThemeButton() {
-  const { theme, setTheme } = useTheme()
-  const [open, setOpen] = useState(false)
-  const ref = useRef(null)
-  const current = THEMES.find((t) => t.id === theme) ?? THEMES[0]
-
-  useEffect(() => {
-    if (!open) return
-    const handler = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false)
-    }
-    document.addEventListener('pointerdown', handler)
-    return () => document.removeEventListener('pointerdown', handler)
-  }, [open])
-
-  return (
-    <div ref={ref} className="relative">
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="px-3 py-1.5 text-xs font-semibold tracking-widest active:opacity-60 transition-opacity"
-        style={{ border: '1px solid var(--ca-40)', color: 'var(--c-accent)' }}
-      >
-        Theme
-      </button>
-
-      {open && (
-        <div
-          className="absolute bottom-full right-0 mb-2 py-1 flex flex-col z-50"
-          style={{
-            background: 'var(--c-surf-2)',
-            border: '1px solid var(--ca-20)',
-            borderRadius: 8,
-            minWidth: 120,
-            boxShadow: '0 -4px 16px rgba(0,0,0,0.5)',
-          }}
-        >
-          {THEMES.map((t) => {
-            const active = t.id === theme
-            return (
-              <button
-                key={t.id}
-                onClick={() => { setTheme(t.id); setOpen(false) }}
-                className="flex items-center gap-2.5 px-3 py-2 text-xs text-left"
-                style={{
-                  color: active ? 'var(--c-accent)' : 'var(--c-muted)',
-                  background: active ? 'var(--ca-08)' : 'transparent',
-                }}
-              >
-                <span
-                  style={{
-                    display: 'inline-block',
-                    width: 10,
-                    height: 10,
-                    borderRadius: '50%',
-                    background: t.accent,
-                    boxShadow: active ? `0 0 6px ${t.accent}` : 'none',
-                    flexShrink: 0,
-                  }}
-                />
-                {t.label}
-              </button>
-            )
-          })}
-        </div>
-      )}
     </div>
   )
 }
