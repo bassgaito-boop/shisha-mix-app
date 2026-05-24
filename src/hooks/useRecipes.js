@@ -1,7 +1,8 @@
 import { useLocalStorage } from './useLocalStorage'
+import { initialRecipes } from '../data/initialRecipes'
 
 export function useRecipes() {
-  const [recipes, setRecipes] = useLocalStorage('shisha_recipes', [])
+  const [recipes, setRecipes] = useLocalStorage('shisha_recipes', initialRecipes)
 
   const addRecipe = (recipe) => {
     const newRecipe = {

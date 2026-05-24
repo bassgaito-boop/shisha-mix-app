@@ -1,5 +1,6 @@
 import { useLocalStorage } from './useLocalStorage'
 import { initialBrands, initialFlavors } from '../data/initialFlavors'
+import { initialRecipes } from '../data/initialRecipes'
 import { INITIAL_TAGS } from '../constants/categories'
 
 /** @param {import('../data/types').FlavorItem[]} flavors */
@@ -17,7 +18,7 @@ function calcRecipeMeta(flavors) {
 
 /** @returns レシピのCRUD操作 */
 export function useRecipes() {
-  const [recipes, setRecipes] = useLocalStorage('shisha_recipes', [])
+  const [recipes, setRecipes] = useLocalStorage('shisha_recipes', initialRecipes)
 
   /** @param {Omit<import('../data/types').Recipe, 'id'|'totalGrams'|'ratios'|'createdAt'|'updatedAt'>} data */
   const addRecipe = (data) => {
