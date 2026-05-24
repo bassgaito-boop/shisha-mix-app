@@ -35,15 +35,15 @@ export default function AgeGate({ onVerify }) {
 
   if (denied) {
     return (
-      <div className="min-h-svh flex flex-col items-center justify-center px-8" style={{ background: 'var(--c-bg)' }}>
+      <main className="min-h-svh flex flex-col items-center justify-center px-8" style={{ background: 'var(--c-bg)' }}>
         <p className="text-sm tracking-wide text-center leading-relaxed" style={{ color: 'var(--c-sub)' }}>{a.denied}</p>
         <p className="text-xs mt-3 text-center" style={{ color: 'var(--c-muted)' }}>{a.deniedSub}</p>
-      </div>
+      </main>
     )
   }
 
   return (
-    <div
+    <main
       className="min-h-svh flex flex-col items-center justify-center px-8 relative overflow-hidden"
       style={{ background: 'var(--c-bg)' }}
     >
@@ -94,7 +94,7 @@ export default function AgeGate({ onVerify }) {
         </button>
       </div>
       <p className="absolute bottom-8 text-xs tracking-wide" style={{ color: 'var(--c-dim)' }}>{a.footer}</p>
-    </div>
+    </main>
   )
 }
 
@@ -102,6 +102,7 @@ function BirthSelect({ value, onChange, placeholder, options }) {
   return (
     <div className="flex-1 relative">
       <select
+        aria-label={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full appearance-none px-2 py-3 text-xs text-center outline-none transition-colors"

@@ -425,6 +425,7 @@ export default function RecipeList() {
         </div>
         <div className="relative">
           <select
+            aria-label={rl.sortLabel}
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
             className="appearance-none pl-2.5 pr-6 py-1.5 text-xs outline-none"
@@ -662,6 +663,7 @@ function FilterSelect({ value, onChange, placeholder, options, children }) {
   return (
     <div className="relative flex-1 min-w-0">
       <select
+        aria-label={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full appearance-none pl-3 pr-7 py-2.5 text-xs outline-none transition-colors"
