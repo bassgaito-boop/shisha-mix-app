@@ -1,6 +1,6 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { PlusCircle, BookOpen, ChevronRight, Library } from 'lucide-react'
+import { PlusCircle, BookOpen, ChevronRight, Library, X } from 'lucide-react'
 import { useRecipes } from '../hooks/useStorage'
 import { useLang } from '../contexts/LangContext'
 
@@ -9,6 +9,7 @@ export default function Home() {
   const { recipes } = useRecipes()
   const { lang, t, toggleLang } = useLang()
   const h = t.home
+  const [helpOpen, setHelpOpen] = useState(false)
 
   const menuItems = useMemo(() => [
     { label: h.createRecipe, sub: h.createRecipeSub, to: '/recipes/new', Icon: PlusCircle },
@@ -91,7 +92,7 @@ export default function Home() {
           <Stat value={recipes.length} label={h.stat} />
         </div>
 
-        {/* リーガルリンク + 言語切り替え */}
+        {/* リーガルリンク + 使い方 + 言語切り替え */}
         <div className="mt-6 flex items-center justify-between w-full">
           <Link
             to="/legal"
@@ -100,17 +101,73 @@ export default function Home() {
           >
             {h.legal}
           </Link>
-          <button
-            onClick={toggleLang}
-            className="px-3 py-1.5 text-xs font-semibold tracking-widest active:opacity-60 transition-opacity flex items-center gap-1"
-            style={{ border: '1px solid var(--ca-40)' }}
-          >
-            <span style={{ color: lang === 'ja' ? 'var(--c-accent)' : 'var(--c-muted)' }}>JP</span>
-            <span style={{ color: 'var(--c-dim)' }}>/</span>
-            <span style={{ color: lang === 'en' ? 'var(--c-accent)' : 'var(--c-muted)' }}>EN</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setHelpOpen(true)}
+              className="px-3 py-1.5 text-xs font-semibold tracking-widest active:opacity-60 transition-opacity"
+              style={{ border: '1px solid var(--ca-40)', color: 'var(--c-accent)' }}
+            >
+              {h.helpBtn}
+            </button>
+            <button
+              onClick={toggleLang}
+              className="px-3 py-1.5 text-xs font-semibold tracking-widest active:opacity-60 transition-opacity flex items-center gap-1"
+              style={{ border: '1px solid var(--ca-40)' }}
+            >
+              <span style={{ color: lang === 'ja' ? 'var(--c-accent)' : 'var(--c-muted)' }}>JP</span>
+              <span style={{ color: 'var(--c-dim)' }}>/</span>
+              <span style={{ color: lang === 'en' ? 'var(--c-accent)' : 'var(--c-muted)' }}>EN</span>
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* 使い方モーダル */}
+      {helpOpen && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center px-0" onClick={() => setHelpOpen(false)}>
+          <div className="absolute inset-0 bg-black/70" />
+          <div
+            className="relative w-full max-w-[430px] pb-8 pt-5 px-5"
+            style={{
+              background: 'var(--c-surf)',
+              border: '1px solid var(--ca-20)',
+              borderRadius: 'var(--radius)',
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+              maxHeight: '80svh',
+              overflowY: 'auto',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-5">
+              <h3
+                className="text-base font-semibold tracking-widest uppercase"
+                style={{ fontFamily: 'var(--font-display)', color: 'var(--c-accent)' }}
+              >
+                {h.help.title}
+              </h3>
+              <button onClick={() => setHelpOpen(false)} style={{ color: 'var(--c-muted)' }}>
+                <X size={18} />
+              </button>
+            </div>
+            <div className="space-y-4">
+              {h.help.items.map((item) => (
+                <div
+                  key={item.title}
+                  className="flex gap-3 p-3"
+                  style={{ background: 'var(--c-surf-2)', border: '1px solid var(--ca-10)' }}
+                >
+                  <span className="text-xl shrink-0 mt-0.5">{item.icon}</span>
+                  <div>
+                    <p className="text-xs font-semibold tracking-wide mb-1" style={{ color: 'var(--c-text)' }}>{item.title}</p>
+                    <p className="text-xs leading-relaxed" style={{ color: 'var(--c-muted)' }}>{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
