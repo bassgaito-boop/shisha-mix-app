@@ -25,6 +25,14 @@ export const translations = {
       stat: 'Recipes',
       legal: '利用規約・プライバシーポリシー',
       langSwitch: 'English',
+      onboarding: {
+        tips: [
+          { icon: '🎨', text: 'CREATEでフレーバーとグラム数を記録' },
+          { icon: '🏷️', text: 'タグで分類してRecipesで絞り込む' },
+          { icon: '💾', text: 'Exportで定期的にバックアップを保存' },
+        ],
+        dismiss: 'わかった',
+      },
     },
     recipeCreate: {
       newLabel: 'New', editLabel: 'Edit',
@@ -79,6 +87,7 @@ export const translations = {
       importTitle: 'Import Recipe',
       exportBtn: 'Export',
       tagFilterBtn: 'Tags',
+      tagFilterOr: 'いずれかのタグを含むレシピを表示',
       sortLabel: '並べ替え',
       sortNewest: '新しい順', sortOldest: '古い順', sortName: '名前順',
       stockFilter: '手持ちで作れる',
@@ -203,6 +212,14 @@ export const translations = {
       stat: 'Recipes',
       legal: 'Terms & Privacy Policy',
       langSwitch: '日本語',
+      onboarding: {
+        tips: [
+          { icon: '🎨', text: 'Record flavors & grams in CREATE' },
+          { icon: '🏷️', text: 'Tag recipes and filter in Recipes' },
+          { icon: '💾', text: 'Export backups regularly' },
+        ],
+        dismiss: 'Got it',
+      },
     },
     recipeCreate: {
       newLabel: 'New', editLabel: 'Edit',
@@ -257,6 +274,7 @@ export const translations = {
       importTitle: 'Import Recipe',
       exportBtn: 'Export',
       tagFilterBtn: 'Tags',
+      tagFilterOr: 'Showing recipes that match any selected tag',
       sortLabel: 'Sort',
       sortNewest: 'Newest', sortOldest: 'Oldest', sortName: 'A–Z',
       stockFilter: 'Can make now',

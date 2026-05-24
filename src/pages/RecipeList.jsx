@@ -342,6 +342,9 @@ export default function RecipeList() {
                   {tag}
                 </button>
               ))}
+              <p className="w-full text-[10px] mt-1" style={{ color: 'var(--c-dim)' }}>
+                {rl.tagFilterOr}
+              </p>
             </div>
           )}
         </div>

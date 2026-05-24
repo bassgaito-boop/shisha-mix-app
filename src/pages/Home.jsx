@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { PlusCircle, BookOpen, ChevronRight, Library } from 'lucide-react'
 import { useRecipes } from '../hooks/useStorage'
@@ -9,6 +9,12 @@ export default function Home() {
   const { recipes } = useRecipes()
   const { lang, t, toggleLang } = useLang()
   const h = t.home
+
+  const [tipSeen, setTipSeen] = useState(() => !!localStorage.getItem('onboarding_seen'))
+  const dismissTip = () => {
+    localStorage.setItem('onboarding_seen', '1')
+    setTipSeen(true)
+  }
 
   const menuItems = useMemo(() => [
     { label: h.createRecipe, sub: h.createRecipeSub, to: '/recipes/new', Icon: PlusCircle },
@@ -90,6 +96,34 @@ export default function Home() {
         <div className="flex items-center gap-6">
           <Stat value={recipes.length} label={h.stat} />
         </div>
+
+        {/* 初回オンボーディングヒント */}
+        {!tipSeen && (
+          <div
+            className="w-full mt-6 p-4"
+            style={{
+              border: '1px solid var(--ca-15)',
+              background: 'var(--ca-04)',
+              borderRadius: 'var(--radius)',
+            }}
+          >
+            <div className="space-y-2.5 mb-3">
+              {h.onboarding.tips.map(({ icon, text }) => (
+                <div key={text} className="flex items-center gap-2.5">
+                  <span className="text-sm shrink-0">{icon}</span>
+                  <p className="text-[11px] leading-snug" style={{ color: 'var(--c-muted)' }}>{text}</p>
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={dismissTip}
+              className="w-full py-1.5 text-[11px] font-semibold tracking-widest transition-opacity active:opacity-60"
+              style={{ border: '1px solid var(--ca-20)', color: 'var(--c-dim)' }}
+            >
+              {h.onboarding.dismiss}
+            </button>
+          </div>
+        )}
 
         {/* リーガルリンク + 言語切り替え */}
         <div className="mt-6 flex items-center justify-between w-full">
