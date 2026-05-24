@@ -15,6 +15,39 @@ import { INITIAL_TAGS } from '../constants/categories'
   }
 })()
 
+// 既存ユーザーのタグ・フレーバーカテゴリを日本語→英語へ移行
+;(() => {
+  if (typeof window === 'undefined') return
+  if (window.localStorage.getItem('shisha_tags_en_migrated')) return
+  window.localStorage.setItem('shisha_tags_en_migrated', '1')
+  const tagMap = {
+    'フルーツ': 'Fruits', 'ミント': 'Mint', 'お菓子・スイーツ': 'Candy & Sweets',
+    'フローラル': 'Floral', 'ドリンク': 'Drinks', 'ナッツ': 'Nuts',
+    'スパイス': 'Spices', '変わり種': 'Exotic',
+  }
+  const tagsRaw = window.localStorage.getItem('shisha_tags')
+  if (tagsRaw) {
+    try {
+      const tags = JSON.parse(tagsRaw)
+      const migrated = tags.map((t) => tagMap[t] ?? t)
+      window.localStorage.setItem('shisha_tags', JSON.stringify(migrated))
+    } catch {}
+  }
+  const flavorsRaw = window.localStorage.getItem('shisha_flavors')
+  if (flavorsRaw) {
+    try {
+      const flavors = JSON.parse(flavorsRaw)
+      const migrated = flavors.map((f) => ({
+        ...f,
+        category: f.category ? (tagMap[f.category] ?? f.category) : f.category,
+        categories: f.categories ? f.categories.map((c) => tagMap[c] ?? c) : f.categories,
+        tags: f.tags ? f.tags.map((t) => tagMap[t] ?? t) : f.tags,
+      }))
+      window.localStorage.setItem('shisha_flavors', JSON.stringify(migrated))
+    } catch {}
+  }
+})()
+
 /** @param {import('../data/types').FlavorItem[]} flavors */
 function calcRecipeMeta(flavors) {
   const totalGrams = flavors.reduce((sum, f) => sum + (f.grams || 0), 0)

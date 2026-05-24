@@ -13,7 +13,7 @@
         "brandId": "brand-001",
         "name": "Double Apple",
         "nameJa": "ダブルアップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -21,15 +21,15 @@
         "brandId": "brand-001",
         "name": "Grape",
         "nameJa": "グレープ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0003",
         "brandId": "brand-001",
         "name": "Grape with Mint",
-        "nameJa": "グレープミント",
-        "category": "フルーツ",
+        "nameJa": "グレープMint",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -37,7 +37,7 @@
         "brandId": "brand-001",
         "name": "Strawberry",
         "nameJa": "ストロベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -45,7 +45,7 @@
         "brandId": "brand-001",
         "name": "Blueberry",
         "nameJa": "ブルーベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -53,7 +53,7 @@
         "brandId": "brand-001",
         "name": "Watermelon",
         "nameJa": "スイカ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -61,7 +61,7 @@
         "brandId": "brand-001",
         "name": "Peach",
         "nameJa": "ピーチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -69,15 +69,15 @@
         "brandId": "brand-001",
         "name": "Lemon",
         "nameJa": "レモン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0009",
         "brandId": "brand-001",
         "name": "Lemon with Mint",
-        "nameJa": "レモンミント",
-        "category": "フルーツ",
+        "nameJa": "レモンMint",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -85,7 +85,7 @@
         "brandId": "brand-001",
         "name": "Orange",
         "nameJa": "オレンジ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -93,7 +93,7 @@
         "brandId": "brand-001",
         "name": "Mango",
         "nameJa": "マンゴー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -101,7 +101,7 @@
         "brandId": "brand-001",
         "name": "Kiwi",
         "nameJa": "キウイ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -109,7 +109,7 @@
         "brandId": "brand-001",
         "name": "Guava",
         "nameJa": "グアバ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -117,7 +117,7 @@
         "brandId": "brand-001",
         "name": "Melon",
         "nameJa": "メロン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -125,7 +125,7 @@
         "brandId": "brand-001",
         "name": "Pomegranate",
         "nameJa": "ザクロ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -133,7 +133,7 @@
         "brandId": "brand-001",
         "name": "Pineapple",
         "nameJa": "パイナップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -141,23 +141,23 @@
         "brandId": "brand-001",
         "name": "Berry",
         "nameJa": "ベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0018",
         "brandId": "brand-001",
         "name": "Mixed Fruit",
-        "nameJa": "ミックスフルーツ",
-        "category": "フルーツ",
+        "nameJa": "ミックスFruits",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0019",
         "brandId": "brand-001",
         "name": "Mint",
-        "nameJa": "ミント",
-        "category": "ミント",
+        "nameJa": "Mint",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -165,15 +165,15 @@
         "brandId": "brand-001",
         "name": "Fresh",
         "nameJa": "フレッシュ",
-        "category": "ミント",
+        "category": "Mint",
         "isCustom": false
       },
       {
         "id": "f-0021",
         "brandId": "brand-001",
         "name": "Spearmint",
-        "nameJa": "スペアミント",
-        "category": "ミント",
+        "nameJa": "スペアMint",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -181,7 +181,7 @@
         "brandId": "brand-001",
         "name": "Gum",
         "nameJa": "ガム",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -189,7 +189,7 @@
         "brandId": "brand-001",
         "name": "Chocolate",
         "nameJa": "チョコレート",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -197,7 +197,7 @@
         "brandId": "brand-001",
         "name": "Vanilla",
         "nameJa": "バニラ",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -205,7 +205,7 @@
         "brandId": "brand-001",
         "name": "Caramel",
         "nameJa": "キャラメル",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -213,7 +213,7 @@
         "brandId": "brand-001",
         "name": "Rose",
         "nameJa": "ローズ",
-        "category": "フローラル",
+        "category": "Floral",
         "isCustom": false
       },
       {
@@ -221,7 +221,7 @@
         "brandId": "brand-001",
         "name": "Jasmine",
         "nameJa": "ジャスミン",
-        "category": "フローラル",
+        "category": "Floral",
         "isCustom": false
       },
       {
@@ -229,7 +229,7 @@
         "brandId": "brand-001",
         "name": "Cola",
         "nameJa": "コーラ",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -237,7 +237,7 @@
         "brandId": "brand-001",
         "name": "Coffee",
         "nameJa": "コーヒー",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -245,7 +245,7 @@
         "brandId": "brand-001",
         "name": "Magic Love",
         "nameJa": "マジックラブ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -253,31 +253,31 @@
         "brandId": "brand-001",
         "name": "Dream Magic Love",
         "nameJa": "ドリームマジックラブ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
         "id": "f-0032",
         "brandId": "brand-001",
         "name": "Two Apples with Mint",
-        "nameJa": "ツーアップルミント",
-        "category": "フルーツ",
+        "nameJa": "ツーアップルMint",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0033",
         "brandId": "brand-001",
         "name": "Watermelon with Mint",
-        "nameJa": "スイカミント",
-        "category": "フルーツ",
+        "nameJa": "スイカMint",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0034",
         "brandId": "brand-001",
         "name": "Mango with Mint",
-        "nameJa": "マンゴーミント",
-        "category": "フルーツ",
+        "nameJa": "マンゴーMint",
+        "category": "Fruits",
         "isCustom": false
       }
     ]
@@ -296,7 +296,7 @@
         "brandId": "brand-002",
         "name": "Two Apple",
         "nameJa": "ツーアップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -304,7 +304,7 @@
         "brandId": "brand-002",
         "name": "Magic Smoke",
         "nameJa": "マジックスモーク",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -312,7 +312,7 @@
         "brandId": "brand-002",
         "name": "Lemon",
         "nameJa": "レモン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -320,7 +320,7 @@
         "brandId": "brand-002",
         "name": "Peach",
         "nameJa": "ピーチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -328,7 +328,7 @@
         "brandId": "brand-002",
         "name": "Mango",
         "nameJa": "マンゴー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -336,7 +336,7 @@
         "brandId": "brand-002",
         "name": "Kiwi",
         "nameJa": "キウイ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -344,7 +344,7 @@
         "brandId": "brand-002",
         "name": "Orange",
         "nameJa": "オレンジ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -352,15 +352,15 @@
         "brandId": "brand-002",
         "name": "Pineapple",
         "nameJa": "パイナップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0043",
         "brandId": "brand-002",
         "name": "Dragon Fruit",
-        "nameJa": "ドラゴンフルーツ",
-        "category": "フルーツ",
+        "nameJa": "ドラゴンFruits",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -368,7 +368,7 @@
         "brandId": "brand-002",
         "name": "Watermelon",
         "nameJa": "スイカ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -376,7 +376,7 @@
         "brandId": "brand-002",
         "name": "Grape",
         "nameJa": "グレープ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -384,7 +384,7 @@
         "brandId": "brand-002",
         "name": "Strawberry",
         "nameJa": "ストロベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -392,7 +392,7 @@
         "brandId": "brand-002",
         "name": "Blueberry",
         "nameJa": "ブルーベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -400,15 +400,15 @@
         "brandId": "brand-002",
         "name": "Lychee",
         "nameJa": "ライチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0049",
         "brandId": "brand-002",
         "name": "Passion Fruit",
-        "nameJa": "パッションフルーツ",
-        "category": "フルーツ",
+        "nameJa": "パッションFruits",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -416,7 +416,7 @@
         "brandId": "brand-002",
         "name": "Guava",
         "nameJa": "グアバ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -424,7 +424,7 @@
         "brandId": "brand-002",
         "name": "Cherry",
         "nameJa": "チェリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -432,7 +432,7 @@
         "brandId": "brand-002",
         "name": "Black Currant",
         "nameJa": "ブラックカラント",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -440,7 +440,7 @@
         "brandId": "brand-002",
         "name": "Plum",
         "nameJa": "プラム",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -448,7 +448,7 @@
         "brandId": "brand-002",
         "name": "Banana",
         "nameJa": "バナナ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -456,7 +456,7 @@
         "brandId": "brand-002",
         "name": "Fig",
         "nameJa": "フィグ（イチジク）",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -464,7 +464,7 @@
         "brandId": "brand-002",
         "name": "Pear",
         "nameJa": "ペア（洋梨）",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -472,15 +472,15 @@
         "brandId": "brand-002",
         "name": "Lime",
         "nameJa": "ライム",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0058",
         "brandId": "brand-002",
         "name": "Grapefruit",
-        "nameJa": "グレープフルーツ",
-        "category": "フルーツ",
+        "nameJa": "グレープFruits",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -488,7 +488,7 @@
         "brandId": "brand-002",
         "name": "Pomegranate",
         "nameJa": "ポメグラネット",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -496,7 +496,7 @@
         "brandId": "brand-002",
         "name": "Melon",
         "nameJa": "メロン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -504,7 +504,7 @@
         "brandId": "brand-002",
         "name": "Cactus",
         "nameJa": "カクタス",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -512,7 +512,7 @@
         "brandId": "brand-002",
         "name": "Acai",
         "nameJa": "アサイー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -520,7 +520,7 @@
         "brandId": "brand-002",
         "name": "Tangerine",
         "nameJa": "タンジェリン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -528,7 +528,7 @@
         "brandId": "brand-002",
         "name": "Pink Lemonade",
         "nameJa": "ピンクレモネード",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -536,7 +536,7 @@
         "brandId": "brand-002",
         "name": "Ice Cream Lemon",
         "nameJa": "アイスクリームレモン",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -544,23 +544,23 @@
         "brandId": "brand-002",
         "name": "Forest Berry",
         "nameJa": "フォレストベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0067",
         "brandId": "brand-002",
         "name": "Mint",
-        "nameJa": "ミント",
-        "category": "ミント",
+        "nameJa": "Mint",
+        "category": "Mint",
         "isCustom": false
       },
       {
         "id": "f-0068",
         "brandId": "brand-002",
         "name": "Mint Storm",
-        "nameJa": "ミントストーム",
-        "category": "ミント",
+        "nameJa": "Mintストーム",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -568,7 +568,7 @@
         "brandId": "brand-002",
         "name": "Ice",
         "nameJa": "アイス",
-        "category": "ミント",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -576,7 +576,7 @@
         "brandId": "brand-002",
         "name": "Green Mix",
         "nameJa": "グリーンミックス",
-        "category": "ミント",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -584,7 +584,7 @@
         "brandId": "brand-002",
         "name": "Yogurt",
         "nameJa": "ヨーグルト",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -592,7 +592,7 @@
         "brandId": "brand-002",
         "name": "Pomegranate Yogurt",
         "nameJa": "ポメグラネットヨーグルト",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -600,7 +600,7 @@
         "brandId": "brand-002",
         "name": "Strawberry Yogurt",
         "nameJa": "ストロベリーヨーグルト",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -608,7 +608,7 @@
         "brandId": "brand-002",
         "name": "Caramel",
         "nameJa": "キャラメル",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -616,7 +616,7 @@
         "brandId": "brand-002",
         "name": "Vanilla",
         "nameJa": "バニラ",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -624,7 +624,7 @@
         "brandId": "brand-002",
         "name": "Chocolate",
         "nameJa": "チョコレート",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -632,7 +632,7 @@
         "brandId": "brand-002",
         "name": "Cotton Candy",
         "nameJa": "コットンキャンディ",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -640,7 +640,7 @@
         "brandId": "brand-002",
         "name": "Biscuit",
         "nameJa": "ビスケット",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -648,7 +648,7 @@
         "brandId": "brand-002",
         "name": "Pancake",
         "nameJa": "パンケーキ",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -656,7 +656,7 @@
         "brandId": "brand-002",
         "name": "Popcorn",
         "nameJa": "ポップコーン",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -664,7 +664,7 @@
         "brandId": "brand-002",
         "name": "Macaron Pink",
         "nameJa": "マカロンピンク",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -672,7 +672,7 @@
         "brandId": "brand-002",
         "name": "Waffle Caramel",
         "nameJa": "ワッフルキャラメル",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -680,7 +680,7 @@
         "brandId": "brand-002",
         "name": "Nesquickly",
         "nameJa": "ネスクリー",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -688,7 +688,7 @@
         "brandId": "brand-002",
         "name": "Tiramisu",
         "nameJa": "ティラミス",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -696,7 +696,7 @@
         "brandId": "brand-002",
         "name": "Holland Waffle",
         "nameJa": "ホランドワッフル",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -704,7 +704,7 @@
         "brandId": "brand-002",
         "name": "Cookie",
         "nameJa": "クッキー",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -712,15 +712,15 @@
         "brandId": "brand-002",
         "name": "Nuttelle",
         "nameJa": "ヌッテッレ",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
         "id": "f-0088",
         "brandId": "brand-002",
         "name": "Brownie Peanut",
-        "nameJa": "ブラウニーピーナッツ",
-        "category": "お菓子・スイーツ",
+        "nameJa": "ブラウニーピーNuts",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -728,7 +728,7 @@
         "brandId": "brand-002",
         "name": "Breakfast",
         "nameJa": "ブレックファースト",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -736,7 +736,7 @@
         "brandId": "brand-002",
         "name": "Green Tea",
         "nameJa": "グリーンティー",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -744,7 +744,7 @@
         "brandId": "brand-002",
         "name": "Bergamot Tea",
         "nameJa": "ベルガモットティー",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -752,7 +752,7 @@
         "brandId": "brand-002",
         "name": "Black Tea",
         "nameJa": "ブラックティー",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -760,7 +760,7 @@
         "brandId": "brand-002",
         "name": "Linden Tea",
         "nameJa": "リンデンティー",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -768,7 +768,7 @@
         "brandId": "brand-002",
         "name": "Earl Grey",
         "nameJa": "アールグレイ",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -776,7 +776,7 @@
         "brandId": "brand-002",
         "name": "Cappuccino",
         "nameJa": "カプチーノ",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -784,7 +784,7 @@
         "brandId": "brand-002",
         "name": "Cola",
         "nameJa": "コーラ",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -792,7 +792,7 @@
         "brandId": "brand-002",
         "name": "Jamaica Rum",
         "nameJa": "ジャマイカラム",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -800,7 +800,7 @@
         "brandId": "brand-002",
         "name": "Havana Puro",
         "nameJa": "ハバナプロ",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -808,7 +808,7 @@
         "brandId": "brand-002",
         "name": "Schweppes",
         "nameJa": "シュウェップス",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -816,7 +816,7 @@
         "brandId": "brand-002",
         "name": "Ice Coke",
         "nameJa": "アイスコーク",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -824,7 +824,7 @@
         "brandId": "brand-002",
         "name": "Milk",
         "nameJa": "ミルク",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -832,7 +832,7 @@
         "brandId": "brand-002",
         "name": "Pistachio",
         "nameJa": "ピスタチオ",
-        "category": "ナッツ",
+        "category": "Nuts",
         "isCustom": false
       },
       {
@@ -840,7 +840,7 @@
         "brandId": "brand-002",
         "name": "Sesame",
         "nameJa": "セサミ",
-        "category": "ナッツ",
+        "category": "Nuts",
         "isCustom": false
       },
       {
@@ -848,7 +848,7 @@
         "brandId": "brand-002",
         "name": "Almond",
         "nameJa": "アーモンド",
-        "category": "ナッツ",
+        "category": "Nuts",
         "isCustom": false
       },
       {
@@ -856,23 +856,23 @@
         "brandId": "brand-002",
         "name": "Butter",
         "nameJa": "バター",
-        "category": "ナッツ",
+        "category": "Nuts",
         "isCustom": false
       },
       {
         "id": "f-0106",
         "brandId": "brand-002",
         "name": "Peanut Butter",
-        "nameJa": "ピーナッツバター",
-        "category": "ナッツ",
+        "nameJa": "ピーNutsバター",
+        "category": "Nuts",
         "isCustom": false
       },
       {
         "id": "f-0107",
         "brandId": "brand-002",
         "name": "Hazelnut",
-        "nameJa": "ヘーゼルナッツ",
-        "category": "ナッツ",
+        "nameJa": "ヘーゼルNuts",
+        "category": "Nuts",
         "isCustom": false
       },
       {
@@ -880,7 +880,7 @@
         "brandId": "brand-002",
         "name": "Brown Sugar",
         "nameJa": "ブラウンシュガー",
-        "category": "スパイス",
+        "category": "Spices",
         "isCustom": false
       },
       {
@@ -888,7 +888,7 @@
         "brandId": "brand-002",
         "name": "Cardamon",
         "nameJa": "カルダモン",
-        "category": "スパイス",
+        "category": "Spices",
         "isCustom": false
       },
       {
@@ -896,7 +896,7 @@
         "brandId": "brand-002",
         "name": "Cinnamon",
         "nameJa": "シナモン",
-        "category": "スパイス",
+        "category": "Spices",
         "isCustom": false
       },
       {
@@ -904,15 +904,15 @@
         "brandId": "brand-002",
         "name": "Basil",
         "nameJa": "バジル",
-        "category": "スパイス",
+        "category": "Spices",
         "isCustom": false
       },
       {
         "id": "f-0112",
         "brandId": "brand-002",
         "name": "Ginger Coconut",
-        "nameJa": "ジンジャーココナッツ",
-        "category": "スパイス",
+        "nameJa": "ジンジャーココNuts",
+        "category": "Spices",
         "isCustom": false
       },
       {
@@ -920,7 +920,7 @@
         "brandId": "brand-002",
         "name": "Jasmine",
         "nameJa": "ジャスミン",
-        "category": "フローラル",
+        "category": "Floral",
         "isCustom": false
       },
       {
@@ -928,7 +928,7 @@
         "brandId": "brand-002",
         "name": "Rose",
         "nameJa": "ローズ",
-        "category": "フローラル",
+        "category": "Floral",
         "isCustom": false
       },
       {
@@ -936,7 +936,7 @@
         "brandId": "brand-002",
         "name": "Yuzu",
         "nameJa": "ゆず",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -944,7 +944,7 @@
         "brandId": "brand-002",
         "name": "Dead Sea",
         "nameJa": "デッドシー",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -952,7 +952,7 @@
         "brandId": "brand-002",
         "name": "Kashmir",
         "nameJa": "カシミール",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -960,7 +960,7 @@
         "brandId": "brand-002",
         "name": "Quince",
         "nameJa": "クインス",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -968,7 +968,7 @@
         "brandId": "brand-002",
         "name": "Proobis",
         "nameJa": "プロビス",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -976,7 +976,7 @@
         "brandId": "brand-002",
         "name": "Eternal",
         "nameJa": "エターナル",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -984,7 +984,7 @@
         "brandId": "brand-002",
         "name": "Twist",
         "nameJa": "ツイスト",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -992,7 +992,7 @@
         "brandId": "brand-002",
         "name": "Summer Love",
         "nameJa": "サマーラブ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1000,7 +1000,7 @@
         "brandId": "brand-002",
         "name": "Honey",
         "nameJa": "ハニー",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1008,7 +1008,7 @@
         "brandId": "brand-002",
         "name": "Black Mamba",
         "nameJa": "ブラックマンバ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1016,7 +1016,7 @@
         "brandId": "brand-002",
         "name": "Black Army",
         "nameJa": "ブラックアーミー",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1024,7 +1024,7 @@
         "brandId": "brand-002",
         "name": "Cash",
         "nameJa": "キャッシュ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1032,7 +1032,7 @@
         "brandId": "brand-002",
         "name": "White Cash",
         "nameJa": "ホワイトキャッシュ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1040,7 +1040,7 @@
         "brandId": "brand-002",
         "name": "Cherry Cash",
         "nameJa": "チェリーキャッシュ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1048,7 +1048,7 @@
         "brandId": "brand-002",
         "name": "Black Queen",
         "nameJa": "ブラッククイーン",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1056,7 +1056,7 @@
         "brandId": "brand-002",
         "name": "Illegal",
         "nameJa": "イリーガル",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1064,7 +1064,7 @@
         "brandId": "brand-002",
         "name": "Darth Wader",
         "nameJa": "ダースウェーダー",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1072,7 +1072,7 @@
         "brandId": "brand-002",
         "name": "Pink Floyd",
         "nameJa": "ピンクフロイド",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1080,7 +1080,7 @@
         "brandId": "brand-002",
         "name": "El Clasico",
         "nameJa": "エルクラシコ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1088,7 +1088,7 @@
         "brandId": "brand-002",
         "name": "Tropical Pearl",
         "nameJa": "トロピカルパール",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1096,7 +1096,7 @@
         "brandId": "brand-002",
         "name": "Tea Time",
         "nameJa": "ティータイム",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1104,15 +1104,15 @@
         "brandId": "brand-002",
         "name": "Subzero",
         "nameJa": "サブゼロ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
         "id": "f-0137",
         "brandId": "brand-002",
         "name": "Red Choco Mint",
-        "nameJa": "レッドチョコミント",
-        "category": "変わり種",
+        "nameJa": "レッドチョコMint",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1120,7 +1120,7 @@
         "brandId": "brand-002",
         "name": "Mucho Mango",
         "nameJa": "ムーチョマンゴー",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1128,7 +1128,7 @@
         "brandId": "brand-002",
         "name": "Moscow Rose",
         "nameJa": "モスクワローズ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1136,7 +1136,7 @@
         "brandId": "brand-002",
         "name": "Morocco",
         "nameJa": "モロッコ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1144,7 +1144,7 @@
         "brandId": "brand-002",
         "name": "King Of",
         "nameJa": "キングオブ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1152,7 +1152,7 @@
         "brandId": "brand-002",
         "name": "Bagnum",
         "nameJa": "バグナム",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1160,7 +1160,7 @@
         "brandId": "brand-002",
         "name": "Bamboo",
         "nameJa": "バンブー",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1168,7 +1168,7 @@
         "brandId": "brand-002",
         "name": "Pineapple Smoothie",
         "nameJa": "パイナップルスムージー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1176,15 +1176,15 @@
         "brandId": "brand-002",
         "name": "Dulce de Leche",
         "nameJa": "ドゥルセデレチェ",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
         "id": "f-0146",
         "brandId": "brand-002",
         "name": "Spike Lime Peach",
-        "nameJa": "スパイスライムピーチ",
-        "category": "フルーツ",
+        "nameJa": "Spicesライムピーチ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1192,7 +1192,7 @@
         "brandId": "brand-002",
         "name": "Lime Lemon",
         "nameJa": "ライムレモン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1200,7 +1200,7 @@
         "brandId": "brand-002",
         "name": "Smoothie",
         "nameJa": "スムージー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1208,7 +1208,7 @@
         "brandId": "brand-002",
         "name": "Cash Peach",
         "nameJa": "キャッシュピーチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1216,15 +1216,15 @@
         "brandId": "brand-002",
         "name": "Yellow Crumble",
         "nameJa": "イエロークランブル",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
         "id": "f-0151",
         "brandId": "brand-002",
         "name": "Walnut Tree",
-        "nameJa": "ウォールナッツツリー",
-        "category": "ナッツ",
+        "nameJa": "ウォールNutsツリー",
+        "category": "Nuts",
         "isCustom": false
       }
     ]
@@ -1243,7 +1243,7 @@
         "brandId": "brand-003",
         "name": "White Peach",
         "nameJa": "ホワイトピーチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1251,7 +1251,7 @@
         "brandId": "brand-003",
         "name": "Blueberry Muffin",
         "nameJa": "ブルーベリーマフィン",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -1259,15 +1259,15 @@
         "brandId": "brand-003",
         "name": "Lychee",
         "nameJa": "ライチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0155",
         "brandId": "brand-003",
         "name": "Watermelon Mint",
-        "nameJa": "スイカミント",
-        "category": "フルーツ",
+        "nameJa": "スイカMint",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1275,7 +1275,7 @@
         "brandId": "brand-003",
         "name": "Aloha Mango",
         "nameJa": "アロハマンゴー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1283,7 +1283,7 @@
         "brandId": "brand-003",
         "name": "Ambrosia",
         "nameJa": "アンブロシア",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1291,7 +1291,7 @@
         "brandId": "brand-003",
         "name": "Citrus Tea",
         "nameJa": "シトラスティー",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -1299,7 +1299,7 @@
         "brandId": "brand-003",
         "name": "French Vanilla",
         "nameJa": "フレンチバニラ",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -1307,7 +1307,7 @@
         "brandId": "brand-003",
         "name": "Island Papaya",
         "nameJa": "アイランドパパイヤ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1315,15 +1315,15 @@
         "brandId": "brand-003",
         "name": "Lemon Loaf",
         "nameJa": "レモンローフ",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
         "id": "f-0162",
         "brandId": "brand-003",
         "name": "Lemon Mint",
-        "nameJa": "レモンミント",
-        "category": "フルーツ",
+        "nameJa": "レモンMint",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1331,7 +1331,7 @@
         "brandId": "brand-003",
         "name": "Limoncello",
         "nameJa": "リモンチェッロ",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -1339,15 +1339,15 @@
         "brandId": "brand-003",
         "name": "Mandarin Zest",
         "nameJa": "マンダリンゼスト",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0165",
         "brandId": "brand-003",
         "name": "Mint Chocolate Chill",
-        "nameJa": "ミントチョコレートチル",
-        "category": "お菓子・スイーツ",
+        "nameJa": "Mintチョコレートチル",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -1355,7 +1355,7 @@
         "brandId": "brand-003",
         "name": "Mochaccino",
         "nameJa": "モカチーノ",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -1363,7 +1363,7 @@
         "brandId": "brand-003",
         "name": "Mojito Mojo",
         "nameJa": "モヒートモジョ",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -1371,7 +1371,7 @@
         "brandId": "brand-003",
         "name": "Nectarine",
         "nameJa": "ネクタリン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1379,7 +1379,7 @@
         "brandId": "brand-003",
         "name": "Orange Cream",
         "nameJa": "オレンジクリーム",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1387,7 +1387,7 @@
         "brandId": "brand-003",
         "name": "Prickly Pear",
         "nameJa": "プリックリーペア",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1395,7 +1395,7 @@
         "brandId": "brand-003",
         "name": "Purple Grape",
         "nameJa": "パープルグレープ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1403,15 +1403,15 @@
         "brandId": "brand-003",
         "name": "Red Gummi Bear",
         "nameJa": "レッドグミベア",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
         "id": "f-0173",
         "brandId": "brand-003",
         "name": "Spiced Chai",
-        "nameJa": "スパイスチャイ",
-        "category": "スパイス",
+        "nameJa": "Spicesチャイ",
+        "category": "Spices",
         "isCustom": false
       },
       {
@@ -1419,7 +1419,7 @@
         "brandId": "brand-003",
         "name": "Summer Sorbetto",
         "nameJa": "サマーソルベット",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -1427,7 +1427,7 @@
         "brandId": "brand-003",
         "name": "Tangelo",
         "nameJa": "タンジェロ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1435,7 +1435,7 @@
         "brandId": "brand-003",
         "name": "Pina Colada",
         "nameJa": "ピニャコラーダ",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -1443,15 +1443,15 @@
         "brandId": "brand-003",
         "name": "Cosmo",
         "nameJa": "コスモポリタン",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
         "id": "f-0178",
         "brandId": "brand-003",
         "name": "Mint",
-        "nameJa": "ミント",
-        "category": "ミント",
+        "nameJa": "Mint",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -1459,7 +1459,7 @@
         "brandId": "brand-003",
         "name": "Strawberry Daiquiri",
         "nameJa": "ストロベリーダイキリ",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -1467,7 +1467,7 @@
         "brandId": "brand-003",
         "name": "Gummy Bear",
         "nameJa": "グミベア",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -1475,7 +1475,7 @@
         "brandId": "brand-003",
         "name": "White Gummy Bear",
         "nameJa": "ホワイトグミベア",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -1483,7 +1483,7 @@
         "brandId": "brand-003",
         "name": "Lemon Grass",
         "nameJa": "レモングラス",
-        "category": "ミント",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -1491,7 +1491,7 @@
         "brandId": "brand-003",
         "name": "Mango Tango",
         "nameJa": "マンゴータンゴ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       }
     ]
@@ -1510,7 +1510,7 @@
         "brandId": "brand-004",
         "name": "Cigar",
         "nameJa": "シガー",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1518,7 +1518,7 @@
         "brandId": "brand-004",
         "name": "Pear Chill",
         "nameJa": "ペアチル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1526,7 +1526,7 @@
         "brandId": "brand-004",
         "name": "Japanese Yuzu",
         "nameJa": "ジャパニーズユズ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1534,7 +1534,7 @@
         "brandId": "brand-004",
         "name": "Hong Kong Milk Tea",
         "nameJa": "ホンコンミルクティー",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -1542,7 +1542,7 @@
         "brandId": "brand-004",
         "name": "Golden Delicious Apple",
         "nameJa": "ゴールデンデリシャスアップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1550,7 +1550,7 @@
         "brandId": "brand-004",
         "name": "Dolce de Leche",
         "nameJa": "ドルセデルチェ",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -1558,7 +1558,7 @@
         "brandId": "brand-004",
         "name": "Lime",
         "nameJa": "ライム",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1566,7 +1566,7 @@
         "brandId": "brand-004",
         "name": "Acai Berry",
         "nameJa": "アサイーベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1574,7 +1574,7 @@
         "brandId": "brand-004",
         "name": "Arctic Mango",
         "nameJa": "アークティックマンゴー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1582,7 +1582,7 @@
         "brandId": "brand-004",
         "name": "Autumn Sunrise",
         "nameJa": "オータムサンライズ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1590,7 +1590,7 @@
         "brandId": "brand-004",
         "name": "Blackberry Brandy",
         "nameJa": "ブラックベリーブランデー",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -1598,7 +1598,7 @@
         "brandId": "brand-004",
         "name": "Blue Mist",
         "nameJa": "ブルーミスト",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1606,7 +1606,7 @@
         "brandId": "brand-004",
         "name": "Cactus Breeze",
         "nameJa": "カクタスブリーズ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1614,7 +1614,7 @@
         "brandId": "brand-004",
         "name": "Caramel",
         "nameJa": "キャラメル",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -1622,23 +1622,23 @@
         "brandId": "brand-004",
         "name": "Carnival",
         "nameJa": "カーニバル",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
         "id": "f-0199",
         "brandId": "brand-004",
         "name": "Citrus Mint",
-        "nameJa": "シトラスミント",
-        "category": "ミント",
+        "nameJa": "シトラスMint",
+        "category": "Mint",
         "isCustom": false
       },
       {
         "id": "f-0200",
         "brandId": "brand-004",
         "name": "Coconut",
-        "nameJa": "ココナッツ",
-        "category": "フルーツ",
+        "nameJa": "ココNuts",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1646,7 +1646,7 @@
         "brandId": "brand-004",
         "name": "Cosmo",
         "nameJa": "コスモポリタン",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -1654,23 +1654,23 @@
         "brandId": "brand-004",
         "name": "Cuban Mojito",
         "nameJa": "キューバンモヒート",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
         "id": "f-0203",
         "brandId": "brand-004",
         "name": "Grape Mint",
-        "nameJa": "グレープミント",
-        "category": "フルーツ",
+        "nameJa": "グレープMint",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0204",
         "brandId": "brand-004",
         "name": "Grapefruit",
-        "nameJa": "グレープフルーツ",
-        "category": "フルーツ",
+        "nameJa": "グレープFruits",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1678,7 +1678,7 @@
         "brandId": "brand-004",
         "name": "Green Apple",
         "nameJa": "グリーンアップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1686,7 +1686,7 @@
         "brandId": "brand-004",
         "name": "Honey Badger",
         "nameJa": "ハニーバジャー",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1694,7 +1694,7 @@
         "brandId": "brand-004",
         "name": "Lemon Chill",
         "nameJa": "レモンチル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1702,7 +1702,7 @@
         "brandId": "brand-004",
         "name": "Mango",
         "nameJa": "マンゴー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1710,15 +1710,15 @@
         "brandId": "brand-004",
         "name": "Margarita",
         "nameJa": "マルガリータ",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
         "id": "f-0210",
         "brandId": "brand-004",
         "name": "Mint",
-        "nameJa": "ミント",
-        "category": "ミント",
+        "nameJa": "Mint",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -1726,15 +1726,15 @@
         "brandId": "brand-004",
         "name": "Orange Cream",
         "nameJa": "オレンジクリーム",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0212",
         "brandId": "brand-004",
         "name": "Passion Fruit",
-        "nameJa": "パッションフルーツ",
-        "category": "フルーツ",
+        "nameJa": "パッションFruits",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1742,7 +1742,7 @@
         "brandId": "brand-004",
         "name": "Peach",
         "nameJa": "ピーチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1750,15 +1750,15 @@
         "brandId": "brand-004",
         "name": "Peach Iced Tea",
         "nameJa": "ピーチアイスティー",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
         "id": "f-0215",
         "brandId": "brand-004",
         "name": "Pineapple Mint",
-        "nameJa": "パイナップルミント",
-        "category": "フルーツ",
+        "nameJa": "パイナップルMint",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1766,7 +1766,7 @@
         "brandId": "brand-004",
         "name": "Raspberry Lemonade",
         "nameJa": "ラズベリーレモネード",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1774,7 +1774,7 @@
         "brandId": "brand-004",
         "name": "Rose",
         "nameJa": "ローズ",
-        "category": "フローラル",
+        "category": "Floral",
         "isCustom": false
       },
       {
@@ -1782,7 +1782,7 @@
         "brandId": "brand-004",
         "name": "Strawberry Margarita",
         "nameJa": "ストロベリーマルガリータ",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -1790,7 +1790,7 @@
         "brandId": "brand-004",
         "name": "Tangerine Dream",
         "nameJa": "タンジェリンドリーム",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1798,7 +1798,7 @@
         "brandId": "brand-004",
         "name": "Vanilla",
         "nameJa": "バニラ",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -1806,7 +1806,7 @@
         "brandId": "brand-004",
         "name": "Watermelon",
         "nameJa": "スイカ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1814,7 +1814,7 @@
         "brandId": "brand-004",
         "name": "White Wine",
         "nameJa": "ホワイトワイン",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -1822,7 +1822,7 @@
         "brandId": "brand-004",
         "name": "Wild Berry",
         "nameJa": "ワイルドベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       }
     ]
@@ -1840,8 +1840,8 @@
         "id": "f-0224",
         "brandId": "brand-005",
         "name": "Iced Mint",
-        "nameJa": "アイスドミント",
-        "category": "ミント",
+        "nameJa": "アイスドMint",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -1849,7 +1849,7 @@
         "brandId": "brand-005",
         "name": "Kiwi",
         "nameJa": "キウイ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1857,7 +1857,7 @@
         "brandId": "brand-005",
         "name": "Strawberry",
         "nameJa": "ストロベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1865,7 +1865,7 @@
         "brandId": "brand-005",
         "name": "Berry Grape",
         "nameJa": "ベリーグレープ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1873,7 +1873,7 @@
         "brandId": "brand-005",
         "name": "Spectra",
         "nameJa": "スペクトラ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1881,7 +1881,7 @@
         "brandId": "brand-005",
         "name": "Sour Asia",
         "nameJa": "サワーアジア",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1889,7 +1889,7 @@
         "brandId": "brand-005",
         "name": "Bitter Sweet",
         "nameJa": "ビタースイート",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1897,15 +1897,15 @@
         "brandId": "brand-005",
         "name": "Cool Breeze",
         "nameJa": "クールブリーズ",
-        "category": "ミント",
+        "category": "Mint",
         "isCustom": false
       },
       {
         "id": "f-0232",
         "brandId": "brand-005",
         "name": "Grape Mint",
-        "nameJa": "グレープミント",
-        "category": "フルーツ",
+        "nameJa": "グレープMint",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1913,7 +1913,7 @@
         "brandId": "brand-005",
         "name": "Wild",
         "nameJa": "ワイルド",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -1921,7 +1921,7 @@
         "brandId": "brand-005",
         "name": "Amazon",
         "nameJa": "アマゾン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1929,7 +1929,7 @@
         "brandId": "brand-005",
         "name": "Peach",
         "nameJa": "ピーチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1937,7 +1937,7 @@
         "brandId": "brand-005",
         "name": "Mango",
         "nameJa": "マンゴー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1945,7 +1945,7 @@
         "brandId": "brand-005",
         "name": "Lemon",
         "nameJa": "レモン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1953,7 +1953,7 @@
         "brandId": "brand-005",
         "name": "Watermelon",
         "nameJa": "スイカ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1961,23 +1961,23 @@
         "brandId": "brand-005",
         "name": "Blueberry Mist",
         "nameJa": "ブルーベリーミスト",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0240",
         "brandId": "brand-005",
         "name": "Gum Mint Watermelon",
-        "nameJa": "ガムミントスイカ",
-        "category": "変わり種",
+        "nameJa": "ガムMintスイカ",
+        "category": "Exotic",
         "isCustom": false
       },
       {
         "id": "f-0241",
         "brandId": "brand-005",
         "name": "Orange Grapefruit",
-        "nameJa": "オレンジグレープフルーツ",
-        "category": "フルーツ",
+        "nameJa": "オレンジグレープFruits",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1985,7 +1985,7 @@
         "brandId": "brand-005",
         "name": "Berry Mix",
         "nameJa": "ベリーミックス",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -1993,7 +1993,7 @@
         "brandId": "brand-005",
         "name": "Double Apple",
         "nameJa": "ダブルアップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2001,15 +2001,15 @@
         "brandId": "brand-005",
         "name": "Grape",
         "nameJa": "グレープ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0245",
         "brandId": "brand-005",
         "name": "Mint",
-        "nameJa": "ミント",
-        "category": "ミント",
+        "nameJa": "Mint",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -2017,23 +2017,23 @@
         "brandId": "brand-005",
         "name": "Pineapple",
         "nameJa": "パイナップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0247",
         "brandId": "brand-005",
         "name": "Coconut",
-        "nameJa": "ココナッツ",
-        "category": "フルーツ",
+        "nameJa": "ココNuts",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0248",
         "brandId": "brand-005",
         "name": "Passion Fruit",
-        "nameJa": "パッションフルーツ",
-        "category": "フルーツ",
+        "nameJa": "パッションFruits",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2041,7 +2041,7 @@
         "brandId": "brand-005",
         "name": "Guava",
         "nameJa": "グアバ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2049,7 +2049,7 @@
         "brandId": "brand-005",
         "name": "Rose",
         "nameJa": "ローズ",
-        "category": "フローラル",
+        "category": "Floral",
         "isCustom": false
       },
       {
@@ -2057,7 +2057,7 @@
         "brandId": "brand-005",
         "name": "Jasmine",
         "nameJa": "ジャスミン",
-        "category": "フローラル",
+        "category": "Floral",
         "isCustom": false
       },
       {
@@ -2065,7 +2065,7 @@
         "brandId": "brand-005",
         "name": "Caramel",
         "nameJa": "キャラメル",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -2073,7 +2073,7 @@
         "brandId": "brand-005",
         "name": "Vanilla",
         "nameJa": "バニラ",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       }
     ]
@@ -2091,8 +2091,8 @@
         "id": "f-0254",
         "brandId": "brand-006",
         "name": "Ice Grapefruit",
-        "nameJa": "アイスグレープフルーツ",
-        "category": "フルーツ",
+        "nameJa": "アイスグレープFruits",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2100,7 +2100,7 @@
         "brandId": "brand-006",
         "name": "Milk",
         "nameJa": "ミルク",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -2108,7 +2108,7 @@
         "brandId": "brand-006",
         "name": "Double Apple",
         "nameJa": "ダブルアップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2116,15 +2116,15 @@
         "brandId": "brand-006",
         "name": "Grape",
         "nameJa": "グレープ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0258",
         "brandId": "brand-006",
         "name": "Mint",
-        "nameJa": "ミント",
-        "category": "ミント",
+        "nameJa": "Mint",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -2132,7 +2132,7 @@
         "brandId": "brand-006",
         "name": "Strawberry",
         "nameJa": "ストロベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2140,7 +2140,7 @@
         "brandId": "brand-006",
         "name": "Peach",
         "nameJa": "ピーチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2148,7 +2148,7 @@
         "brandId": "brand-006",
         "name": "Mango",
         "nameJa": "マンゴー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2156,7 +2156,7 @@
         "brandId": "brand-006",
         "name": "Lemon",
         "nameJa": "レモン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2164,7 +2164,7 @@
         "brandId": "brand-006",
         "name": "Watermelon",
         "nameJa": "スイカ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2172,7 +2172,7 @@
         "brandId": "brand-006",
         "name": "Rose",
         "nameJa": "ローズ",
-        "category": "フローラル",
+        "category": "Floral",
         "isCustom": false
       },
       {
@@ -2180,7 +2180,7 @@
         "brandId": "brand-006",
         "name": "Blueberry",
         "nameJa": "ブルーベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2188,7 +2188,7 @@
         "brandId": "brand-006",
         "name": "Pineapple",
         "nameJa": "パイナップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2196,7 +2196,7 @@
         "brandId": "brand-006",
         "name": "Orange",
         "nameJa": "オレンジ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2204,7 +2204,7 @@
         "brandId": "brand-006",
         "name": "Vanilla",
         "nameJa": "バニラ",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -2212,7 +2212,7 @@
         "brandId": "brand-006",
         "name": "Caramel",
         "nameJa": "キャラメル",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -2220,7 +2220,7 @@
         "brandId": "brand-006",
         "name": "Cappuccino",
         "nameJa": "カプチーノ",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -2228,7 +2228,7 @@
         "brandId": "brand-006",
         "name": "Mojito",
         "nameJa": "モヒート",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       }
     ]
@@ -2247,7 +2247,7 @@
         "brandId": "brand-007",
         "name": "Blue Mist",
         "nameJa": "ブルーミスト",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -2255,7 +2255,7 @@
         "brandId": "brand-007",
         "name": "Key Lime",
         "nameJa": "キーライム",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2263,7 +2263,7 @@
         "brandId": "brand-007",
         "name": "BTS",
         "nameJa": "BTS",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -2271,7 +2271,7 @@
         "brandId": "brand-007",
         "name": "Watermelon",
         "nameJa": "スイカ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2279,15 +2279,15 @@
         "brandId": "brand-007",
         "name": "Grape",
         "nameJa": "グレープ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0277",
         "brandId": "brand-007",
         "name": "Mint",
-        "nameJa": "ミント",
-        "category": "ミント",
+        "nameJa": "Mint",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -2295,7 +2295,7 @@
         "brandId": "brand-007",
         "name": "Strawberry",
         "nameJa": "ストロベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2303,7 +2303,7 @@
         "brandId": "brand-007",
         "name": "Peach",
         "nameJa": "ピーチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2311,7 +2311,7 @@
         "brandId": "brand-007",
         "name": "Double Apple",
         "nameJa": "ダブルアップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2319,7 +2319,7 @@
         "brandId": "brand-007",
         "name": "Lemon",
         "nameJa": "レモン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2327,7 +2327,7 @@
         "brandId": "brand-007",
         "name": "Rose",
         "nameJa": "ローズ",
-        "category": "フローラル",
+        "category": "Floral",
         "isCustom": false
       },
       {
@@ -2335,7 +2335,7 @@
         "brandId": "brand-007",
         "name": "Mango",
         "nameJa": "マンゴー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2343,7 +2343,7 @@
         "brandId": "brand-007",
         "name": "Vanilla",
         "nameJa": "バニラ",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       }
     ]
@@ -2362,7 +2362,7 @@
         "brandId": "brand-008",
         "name": "Double Apple",
         "nameJa": "ダブルアップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2370,15 +2370,15 @@
         "brandId": "brand-008",
         "name": "Pan Rasna",
         "nameJa": "パンラスナ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
         "id": "f-0287",
         "brandId": "brand-008",
         "name": "Choco Mint",
-        "nameJa": "チョコミント",
-        "category": "お菓子・スイーツ",
+        "nameJa": "チョコMint",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -2386,7 +2386,7 @@
         "brandId": "brand-008",
         "name": "Pan Bahar",
         "nameJa": "パンバハール",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -2394,15 +2394,15 @@
         "brandId": "brand-008",
         "name": "Gulab Rose",
         "nameJa": "グラブローズ",
-        "category": "フローラル",
+        "category": "Floral",
         "isCustom": false
       },
       {
         "id": "f-0290",
         "brandId": "brand-008",
         "name": "Fresh Mint",
-        "nameJa": "フレッシュミント",
-        "category": "ミント",
+        "nameJa": "フレッシュMint",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -2410,7 +2410,7 @@
         "brandId": "brand-008",
         "name": "Grape",
         "nameJa": "グレープ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2418,7 +2418,7 @@
         "brandId": "brand-008",
         "name": "Strawberry",
         "nameJa": "ストロベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2426,7 +2426,7 @@
         "brandId": "brand-008",
         "name": "Peach",
         "nameJa": "ピーチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2434,7 +2434,7 @@
         "brandId": "brand-008",
         "name": "Mango",
         "nameJa": "マンゴー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2442,7 +2442,7 @@
         "brandId": "brand-008",
         "name": "Orange",
         "nameJa": "オレンジ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2450,7 +2450,7 @@
         "brandId": "brand-008",
         "name": "Watermelon",
         "nameJa": "スイカ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2458,7 +2458,7 @@
         "brandId": "brand-008",
         "name": "Pineapple",
         "nameJa": "パイナップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2466,7 +2466,7 @@
         "brandId": "brand-008",
         "name": "Blueberry",
         "nameJa": "ブルーベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2474,7 +2474,7 @@
         "brandId": "brand-008",
         "name": "Lemon",
         "nameJa": "レモン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2482,7 +2482,7 @@
         "brandId": "brand-008",
         "name": "Vanilla",
         "nameJa": "バニラ",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -2490,7 +2490,7 @@
         "brandId": "brand-008",
         "name": "Caramel",
         "nameJa": "キャラメル",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -2498,7 +2498,7 @@
         "brandId": "brand-008",
         "name": "Jasmine",
         "nameJa": "ジャスミン",
-        "category": "フローラル",
+        "category": "Floral",
         "isCustom": false
       }
     ]
@@ -2517,7 +2517,7 @@
         "brandId": "brand-009",
         "name": "Needls",
         "nameJa": "ニードルズ",
-        "category": "ミント",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -2525,7 +2525,7 @@
         "brandId": "brand-009",
         "name": "Cookie Dough",
         "nameJa": "クッキードウ",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -2533,7 +2533,7 @@
         "brandId": "brand-009",
         "name": "Red Formula",
         "nameJa": "レッドフォーミュラ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -2541,7 +2541,7 @@
         "brandId": "brand-009",
         "name": "Rare",
         "nameJa": "レア",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -2549,7 +2549,7 @@
         "brandId": "brand-009",
         "name": "Clove",
         "nameJa": "クローブ",
-        "category": "スパイス",
+        "category": "Spices",
         "isCustom": false
       },
       {
@@ -2557,7 +2557,7 @@
         "brandId": "brand-009",
         "name": "Tiki Toki",
         "nameJa": "ティキトキ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -2565,7 +2565,7 @@
         "brandId": "brand-009",
         "name": "Waterfall",
         "nameJa": "ウォーターフォール",
-        "category": "ミント",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -2573,7 +2573,7 @@
         "brandId": "brand-009",
         "name": "Citrus Shock",
         "nameJa": "シトラスショック",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2581,7 +2581,7 @@
         "brandId": "brand-009",
         "name": "Grape",
         "nameJa": "グレープ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2589,15 +2589,15 @@
         "brandId": "brand-009",
         "name": "Strawberry",
         "nameJa": "ストロベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0313",
         "brandId": "brand-009",
         "name": "Mint",
-        "nameJa": "ミント",
-        "category": "ミント",
+        "nameJa": "Mint",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -2605,7 +2605,7 @@
         "brandId": "brand-009",
         "name": "Melon",
         "nameJa": "メロン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2613,7 +2613,7 @@
         "brandId": "brand-009",
         "name": "Mango",
         "nameJa": "マンゴー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2621,7 +2621,7 @@
         "brandId": "brand-009",
         "name": "Lemon Blast",
         "nameJa": "レモンブラスト",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2629,7 +2629,7 @@
         "brandId": "brand-009",
         "name": "Pear",
         "nameJa": "ペア（洋梨）",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2637,7 +2637,7 @@
         "brandId": "brand-009",
         "name": "Peach",
         "nameJa": "ピーチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2645,7 +2645,7 @@
         "brandId": "brand-009",
         "name": "Blueberry",
         "nameJa": "ブルーベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2653,7 +2653,7 @@
         "brandId": "brand-009",
         "name": "Berry",
         "nameJa": "ベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2661,7 +2661,7 @@
         "brandId": "brand-009",
         "name": "Orange",
         "nameJa": "オレンジ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       }
     ]
@@ -2680,7 +2680,7 @@
         "brandId": "brand-010",
         "name": "Blue Mist",
         "nameJa": "ブルーミスト",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -2688,7 +2688,7 @@
         "brandId": "brand-010",
         "name": "Geisha",
         "nameJa": "ゲイシャ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -2696,7 +2696,7 @@
         "brandId": "brand-010",
         "name": "Pirates Cave",
         "nameJa": "パイレーツケーブ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -2704,7 +2704,7 @@
         "brandId": "brand-010",
         "name": "Code 69",
         "nameJa": "コード69",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -2712,7 +2712,7 @@
         "brandId": "brand-010",
         "name": "White Peach",
         "nameJa": "ホワイトピーチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2720,7 +2720,7 @@
         "brandId": "brand-010",
         "name": "Watermelon",
         "nameJa": "スイカ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2728,7 +2728,7 @@
         "brandId": "brand-010",
         "name": "Grape",
         "nameJa": "グレープ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2736,7 +2736,7 @@
         "brandId": "brand-010",
         "name": "Strawberry",
         "nameJa": "ストロベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2744,15 +2744,15 @@
         "brandId": "brand-010",
         "name": "Lemon",
         "nameJa": "レモン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0331",
         "brandId": "brand-010",
         "name": "Mint",
-        "nameJa": "ミント",
-        "category": "ミント",
+        "nameJa": "Mint",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -2760,7 +2760,7 @@
         "brandId": "brand-010",
         "name": "Mango",
         "nameJa": "マンゴー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2768,7 +2768,7 @@
         "brandId": "brand-010",
         "name": "Sex on the Beach",
         "nameJa": "セックスオンザビーチ",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -2776,7 +2776,7 @@
         "brandId": "brand-010",
         "name": "Pina Colada",
         "nameJa": "ピニャコラーダ",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -2784,7 +2784,7 @@
         "brandId": "brand-010",
         "name": "Miami Ice",
         "nameJa": "マイアミアイス",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -2792,7 +2792,7 @@
         "brandId": "brand-010",
         "name": "Fuzzy Navel",
         "nameJa": "ファジーネーブル",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       }
     ]
@@ -2811,7 +2811,7 @@
         "brandId": "brand-011",
         "name": "Twice The Ice",
         "nameJa": "トゥワイスジアイス",
-        "category": "ミント",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -2819,7 +2819,7 @@
         "brandId": "brand-011",
         "name": "Pirate's Cove",
         "nameJa": "パイレーツコーブ",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -2827,7 +2827,7 @@
         "brandId": "brand-011",
         "name": "Blueberry",
         "nameJa": "ブルーベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2835,7 +2835,7 @@
         "brandId": "brand-011",
         "name": "Grape",
         "nameJa": "グレープ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2843,7 +2843,7 @@
         "brandId": "brand-011",
         "name": "Strawberry",
         "nameJa": "ストロベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2851,7 +2851,7 @@
         "brandId": "brand-011",
         "name": "Peach",
         "nameJa": "ピーチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2859,15 +2859,15 @@
         "brandId": "brand-011",
         "name": "Watermelon",
         "nameJa": "スイカ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0344",
         "brandId": "brand-011",
         "name": "Mint",
-        "nameJa": "ミント",
-        "category": "ミント",
+        "nameJa": "Mint",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -2875,7 +2875,7 @@
         "brandId": "brand-011",
         "name": "Mango",
         "nameJa": "マンゴー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2883,7 +2883,7 @@
         "brandId": "brand-011",
         "name": "Lemon",
         "nameJa": "レモン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2891,7 +2891,7 @@
         "brandId": "brand-011",
         "name": "Pineapple",
         "nameJa": "パイナップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2899,7 +2899,7 @@
         "brandId": "brand-011",
         "name": "Orange",
         "nameJa": "オレンジ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2907,15 +2907,15 @@
         "brandId": "brand-011",
         "name": "Raspberry",
         "nameJa": "ラズベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0350",
         "brandId": "brand-011",
         "name": "Dragon Fruit",
-        "nameJa": "ドラゴンフルーツ",
-        "category": "フルーツ",
+        "nameJa": "ドラゴンFruits",
+        "category": "Fruits",
         "isCustom": false
       }
     ]
@@ -2934,7 +2934,7 @@
         "brandId": "brand-012",
         "name": "Twice The Ice X",
         "nameJa": "トゥワイスジアイスX",
-        "category": "ミント",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -2942,7 +2942,7 @@
         "brandId": "brand-012",
         "name": "Blonde",
         "nameJa": "ブロンド",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -2950,7 +2950,7 @@
         "brandId": "brand-012",
         "name": "Dark",
         "nameJa": "ダーク",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -2958,7 +2958,7 @@
         "brandId": "brand-012",
         "name": "Even Keel",
         "nameJa": "イーブンキール",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -2966,7 +2966,7 @@
         "brandId": "brand-012",
         "name": "Lychee",
         "nameJa": "ライチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2974,7 +2974,7 @@
         "brandId": "brand-012",
         "name": "Mango",
         "nameJa": "マンゴー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2982,7 +2982,7 @@
         "brandId": "brand-012",
         "name": "Peach",
         "nameJa": "ピーチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2990,7 +2990,7 @@
         "brandId": "brand-012",
         "name": "Strawberry",
         "nameJa": "ストロベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -2998,7 +2998,7 @@
         "brandId": "brand-012",
         "name": "Watermelon",
         "nameJa": "スイカ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3006,7 +3006,7 @@
         "brandId": "brand-012",
         "name": "Pineapple",
         "nameJa": "パイナップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3014,15 +3014,15 @@
         "brandId": "brand-012",
         "name": "Grape",
         "nameJa": "グレープ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0362",
         "brandId": "brand-012",
         "name": "Mint",
-        "nameJa": "ミント",
-        "category": "ミント",
+        "nameJa": "Mint",
+        "category": "Mint",
         "isCustom": false
       }
     ]
@@ -3041,7 +3041,7 @@
         "brandId": "brand-013",
         "name": "Mango Lemonade",
         "nameJa": "マンゴーレモネード",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3049,7 +3049,7 @@
         "brandId": "brand-013",
         "name": "Summer Air",
         "nameJa": "サマーエアー",
-        "category": "変わり種",
+        "category": "Exotic",
         "isCustom": false
       },
       {
@@ -3057,15 +3057,15 @@
         "brandId": "brand-013",
         "name": "Blueberry Mix",
         "nameJa": "ブルーベリーミックス",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0366",
         "brandId": "brand-013",
         "name": "Grapefruit",
-        "nameJa": "グレープフルーツ",
-        "category": "フルーツ",
+        "nameJa": "グレープFruits",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3073,7 +3073,7 @@
         "brandId": "brand-013",
         "name": "Double Apple",
         "nameJa": "ダブルアップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3081,15 +3081,15 @@
         "brandId": "brand-013",
         "name": "Grape",
         "nameJa": "グレープ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0369",
         "brandId": "brand-013",
         "name": "Mint",
-        "nameJa": "ミント",
-        "category": "ミント",
+        "nameJa": "Mint",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -3097,7 +3097,7 @@
         "brandId": "brand-013",
         "name": "Strawberry",
         "nameJa": "ストロベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3105,7 +3105,7 @@
         "brandId": "brand-013",
         "name": "Peach",
         "nameJa": "ピーチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3113,7 +3113,7 @@
         "brandId": "brand-013",
         "name": "Watermelon",
         "nameJa": "スイカ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3121,7 +3121,7 @@
         "brandId": "brand-013",
         "name": "Lemon",
         "nameJa": "レモン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3129,7 +3129,7 @@
         "brandId": "brand-013",
         "name": "Orange",
         "nameJa": "オレンジ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3137,7 +3137,7 @@
         "brandId": "brand-013",
         "name": "Mango",
         "nameJa": "マンゴー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3145,7 +3145,7 @@
         "brandId": "brand-013",
         "name": "Rose",
         "nameJa": "ローズ",
-        "category": "フローラル",
+        "category": "Floral",
         "isCustom": false
       },
       {
@@ -3153,7 +3153,7 @@
         "brandId": "brand-013",
         "name": "Vanilla",
         "nameJa": "バニラ",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       }
     ]
@@ -3172,7 +3172,7 @@
         "brandId": "brand-014",
         "name": "Double Apple",
         "nameJa": "ダブルアップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3180,15 +3180,15 @@
         "brandId": "brand-014",
         "name": "Grape",
         "nameJa": "グレープ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0380",
         "brandId": "brand-014",
         "name": "Mint",
-        "nameJa": "ミント",
-        "category": "ミント",
+        "nameJa": "Mint",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -3196,7 +3196,7 @@
         "brandId": "brand-014",
         "name": "Strawberry",
         "nameJa": "ストロベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3204,7 +3204,7 @@
         "brandId": "brand-014",
         "name": "Peach",
         "nameJa": "ピーチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3212,7 +3212,7 @@
         "brandId": "brand-014",
         "name": "Watermelon",
         "nameJa": "スイカ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3220,7 +3220,7 @@
         "brandId": "brand-014",
         "name": "Lemon",
         "nameJa": "レモン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3228,7 +3228,7 @@
         "brandId": "brand-014",
         "name": "Mango",
         "nameJa": "マンゴー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3236,7 +3236,7 @@
         "brandId": "brand-014",
         "name": "Rose",
         "nameJa": "ローズ",
-        "category": "フローラル",
+        "category": "Floral",
         "isCustom": false
       },
       {
@@ -3244,7 +3244,7 @@
         "brandId": "brand-014",
         "name": "Orange",
         "nameJa": "オレンジ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3252,7 +3252,7 @@
         "brandId": "brand-014",
         "name": "Blueberry",
         "nameJa": "ブルーベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3260,7 +3260,7 @@
         "brandId": "brand-014",
         "name": "Vanilla",
         "nameJa": "バニラ",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -3268,7 +3268,7 @@
         "brandId": "brand-014",
         "name": "Caramel",
         "nameJa": "キャラメル",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       }
     ]
@@ -3287,7 +3287,7 @@
         "brandId": "brand-015",
         "name": "Grape",
         "nameJa": "グレープ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3295,7 +3295,7 @@
         "brandId": "brand-015",
         "name": "Strawberry",
         "nameJa": "ストロベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3303,7 +3303,7 @@
         "brandId": "brand-015",
         "name": "Peach",
         "nameJa": "ピーチ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3311,15 +3311,15 @@
         "brandId": "brand-015",
         "name": "Watermelon",
         "nameJa": "スイカ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0395",
         "brandId": "brand-015",
         "name": "Mint",
-        "nameJa": "ミント",
-        "category": "ミント",
+        "nameJa": "Mint",
+        "category": "Mint",
         "isCustom": false
       },
       {
@@ -3327,7 +3327,7 @@
         "brandId": "brand-015",
         "name": "Mango",
         "nameJa": "マンゴー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3335,7 +3335,7 @@
         "brandId": "brand-015",
         "name": "Lemon",
         "nameJa": "レモン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3343,7 +3343,7 @@
         "brandId": "brand-015",
         "name": "Double Apple",
         "nameJa": "ダブルアップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3351,7 +3351,7 @@
         "brandId": "brand-015",
         "name": "Blueberry",
         "nameJa": "ブルーベリー",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3359,7 +3359,7 @@
         "brandId": "brand-015",
         "name": "Orange",
         "nameJa": "オレンジ",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3367,7 +3367,7 @@
         "brandId": "brand-015",
         "name": "Pineapple",
         "nameJa": "パイナップル",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3375,7 +3375,7 @@
         "brandId": "brand-015",
         "name": "Melon",
         "nameJa": "メロン",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3383,7 +3383,7 @@
         "brandId": "brand-015",
         "name": "Berry Mix",
         "nameJa": "ベリーミックス",
-        "category": "フルーツ",
+        "category": "Fruits",
         "isCustom": false
       },
       {
@@ -3391,7 +3391,7 @@
         "brandId": "brand-015",
         "name": "Rose",
         "nameJa": "ローズ",
-        "category": "フローラル",
+        "category": "Floral",
         "isCustom": false
       },
       {
@@ -3399,7 +3399,7 @@
         "brandId": "brand-015",
         "name": "Vanilla",
         "nameJa": "バニラ",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -3407,7 +3407,7 @@
         "brandId": "brand-015",
         "name": "Caramel",
         "nameJa": "キャラメル",
-        "category": "お菓子・スイーツ",
+        "category": "Candy & Sweets",
         "isCustom": false
       },
       {
@@ -3415,7 +3415,7 @@
         "brandId": "brand-015",
         "name": "Cola",
         "nameJa": "コーラ",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
@@ -3423,23 +3423,23 @@
         "brandId": "brand-015",
         "name": "Coffee",
         "nameJa": "コーヒー",
-        "category": "ドリンク",
+        "category": "Drinks",
         "isCustom": false
       },
       {
         "id": "f-0409",
         "brandId": "brand-015",
         "name": "Grape Mint",
-        "nameJa": "グレープミント",
-        "category": "フルーツ",
+        "nameJa": "グレープMint",
+        "category": "Fruits",
         "isCustom": false
       },
       {
         "id": "f-0410",
         "brandId": "brand-015",
         "name": "Lemon Mint",
-        "nameJa": "レモンミント",
-        "category": "フルーツ",
+        "nameJa": "レモンMint",
+        "category": "Fruits",
         "isCustom": false
       }
     ]

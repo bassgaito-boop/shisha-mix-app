@@ -1,6 +1,6 @@
 export const CATEGORIES = [
-  'フルーツ', 'ミント', 'お菓子・スイーツ',
-  'フローラル', 'ドリンク', 'ナッツ', 'スパイス', '変わり種',
+  'Fruits', 'Mint', 'Candy & Sweets',
+  'Floral', 'Drinks', 'Nuts', 'Spices', 'Exotic',
 ]
 
 export const INITIAL_TAGS = [...CATEGORIES]
