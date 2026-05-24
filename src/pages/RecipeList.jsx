@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import jsQR from 'jsqr'
 import { useNavigate } from 'react-router-dom'
-import { Search, Trash2, PlusCircle, Pencil, X, ChevronDown, Plus, Check, Download, Upload, Copy, Send, QrCode, Camera, FileText } from 'lucide-react'
+import { Search, Trash2, PlusCircle, Pencil, X, ChevronDown, Plus, Check, Download, Upload, Copy, CopyPlus, Send, QrCode, Camera, FileText } from 'lucide-react'
 import { useRecipes, useFlavors } from '../hooks/useStorage'
 import { encodeRecipe, decodeRecipe } from '../utils/shareCode'
 import QRCodeLib from 'qrcode'
@@ -9,7 +9,7 @@ import { SLICE_COLORS } from '../constants/colors'
 import { useLang } from '../contexts/LangContext'
 
 export default function RecipeList() {
-  const { recipes, deleteRecipe, addRecipe, bulkAddRecipes } = useRecipes()
+  const { recipes, deleteRecipe, addRecipe, bulkAddRecipes, duplicateRecipe } = useRecipes()
   const { getFlavor, brands, flavors: allFlavors, addBrand, addFlavor } = useFlavors()
   const navigate = useNavigate()
   const { t } = useLang()
@@ -121,6 +121,10 @@ export default function RecipeList() {
     if (jsonFileRef.current) jsonFileRef.current.value = ''
   }
 
+  // ── 並べ替え・在庫フィルター ──────────────────────────────
+  const [sortBy, setSortBy] = useState('newest')
+  const [stockOnly, setStockOnly] = useState(false)
+
   // ── テキスト検索 ──────────────────────────────────────────
   const [query, setQuery] = useState('')
 
@@ -160,10 +164,10 @@ export default function RecipeList() {
     }
   }, [recipes, brands, allFlavors])
 
-  // ── フィルタリングロジック（全行AND）─────────────────────
+  // ── フィルタリング・ソートロジック ────────────────────────
   const filtered = useMemo(() => {
     const q = query.toLowerCase()
-    return recipes.filter((r) => {
+    let result = recipes.filter((r) => {
       if (q) {
         const nameMatch = r.name.toLowerCase().includes(q)
         const flavorMatch = r.flavors?.some((item) => {
@@ -177,9 +181,23 @@ export default function RecipeList() {
         if (row.brandId  && !r.flavors?.some((item) => item.brandId  === row.brandId))  return false
         if (row.flavorId && !r.flavors?.some((item) => item.flavorId === row.flavorId)) return false
       }
+      if (stockOnly) {
+        const canMake = r.flavors?.every((item) => {
+          const fl = allFlavors.find((f) => f.id === item.flavorId)
+          return !fl || fl.inStock !== false
+        })
+        if (!canMake) return false
+      }
       return true
     })
-  }, [recipes, query, filterRows, getFlavor, brands])
+    result = [...result].sort((a, b) => {
+      if (sortBy === 'oldest') return new Date(a.createdAt) - new Date(b.createdAt)
+      if (sortBy === 'rating') return (b.rating ?? 0) - (a.rating ?? 0)
+      if (sortBy === 'name')   return a.name.localeCompare(b.name, 'ja')
+      return new Date(b.createdAt) - new Date(a.createdAt)
+    })
+    return result
+  }, [recipes, query, filterRows, getFlavor, brands, allFlavors, stockOnly, sortBy])
 
   return (
     <div className="px-5 pt-14 pb-4">
@@ -279,6 +297,40 @@ export default function RecipeList() {
         })}
       </div>
 
+      {/* 並べ替え・在庫フィルター */}
+      <div className="flex items-center justify-between mb-3">
+        <button
+          onClick={() => setStockOnly((v) => !v)}
+          className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs transition-colors"
+          style={{
+            border: `1px solid ${stockOnly ? 'var(--c-accent)' : 'var(--ca-20)'}`,
+            background: stockOnly ? 'var(--ca-10)' : 'transparent',
+            color: stockOnly ? 'var(--c-accent)' : 'var(--c-muted)',
+          }}
+        >
+          <div className="w-1.5 h-1.5 rounded-full" style={{ background: stockOnly ? 'var(--c-accent)' : 'var(--c-dim)' }} />
+          {rl.stockFilter}
+        </button>
+        <div className="relative">
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="appearance-none pl-2.5 pr-6 py-1.5 text-xs outline-none"
+            style={{
+              background: 'var(--c-surf)',
+              border: '1px solid var(--ca-15)',
+              color: 'var(--c-muted)',
+            }}
+          >
+            <option value="newest">{rl.sortNewest}</option>
+            <option value="oldest">{rl.sortOldest}</option>
+            <option value="rating">{rl.sortRating}</option>
+            <option value="name">{rl.sortName}</option>
+          </select>
+          <ChevronDown size={11} className="absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--c-dim)' }} />
+        </div>
+      </div>
+
       {/* ADD FILTER / 全クリア */}
       <div className="flex items-center gap-2 mb-5">
         <button
@@ -341,6 +393,7 @@ export default function RecipeList() {
               getFlavor={getFlavor}
               brands={brands}
               onDelete={deleteRecipe}
+              onDuplicate={duplicateRecipe}
               onQr={setQrRecipe}
             />
           ))}
@@ -713,12 +766,20 @@ function buildXPostText(recipe, getFlavor, brands) {
   return lines.join('\n')
 }
 
-function RecipeCard({ recipe, getFlavor, brands, onDelete, onQr }) {
+function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onQr }) {
   const navigate = useNavigate()
   const { t } = useLang()
   const rl = t.recipeList
   const [shared, setShared] = useState(false)
   const [codeCopied, setCodeCopied] = useState(false)
+  const [duplicated, setDuplicated] = useState(false)
+
+  const handleDuplicate = (e) => {
+    e.stopPropagation()
+    onDuplicate(recipe.id)
+    setDuplicated(true)
+    setTimeout(() => setDuplicated(false), 1500)
+  }
 
   const handleDelete = (e) => {
     e.stopPropagation()
@@ -805,6 +866,14 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onQr }) {
           title={rl.xPostTooltip}
         >
           {shared ? <Check size={14} style={{ color: 'var(--c-accent)' }} /> : <Send size={14} />}
+        </button>
+        <button
+          onClick={handleDuplicate}
+          className="p-1.5 transition-colors shrink-0"
+          style={{ color: 'var(--c-muted)' }}
+          title={rl.duplicateTooltip}
+        >
+          {duplicated ? <Check size={14} style={{ color: 'var(--c-accent)' }} /> : <CopyPlus size={14} />}
         </button>
         <button
           onClick={() => navigate(`/recipes/${recipe.id}/edit`)}

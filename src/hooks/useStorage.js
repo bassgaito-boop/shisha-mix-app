@@ -69,7 +69,23 @@ export function useRecipes() {
     })
   }
 
-  return { recipes, addRecipe, updateRecipe, deleteRecipe, getRecipe, bulkAddRecipes }
+  const duplicateRecipe = (id) => {
+    const original = recipes.find((r) => r.id === id)
+    if (!original) return
+    const { totalGrams, ratios } = calcRecipeMeta(original.flavors ?? [])
+    const copy = {
+      ...original,
+      id: crypto.randomUUID(),
+      name: original.name + ' (コピー)',
+      totalGrams,
+      ratios,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+    setRecipes((prev) => [copy, ...prev])
+  }
+
+  return { recipes, addRecipe, updateRecipe, deleteRecipe, getRecipe, bulkAddRecipes, duplicateRecipe }
 }
 
 // ---------------------------------------------------------------------------
@@ -126,6 +142,12 @@ export function useFlavors() {
 
   const getFlavor = (id) => flavors.find((f) => f.id === id) ?? null
 
+  const toggleStock = (id) => {
+    setFlavors((prev) =>
+      prev.map((f) => (f.id === id ? { ...f, inStock: f.inStock === false } : f))
+    )
+  }
+
   /** @param {Omit<import('../data/types').Flavor, 'id'|'isCustom'>} data */
   const addFlavor = (data) => {
     const newFlavor = { ...data, id: crypto.randomUUID(), isCustom: true }
@@ -161,6 +183,7 @@ export function useFlavors() {
     flavors,
     brands,
     getFlavor,
+    toggleStock,
     addFlavor,
     updateFlavor,
     deleteFlavor,

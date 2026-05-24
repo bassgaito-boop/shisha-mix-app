@@ -7,7 +7,7 @@ import { useLang } from '../contexts/LangContext'
 
 export default function FlavorManage() {
   const navigate = useNavigate()
-  const { brands, flavors, addBrand, addFlavor, deleteBrand, deleteFlavor } = useFlavors()
+  const { brands, flavors, addBrand, addFlavor, deleteBrand, deleteFlavor, toggleStock } = useFlavors()
   const { tags: globalTags } = useTags()
   const { t } = useLang()
   const fm = t.flavorManage
@@ -138,6 +138,16 @@ export default function FlavorManage() {
                             </div>
                           )}
                         </div>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); toggleStock(flavor.id) }}
+                          className="shrink-0 p-1 transition-colors"
+                          title={flavor.inStock === false ? fm.stockOff : fm.stockOn}
+                        >
+                          <div
+                            className="w-2.5 h-2.5 rounded-full transition-colors"
+                            style={{ background: flavor.inStock === false ? 'var(--c-dim)' : 'var(--c-accent)' }}
+                          />
+                        </button>
                         <ChevronRight size={13} className="shrink-0" style={{ color: 'var(--c-dim)' }} />
                         <button
                           onClick={(e) => handleDeleteFlavor(e, flavor)}
