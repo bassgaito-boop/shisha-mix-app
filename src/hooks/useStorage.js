@@ -3,6 +3,18 @@ import { initialBrands, initialFlavors } from '../data/initialFlavors'
 import { initialRecipes } from '../data/initialRecipes'
 import { INITIAL_TAGS } from '../constants/categories'
 
+// 初回またはレシピが空のユーザーにサンプルレシピを投入
+;(() => {
+  if (typeof window === 'undefined') return
+  if (!window.localStorage.getItem('shisha_seeded')) {
+    window.localStorage.setItem('shisha_seeded', '1')
+    const stored = window.localStorage.getItem('shisha_recipes')
+    if (!stored || stored === '[]') {
+      window.localStorage.setItem('shisha_recipes', JSON.stringify(initialRecipes))
+    }
+  }
+})()
+
 /** @param {import('../data/types').FlavorItem[]} flavors */
 function calcRecipeMeta(flavors) {
   const totalGrams = flavors.reduce((sum, f) => sum + (f.grams || 0), 0)
