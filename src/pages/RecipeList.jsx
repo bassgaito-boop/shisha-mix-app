@@ -1004,18 +1004,16 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate }) {
       {/* 共有ボトムシート */}
       {shareOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-end justify-center"
+          className="fixed inset-0 z-50 flex items-center justify-center px-5"
           onClick={() => setShareOpen(false)}
         >
           <div className="absolute inset-0 bg-black/70" />
           <div
-            className="relative w-full max-w-[430px] pb-8 pt-5 px-5"
+            className="relative w-full max-w-[400px] p-5"
             style={{
               background: 'var(--c-surf)',
               border: '1px solid var(--ca-20)',
               borderRadius: 'var(--radius)',
-              borderBottomLeftRadius: 0,
-              borderBottomRightRadius: 0,
             }}
             onClick={(e) => e.stopPropagation()}
           >
