@@ -4,6 +4,7 @@ import { Plus, X, ChevronDown, ChevronRight, Search } from 'lucide-react'
 import { useFlavors, useTags } from '../hooks/useStorage'
 import { getTags } from '../constants/categories'
 import { useLang } from '../contexts/LangContext'
+import { useToast, Toast } from '../components/common/Toast'
 
 export default function FlavorManage() {
   const navigate = useNavigate()
@@ -11,6 +12,8 @@ export default function FlavorManage() {
   const { tags: globalTags } = useTags()
   const { t } = useLang()
   const fm = t.flavorManage
+
+  const { message: toastMsg, showToast } = useToast()
 
   const [activeBrandId, setActiveBrandId] = useState(brands[0]?.id ?? '')
   const [showModal, setShowModal] = useState(false)
@@ -221,9 +224,12 @@ export default function FlavorManage() {
           onAddBrand={addBrand}
           onAddFlavor={addFlavor}
           onClose={() => setShowModal(false)}
+          onError={showToast}
           fm={fm}
         />
       )}
+
+      <Toast message={toastMsg} />
 
       {/* 削除確認モーダル */}
       {deleteTarget && (
@@ -258,7 +264,7 @@ export default function FlavorManage() {
               <button
                 onClick={confirmDelete}
                 className="flex-1 py-2.5 text-sm font-semibold active:opacity-80"
-                style={{ background: '#4a2a2a', color: '#e07070' }}
+                style={{ background: 'var(--c-danger-bg)', color: 'var(--c-danger-fg)' }}
               >
                 {fm.deleteOkBtn}
               </button>
@@ -272,7 +278,7 @@ export default function FlavorManage() {
 
 // ─── 追加モーダル ─────────────────────────────────────────────
 
-function AddModal({ brands, flavors, globalTags, onAddBrand, onAddFlavor, onClose, fm }) {
+function AddModal({ brands, flavors, globalTags, onAddBrand, onAddFlavor, onClose, onError, fm }) {
   const m = fm.modal
 
   const [brandMode, setBrandMode]             = useState('select')
@@ -311,7 +317,7 @@ function AddModal({ brands, flavors, globalTags, onAddBrand, onAddFlavor, onClos
   const handleSave = () => {
     let brandId = selectedBrandId
     if (brandMode === 'new') {
-      if (!newBrandName.trim()) return alert(m.alertBrand)
+      if (!newBrandName.trim()) { onError(m.alertBrand); return }
       const nb = onAddBrand({
         name: newBrandName.trim(),
         nameJa: newBrandName.trim(),
@@ -319,15 +325,15 @@ function AddModal({ brands, flavors, globalTags, onAddBrand, onAddFlavor, onClos
       })
       brandId = nb.id
     } else {
-      if (!brandId) return alert(m.alertBrandSelect)
+      if (!brandId) { onError(m.alertBrandSelect); return }
     }
 
     if (flavorMode === 'select') {
       const existing = flavors.find((f) => f.id === selectedFlavorId)
-      if (!existing) return alert(m.alertFlavor)
+      if (!existing) { onError(m.alertFlavor); return }
       onAddFlavor({ brandId, name: existing.name, nameJa: existing.name, tags: getTags(existing) })
     } else {
-      if (!flavorName.trim()) return alert(m.alertFlavorName)
+      if (!flavorName.trim()) { onError(m.alertFlavorName); return }
       onAddFlavor({ brandId, name: flavorName.trim(), nameJa: flavorName.trim(), tags: selectedTags })
     }
     onClose()

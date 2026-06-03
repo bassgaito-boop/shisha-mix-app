@@ -5,6 +5,7 @@ import { useRecipes, useFlavors, useRecipeTags } from '../hooks/useStorage'
 import { SLICE_COLORS } from '../constants/colors'
 import { CATEGORIES, getTags } from '../constants/categories'
 import { useLang } from '../contexts/LangContext'
+import { useToast, Toast } from '../components/common/Toast'
 
 export default function RecipeCreate() {
   const navigate = useNavigate()
@@ -13,6 +14,8 @@ export default function RecipeCreate() {
   const { t } = useLang()
   const rc = t.recipeCreate
   const { brands, flavors: allFlavors, getFlavor, addBrand, addFlavor } = useFlavors()
+
+  const { message: toastMsg, showToast } = useToast()
 
   const isEdit = !!id
   const existing = isEdit ? (recipes.find((r) => r.id === id) ?? null) : null
@@ -36,7 +39,7 @@ export default function RecipeCreate() {
       (f, i) => i !== pickerIndex && f.flavorId === flavorId
     )
     if (isDuplicate) {
-      alert(rc.alertDuplicate)
+      showToast(rc.alertDuplicate)
       return
     }
     setFlavorItems((prev) =>
@@ -78,8 +81,8 @@ export default function RecipeCreate() {
   const removeTag = (tag) => setRecipeTags((prev) => prev.filter((t) => t !== tag))
 
   const handleSave = () => {
-    if (!name.trim()) return alert(rc.alertName)
-    if (flavorItems.some((f) => !f.flavorId)) return alert(rc.alertFlavors)
+    if (!name.trim()) { showToast(rc.alertName); return }
+    if (flavorItems.some((f) => !f.flavorId)) { showToast(rc.alertFlavors); return }
     if (isEdit) {
       updateRecipe(id, {
         name: name.trim(),
@@ -360,10 +363,13 @@ export default function RecipeCreate() {
           onClose={closePicker}
           addBrand={addBrand}
           addFlavor={addFlavor}
+          onError={showToast}
           rc={rc}
           fm={t.flavorManage}
         />
       )}
+
+      <Toast message={toastMsg} />
     </div>
   )
 }
@@ -381,7 +387,8 @@ function GramsInput({ value, onChange }) {
     if (!isNaN(n) && n >= 0.1) onChange(n)
   }
 
-  const handleBlur = () => {
+  const handleBlur = (e) => {
+    e.target.style.borderColor = 'var(--ca-15)'
     const n = parseFloat(display)
     const valid = !isNaN(n) && n >= 0.1 ? n : 0.1
     setDisplay(String(valid))
@@ -396,7 +403,6 @@ function GramsInput({ value, onChange }) {
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={(e) => { e.target.select(); e.target.style.borderColor = 'var(--ca-40)' }}
-      onBlur={(e) => { e.target.style.borderColor = 'var(--ca-15)' }}
       className="w-12 px-1 py-2.5 text-sm text-center outline-none transition-colors"
       style={{
         background: 'var(--c-surf)',
@@ -475,7 +481,7 @@ function Legend({ slices, total }) {
 // FlavorPicker — 検索・カテゴリフィルター・新規登録一体型
 // ---------------------------------------------------------------------------
 
-function FlavorPicker({ brands, allFlavors, usedFlavorIds, onSelect, onClose, addBrand, addFlavor, rc, fm }) {
+function FlavorPicker({ brands, allFlavors, usedFlavorIds, onSelect, onClose, addBrand, addFlavor, onError, rc, fm }) {
   const [mode, setMode] = useState('search')
   const [query, setQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState('')
@@ -521,12 +527,12 @@ function FlavorPicker({ brands, allFlavors, usedFlavorIds, onSelect, onClose, ad
     )
 
   const handleRegister = () => {
-    if (!newFlavorName.trim()) return alert(rc.pickerAlertFlavorName)
+    if (!newFlavorName.trim()) { onError(rc.pickerAlertFlavorName); return }
     let brandId = ''
     if (newBrandMode === 'select') {
       brandId = newBrandId
     } else if (newBrandMode === 'new') {
-      if (!newBrandNameVal.trim()) return alert(rc.pickerAlertBrand)
+      if (!newBrandNameVal.trim()) { onError(rc.pickerAlertBrand); return }
       const nb = addBrand({
         name: newBrandNameVal.trim(),
         nameJa: newBrandNameVal.trim(),
@@ -664,7 +670,7 @@ function FlavorPicker({ brands, allFlavors, usedFlavorIds, onSelect, onClose, ad
                           <p className="text-[10px]" style={{ color: 'var(--c-muted)' }}>{brand?.name ?? ''}</p>
                         </div>
                         {used && (
-                          <span className="text-[10px] shrink-0" style={{ color: 'var(--c-dim)' }}>追加済み</span>
+                          <span className="text-[10px] shrink-0" style={{ color: 'var(--c-dim)' }}>{rc.pickerUsed}</span>
                         )}
                       </button>
                     )

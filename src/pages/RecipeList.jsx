@@ -617,8 +617,8 @@ export default function RecipeList() {
                     onClick={handleJsonImport}
                     className="flex-1 py-3 text-sm font-semibold tracking-wide transition-all"
                     style={{
-                      background: jsonDone ? '#2a4a2a' : 'var(--ca-grad)',
-                      color: jsonDone ? '#7ec8a0' : 'var(--c-btn-fg)',
+                      background: jsonDone ? 'var(--c-success-bg)' : 'var(--ca-grad)',
+                      color: jsonDone ? 'var(--c-success-fg)' : 'var(--c-btn-fg)',
                     }}
                   >
                     {jsonDone ? rl.jsonDoneMsg : rl.jsonAddBtn}
@@ -642,8 +642,8 @@ export default function RecipeList() {
                   onClick={handleImport}
                   className="flex-1 py-3 text-sm font-semibold tracking-wide transition-all"
                   style={{
-                    background: importDone ? '#2a4a2a' : 'var(--ca-grad)',
-                    color: importDone ? '#7ec8a0' : 'var(--c-btn-fg)',
+                    background: importDone ? 'var(--c-success-bg)' : 'var(--ca-grad)',
+                    color: importDone ? 'var(--c-success-fg)' : 'var(--c-btn-fg)',
                   }}
                 >
                   {importDone ? rl.addedMsg : rl.addBtn}
@@ -991,7 +991,7 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate }) {
                 color: 'var(--c-dim)',
               }}
             />
-            Tasting Note
+            {rl.tastingNoteLabel}
           </button>
           {noteOpen && (
             <p className="mt-2 text-xs leading-relaxed" style={{ color: 'var(--c-muted)' }}>
@@ -1116,7 +1116,7 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate }) {
               <button
                 onClick={handleDelete}
                 className="flex-1 py-2.5 text-sm font-semibold active:opacity-80"
-                style={{ background: '#4a2a2a', color: '#e07070' }}
+                style={{ background: 'var(--c-danger-bg)', color: 'var(--c-danger-fg)' }}
               >
                 {rl.deleteOkBtn}
               </button>

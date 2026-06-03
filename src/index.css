@@ -37,6 +37,11 @@
   --ca-60: rgba(201, 168, 76, 0.60);
   --ca-grad: linear-gradient(135deg, var(--c-accent), var(--c-accent-2));
 
+  --c-danger-bg: rgba(74, 42, 42, 0.95);
+  --c-danger-fg: #e07070;
+  --c-success-bg: rgba(42, 74, 42, 0.95);
+  --c-success-fg: #7ec8a0;
+
   --radius:     0px;
   --font-body:  'Inter', 'Helvetica Neue', sans-serif;
   --font-display: 'Cormorant Garamond', Georgia, serif;

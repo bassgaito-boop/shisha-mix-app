@@ -20,6 +20,7 @@ export default function FlavorEdit() {
   const [selectedTags, setSelectedTags] = useState(() => getTags(flavor ?? {}))
   const [note, setNote]               = useState(flavor?.note ?? '')
   const [newTagInput, setNewTagInput] = useState('')
+  const [deleteOpen, setDeleteOpen]   = useState(false)
 
   if (!flavor) return <Navigate to="/flavors" replace />
 
@@ -46,7 +47,6 @@ export default function FlavorEdit() {
   }
 
   const handleDelete = () => {
-    if (!confirm(fe.deleteConfirm(flavor.name))) return
     deleteFlavor(id)
     const remaining = flavors.filter((f) => f.brandId === flavor.brandId && f.id !== flavor.id)
     if (remaining.length === 0) {
@@ -240,12 +240,54 @@ export default function FlavorEdit() {
 
       {/* 削除ボタン */}
       <button
-        onClick={handleDelete}
-        className="w-full py-3 border border-red-900/40 text-red-500/60 text-sm active:opacity-70 transition-opacity"
+        onClick={() => setDeleteOpen(true)}
+        className="w-full py-3 border text-sm active:opacity-70 transition-opacity"
+        style={{ borderColor: 'var(--c-danger-fg)', color: 'var(--c-danger-fg)', opacity: 0.6 }}
       >
         {fe.deleteBtn}
       </button>
 
+      {/* 削除確認モーダル */}
+      {deleteOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center px-6"
+          onClick={() => setDeleteOpen(false)}
+        >
+          <div className="absolute inset-0 bg-black/70" />
+          <div
+            className="relative w-full max-w-[320px] p-5"
+            style={{
+              background: 'var(--c-surf)',
+              border: '1px solid var(--ca-20)',
+              borderRadius: 'var(--radius)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-sm font-semibold mb-2" style={{ color: 'var(--c-text)' }}>
+              {fe.deleteTitle}
+            </h3>
+            <p className="text-xs mb-5 leading-relaxed" style={{ color: 'var(--c-muted)' }}>
+              {fe.deleteConfirm(flavor.name)}
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setDeleteOpen(false)}
+                className="flex-1 py-2.5 text-sm active:opacity-70"
+                style={{ border: '1px solid var(--ca-20)', color: 'var(--c-muted)' }}
+              >
+                {fe.deleteCancelBtn}
+              </button>
+              <button
+                onClick={handleDelete}
+                className="flex-1 py-2.5 text-sm font-semibold active:opacity-80"
+                style={{ background: 'var(--c-danger-bg)', color: 'var(--c-danger-fg)' }}
+              >
+                {fe.deleteOkBtn}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
