@@ -7,6 +7,7 @@ import RecipeCreate from './pages/RecipeCreate'
 import RecipeList from './pages/RecipeList'
 import FlavorManage from './pages/FlavorManage'
 import FlavorEdit from './pages/FlavorEdit'
+import SettingManage from './pages/SettingManage'
 import Legal from './pages/Legal'
 import Layout from './components/common/Layout'
 
@@ -38,6 +39,7 @@ export default function App() {
             <Route path="/recipes/:id/edit" element={<RecipeCreate />} />
             <Route path="/flavors" element={<FlavorManage />} />
             <Route path="/flavors/:id/edit" element={<FlavorEdit />} />
+            <Route path="/settings" element={<SettingManage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

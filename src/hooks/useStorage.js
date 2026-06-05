@@ -114,6 +114,12 @@ export function useRecipes() {
     })
   }
 
+  const toggleFavorite = (id) => {
+    setRecipes((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, isFavorite: !r.isFavorite } : r))
+    )
+  }
+
   const duplicateRecipe = (id) => {
     const original = recipes.find((r) => r.id === id)
     if (!original) return
@@ -130,7 +136,7 @@ export function useRecipes() {
     setRecipes((prev) => [copy, ...prev])
   }
 
-  return { recipes, addRecipe, updateRecipe, deleteRecipe, getRecipe, bulkAddRecipes, duplicateRecipe }
+  return { recipes, addRecipe, updateRecipe, deleteRecipe, getRecipe, bulkAddRecipes, duplicateRecipe, toggleFavorite }
 }
 
 // ---------------------------------------------------------------------------

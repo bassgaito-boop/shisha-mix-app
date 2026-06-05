@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Trash2, PlusCircle, Pencil, X, ChevronDown, Check, Download, Upload, Copy, CopyPlus, Send, QrCode, Camera, FileText } from 'lucide-react'
+import { Search, Trash2, PlusCircle, Pencil, X, ChevronDown, Check, Download, Upload, Copy, CopyPlus, Send, QrCode, Camera, FileText, Heart } from 'lucide-react'
 import { useRecipes, useFlavors } from '../hooks/useStorage'
 import { encodeRecipe, decodeRecipe } from '../utils/shareCode'
 import { SLICE_COLORS } from '../constants/colors'
 import { useLang } from '../contexts/LangContext'
 
 export default function RecipeList() {
-  const { recipes, deleteRecipe, addRecipe, bulkAddRecipes, duplicateRecipe } = useRecipes()
+  const { recipes, deleteRecipe, addRecipe, bulkAddRecipes, duplicateRecipe, updateRecipe, toggleFavorite } = useRecipes()
   const { getFlavor, brands, flavors: allFlavors, addBrand, addFlavor } = useFlavors()
   const navigate = useNavigate()
   const { t } = useLang()
@@ -27,13 +27,18 @@ export default function RecipeList() {
     () => recipes.filter((r) => !r.id.startsWith('sample-')).length,
     [recipes]
   )
-  const [backupDismissed, setBackupDismissed] = useState(
-    () => !!localStorage.getItem('backup_reminded')
-  )
-  const showBackupReminder = userRecipeCount >= 5 && !backupDismissed
+  const [backupRemindedCount, setBackupRemindedCount] = useState(() => {
+    const newKey = localStorage.getItem('backup_reminded_count')
+    if (newKey) return parseInt(newKey)
+    if (localStorage.getItem('backup_reminded')) return 999
+    return 0
+  })
+  const showBackupReminder =
+    userRecipeCount >= 5 &&
+    (backupRemindedCount === 0 || userRecipeCount >= backupRemindedCount * 2)
   const dismissBackup = () => {
-    localStorage.setItem('backup_reminded', '1')
-    setBackupDismissed(true)
+    localStorage.setItem('backup_reminded_count', String(userRecipeCount))
+    setBackupRemindedCount(userRecipeCount)
   }
 
   // ── インポートモーダル ──────────────────────────────────────
@@ -142,6 +147,7 @@ export default function RecipeList() {
   // ── 並べ替え・在庫フィルター ──────────────────────────────
   const [sortBy, setSortBy] = useState('newest')
   const [stockOnly, setStockOnly] = useState(false)
+  const [favoriteOnly, setFavoriteOnly] = useState(false)
 
   // ── テキスト検索 ──────────────────────────────────────────
   const [query, setQuery] = useState('')
@@ -160,9 +166,10 @@ export default function RecipeList() {
     setFilterBrandId('')
     setFilterFlavorId('')
     setFilterTags([])
+    setFavoriteOnly(false)
   }
 
-  const hasFilters = !!query || !!filterBrandId || !!filterFlavorId || filterTags.length > 0
+  const hasFilters = !!query || !!filterBrandId || !!filterFlavorId || filterTags.length > 0 || favoriteOnly
 
   // レシピで実際に使われているブランド・フレーバーのみ
   const { usedBrands, usedFlavors } = useMemo(() => {
@@ -210,11 +217,13 @@ export default function RecipeList() {
         })
         if (!canMake) return false
       }
+      if (favoriteOnly && !r.isFavorite) return false
       return true
     })
     result = [...result].sort((a, b) => {
       if (sortBy === 'oldest') return new Date(a.createdAt) - new Date(b.createdAt)
       if (sortBy === 'name')   return a.name.localeCompare(b.name, 'ja')
+      if (sortBy === 'rating') return (b.rating ?? 0) - (a.rating ?? 0)
       return new Date(b.createdAt) - new Date(a.createdAt)
     })
     return result
@@ -397,6 +406,18 @@ export default function RecipeList() {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <button
+            onClick={() => setFavoriteOnly((v) => !v)}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs transition-colors"
+            style={{
+              border: `1px solid ${favoriteOnly ? 'var(--c-accent)' : 'var(--ca-20)'}`,
+              background: favoriteOnly ? 'var(--ca-10)' : 'transparent',
+              color: favoriteOnly ? 'var(--c-accent)' : 'var(--c-muted)',
+            }}
+          >
+            <Heart size={11} fill={favoriteOnly ? 'currentColor' : 'none'} />
+            {rl.favoriteFilter}
+          </button>
+          <button
             onClick={() => setStockOnly((v) => !v)}
             className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs transition-colors"
             style={{
@@ -438,6 +459,7 @@ export default function RecipeList() {
             <option value="newest">{rl.sortNewest}</option>
             <option value="oldest">{rl.sortOldest}</option>
             <option value="name">{rl.sortName}</option>
+            <option value="rating">{rl.sortRating}</option>
           </select>
           <ChevronDown size={11} className="absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--c-dim)' }} />
         </div>
@@ -477,6 +499,8 @@ export default function RecipeList() {
               brands={brands}
               onDelete={deleteRecipe}
               onDuplicate={duplicateRecipe}
+              onRate={(id, val) => updateRecipe(id, { rating: val })}
+              onFavorite={toggleFavorite}
             />
           ))}
         </div>
@@ -820,7 +844,7 @@ function buildXPostText(recipe, getFlavor, brands) {
   return lines.join('\n')
 }
 
-function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate }) {
+function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onRate, onFavorite }) {
   const navigate = useNavigate()
   const { t } = useLang()
   const rl = t.recipeList
@@ -895,8 +919,16 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate }) {
         {recipe.name}
       </h3>
 
-      {/* アイコン行（4つ） */}
+      {/* アイコン行 */}
       <div className="flex items-center gap-0 mb-3" style={{ marginLeft: '-6px' }}>
+        <button
+          onClick={(e) => { e.stopPropagation(); onFavorite(recipe.id) }}
+          className="p-1.5 transition-colors"
+          style={{ color: recipe.isFavorite ? 'var(--c-accent)' : 'var(--c-muted)' }}
+          title={rl.favoriteFilter}
+        >
+          <Heart size={14} fill={recipe.isFavorite ? 'currentColor' : 'none'} />
+        </button>
         <button
           onClick={(e) => { e.stopPropagation(); setShareOpen(true) }}
           className="p-1.5 transition-colors"
@@ -974,6 +1006,23 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate }) {
           ))}
         </div>
       )}
+
+      {/* 評価 */}
+      <div className="flex gap-1 mt-2.5">
+        {[1, 2, 3, 4, 5].map((n) => (
+          <button
+            key={n}
+            onClick={(e) => { e.stopPropagation(); onRate(recipe.id, (recipe.rating ?? 0) === n ? 0 : n) }}
+            className="leading-none transition-all active:scale-90"
+            style={{
+              fontSize: '14px',
+              color: n <= (recipe.rating ?? 0) ? 'var(--c-accent)' : 'var(--ca-20)',
+            }}
+          >
+            ★
+          </button>
+        ))}
+      </div>
 
       {/* テイスティングノート（折り畳み） */}
       {note && (

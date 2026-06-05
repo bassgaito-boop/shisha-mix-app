@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Plus, X, ChevronRight, ChevronLeft, ChevronDown, Search } from 'lucide-react'
-import { useRecipes, useFlavors, useRecipeTags } from '../hooks/useStorage'
+import { useRecipes, useFlavors, useRecipeTags, useSettings } from '../hooks/useStorage'
 import { SLICE_COLORS } from '../constants/colors'
 import { CATEGORIES, getTags } from '../constants/categories'
 import { useLang } from '../contexts/LangContext'
@@ -14,6 +14,7 @@ export default function RecipeCreate() {
   const { t } = useLang()
   const rc = t.recipeCreate
   const { brands, flavors: allFlavors, getFlavor, addBrand, addFlavor } = useFlavors()
+  const { settings } = useSettings()
 
   const { message: toastMsg, showToast } = useToast()
 
@@ -25,6 +26,8 @@ export default function RecipeCreate() {
     existing?.flavors?.length ? existing.flavors : [{ brandId: '', flavorId: '', grams: 5 }]
   )
   const [tastingNote, setTastingNote] = useState(existing?.tastingNote ?? existing?.memo ?? '')
+  const [rating, setRating] = useState(existing?.rating ?? 0)
+  const [settingId, setSettingId] = useState(existing?.settingId ?? null)
   const [recipeTags, setRecipeTags] = useState(existing?.tags ?? [])
   const [tagInput, setTagInput] = useState('')
   const { recipeTags: allRecipeTags, addRecipeTag } = useRecipeTags()
@@ -89,6 +92,8 @@ export default function RecipeCreate() {
         flavors: flavorItems,
         tastingNote: tastingNote.trim(),
         tags: recipeTags,
+        rating,
+        settingId,
       })
     } else {
       addRecipe({
@@ -96,11 +101,12 @@ export default function RecipeCreate() {
         flavors: flavorItems,
         tastingNote: tastingNote.trim(),
         tags: recipeTags,
-        rating: 0,
-        settingId: null,
+        rating,
+        settingId,
       })
     }
-    navigate('/recipes')
+    showToast(isEdit ? rc.updatedMsg : rc.savedMsg)
+    setTimeout(() => navigate('/recipes'), 900)
   }
 
   const getLabel = (item) => {
@@ -228,6 +234,25 @@ export default function RecipeCreate() {
         </button>
       </div>
 
+      {/* 評価 */}
+      <div className="mb-6">
+        <label className="block text-xs tracking-widest uppercase mb-3" style={{ color: 'var(--c-muted)' }}>
+          {rc.rating}
+        </label>
+        <div className="flex gap-3">
+          {[1, 2, 3, 4, 5].map((n) => (
+            <button
+              key={n}
+              onClick={() => setRating(rating === n ? 0 : n)}
+              className="text-2xl leading-none transition-all active:scale-90"
+              style={{ color: n <= rating ? 'var(--c-accent)' : 'var(--ca-20)' }}
+            >
+              ★
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* テイスティングノート */}
       <div className="mb-6">
         <label className="block text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--c-muted)' }}>
@@ -332,6 +357,35 @@ export default function RecipeCreate() {
           )}
         </div>
       </div>
+
+      {/* 器材セッティング */}
+      {settings.length > 0 && (
+        <div className="mb-6">
+          <label className="block text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--c-muted)' }}>
+            {rc.setting}
+          </label>
+          <div className="relative">
+            <select
+              value={settingId ?? ''}
+              onChange={(e) => setSettingId(e.target.value || null)}
+              className="w-full appearance-none px-4 pr-9 py-3 text-sm outline-none transition-colors"
+              style={{
+                background: 'var(--c-surf)',
+                border: '1px solid var(--ca-15)',
+                color: settingId ? 'var(--c-text)' : 'var(--c-muted)',
+              }}
+              onFocus={(e) => { e.target.style.borderColor = 'var(--ca-40)' }}
+              onBlur={(e) => { e.target.style.borderColor = 'var(--ca-15)' }}
+            >
+              <option value="" style={{ background: 'var(--c-surf)', color: 'var(--c-muted)' }}>{rc.settingNone}</option>
+              {settings.map((s) => (
+                <option key={s.id} value={s.id} style={{ background: 'var(--c-surf)', color: 'var(--c-text)' }}>{s.name}</option>
+              ))}
+            </select>
+            <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--c-muted)' }} />
+          </div>
+        </div>
+      )}
 
       {/* 円グラフ */}
       {chartSlices.length > 0 && (

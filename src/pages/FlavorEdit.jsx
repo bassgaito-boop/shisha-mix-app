@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useParams, Navigate } from 'react-router-dom'
 import { ChevronLeft, Plus } from 'lucide-react'
-import { useFlavors, useTags } from '../hooks/useStorage'
+import { useFlavors, useTags, useRecipes } from '../hooks/useStorage'
 import { getTags } from '../constants/categories'
 import { useLang } from '../contexts/LangContext'
 
@@ -13,8 +13,10 @@ export default function FlavorEdit() {
   const { t } = useLang()
   const fe = t.flavorEdit
 
+  const { recipes } = useRecipes()
   const flavor = flavors.find((f) => f.id === id) ?? null
   const brand  = brands.find((b) => b.id === flavor?.brandId) ?? null
+  const usedRecipes = recipes.filter((r) => r.flavors?.some((f) => f.flavorId === id))
 
   const [name, setName]               = useState(flavor?.name ?? '')
   const [selectedTags, setSelectedTags] = useState(() => getTags(flavor ?? {}))
@@ -223,6 +225,33 @@ export default function FlavorEdit() {
           onFocus={(e) => { e.target.style.borderColor = 'var(--ca-40)' }}
           onBlur={(e) => { e.target.style.borderColor = 'var(--ca-15)' }}
         />
+      </div>
+
+      {/* 使用中レシピ */}
+      <div className="mb-8">
+        <label className="block text-[10px] tracking-widest uppercase mb-2" style={{ color: 'var(--c-muted)' }}>
+          {fe.usedIn}
+        </label>
+        {usedRecipes.length === 0 ? (
+          <p className="text-xs" style={{ color: 'var(--c-dim)' }}>{fe.usedInNone}</p>
+        ) : (
+          <div className="space-y-1.5">
+            {usedRecipes.map((r) => (
+              <div
+                key={r.id}
+                className="px-3 py-2 text-xs"
+                style={{
+                  background: 'var(--c-surf)',
+                  border: '1px solid var(--ca-08)',
+                  borderRadius: 'var(--radius)',
+                  color: 'var(--c-text)',
+                }}
+              >
+                {r.name}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* 保存ボタン */}

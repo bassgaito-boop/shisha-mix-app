@@ -1,12 +1,13 @@
 import { useMemo, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { PlusCircle, BookOpen, ChevronRight, Library } from 'lucide-react'
-import { useRecipes } from '../hooks/useStorage'
+import { useRecipes, useFlavors } from '../hooks/useStorage'
 import { useLang } from '../contexts/LangContext'
 
 export default function Home() {
   const navigate = useNavigate()
   const { recipes } = useRecipes()
+  const { flavors, brands } = useFlavors()
   const { lang, t, toggleLang } = useLang()
   const h = t.home
 
@@ -95,6 +96,10 @@ export default function Home() {
         {/* 統計 */}
         <div className="flex items-center gap-6">
           <Stat value={recipes.length} label={h.stat} />
+          <div className="w-px h-6" style={{ background: 'var(--ca-20)' }} />
+          <Stat value={flavors.length} label={h.statFlavors} />
+          <div className="w-px h-6" style={{ background: 'var(--ca-20)' }} />
+          <Stat value={brands.length} label={h.statBrands} />
         </div>
 
         {/* 初回オンボーディングヒント */}
