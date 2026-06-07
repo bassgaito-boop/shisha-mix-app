@@ -75,7 +75,7 @@ export default function FlavorEdit() {
           className="text-2xl"
           style={{ fontFamily: 'var(--font-display)', color: 'var(--c-text)' }}
         >
-          {fe.title}
+          {fe.title}{flavor?.name ? ` "${flavor.name}"` : ''}
         </h2>
       </div>
 

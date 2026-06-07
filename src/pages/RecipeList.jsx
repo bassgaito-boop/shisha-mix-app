@@ -353,7 +353,7 @@ export default function RecipeList() {
         <div className="mb-3">
           <button
             onClick={() => setTagFilterOpen((v) => !v)}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs transition-colors"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs whitespace-nowrap transition-colors"
             style={{
               border: `1px solid ${filterTags.length > 0 ? 'var(--c-accent)' : 'var(--ca-20)'}`,
               background: filterTags.length > 0 ? 'var(--ca-10)' : 'transparent',
@@ -403,11 +403,11 @@ export default function RecipeList() {
       )}
 
       {/* 並べ替え・在庫フィルター */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-y-2 mb-3">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => setFavoriteOnly((v) => !v)}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs transition-colors"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs whitespace-nowrap transition-colors"
             style={{
               border: `1px solid ${favoriteOnly ? 'var(--c-accent)' : 'var(--ca-20)'}`,
               background: favoriteOnly ? 'var(--ca-10)' : 'transparent',
@@ -419,7 +419,7 @@ export default function RecipeList() {
           </button>
           <button
             onClick={() => setStockOnly((v) => !v)}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs transition-colors"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs whitespace-nowrap transition-colors"
             style={{
               border: `1px solid ${stockOnly ? 'var(--c-accent)' : 'var(--ca-20)'}`,
               background: stockOnly ? 'var(--ca-10)' : 'transparent',
@@ -432,7 +432,7 @@ export default function RecipeList() {
           {hasFilters && (
             <button
               onClick={clearAll}
-              className="flex items-center gap-1 px-2.5 py-1.5 text-xs active:opacity-60 transition-opacity"
+              className="flex items-center gap-1 px-2.5 py-1.5 text-xs whitespace-nowrap active:opacity-60 transition-opacity"
               style={{
                 background: 'var(--c-surf)',
                 border: '1px solid var(--ca-15)',
@@ -954,7 +954,7 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onRate, 
         </button>
         <button
           onClick={(e) => { e.stopPropagation(); setDeleteOpen(true) }}
-          className="p-1.5 transition-colors active:text-red-500"
+          className="p-1.5 ml-2 transition-colors active:text-red-500"
           style={{ color: 'var(--c-dim)' }}
         >
           <Trash2 size={15} />

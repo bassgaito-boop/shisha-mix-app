@@ -37,7 +37,7 @@ export default function Home() {
 
         {/* アプリ名 */}
         <h1
-          className="text-5xl font-bold tracking-[0.25em] mb-2"
+          className="text-5xl font-bold tracking-[0.12em] whitespace-nowrap mb-2"
           style={{ fontFamily: 'var(--font-display)', color: 'var(--c-accent)' }}
         >
           SHISHA MIX
