@@ -17,115 +17,96 @@
       <stop offset="0%"   stop-color="#e8c97a"/>
       <stop offset="100%" stop-color="#b07828"/>
     </linearGradient>
-    <!-- 煙：左（暗めゴールド） -->
     <linearGradient id="sm1" x1="10%" y1="100%" x2="0%"  y2="0%">
       <stop offset="0%"   stop-color="#c9a84c" stop-opacity="0.72"/>
       <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
     </linearGradient>
-    <!-- 煙：中央（明るめゴールド） -->
     <linearGradient id="sm2" x1="0%"  y1="100%" x2="0%"  y2="0%">
       <stop offset="0%"   stop-color="#f0d88a" stop-opacity="0.80"/>
       <stop offset="100%" stop-color="#f0d88a" stop-opacity="0"/>
     </linearGradient>
-    <!-- 煙：右（暗めゴールド） -->
     <linearGradient id="sm3" x1="-10%" y1="100%" x2="0%"  y2="0%">
       <stop offset="0%"   stop-color="#c9a84c" stop-opacity="0.72"/>
       <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
     </linearGradient>
-    <!-- ベース内部：黒〜暗金 -->
     <linearGradient id="baseInt" x1="30%" y1="0%" x2="70%" y2="100%">
       <stop offset="0%"   stop-color="#1a1308"/>
       <stop offset="100%" stop-color="#0a0a0a"/>
     </linearGradient>
   </defs>
 
-  <!-- 背景 -->
-  <rect width="512" height="512" rx="76" fill="#0a0a0a"/>
-  <!-- 極細白枠：ダーク背景とかろうじて分かる程度 -->
-  <rect x="2" y="2" width="508" height="508" rx="75"
+  <!-- 背景：rx縮小で角の白抜けを削減 -->
+  <rect width="512" height="512" rx="40" fill="#0a0a0a"/>
+  <rect x="2" y="2" width="508" height="508" rx="39"
         fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1.5"/>
 
-  <!-- ══════ 煙（金3本） ══════ -->
-  <path d="M224 126 C208 106 220 82 212 58 C206 38 218 20 210 6"
-        fill="none" stroke="url(#sm1)" stroke-width="6" stroke-linecap="round"/>
-  <path d="M256 120 C238 94 256 68 248 42 C242 20 258 6 254 0"
-        fill="none" stroke="url(#sm2)" stroke-width="5.5" stroke-linecap="round"/>
-  <path d="M288 126 C304 106 292 82 300 58 C306 38 294 20 302 6"
-        fill="none" stroke="url(#sm3)" stroke-width="6" stroke-linecap="round"/>
+  <!-- シーシャ本体：1.15倍に拡大（中心256,272から） -->
+  <g transform="translate(-38, -41) scale(1.15)">
 
-  <!-- ══════ ボウル ══════ -->
-  <path d="M205 152 C204 126 256 120 256 120 C256 120 308 126 307 152 L294 196 Q256 206 218 196 Z"
-        fill="url(#goldLt)"/>
-  <!-- 上縁リム -->
-  <ellipse cx="256" cy="151" rx="51" ry="11" fill="#f0d88a"/>
-  <ellipse cx="256" cy="151" rx="51" ry="11" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
-  <!-- リム内側シャドウ -->
-  <ellipse cx="256" cy="152" rx="40" ry="7" fill="rgba(0,0,0,0.26)"/>
-  <!-- スコアライン（3本） -->
-  <line x1="234" y1="156" x2="232" y2="191" stroke="rgba(0,0,0,0.28)" stroke-width="2"/>
-  <line x1="256" y1="151" x2="256" y2="193" stroke="rgba(0,0,0,0.28)" stroke-width="2"/>
-  <line x1="278" y1="156" x2="280" y2="191" stroke="rgba(0,0,0,0.28)" stroke-width="2"/>
-  <!-- 下部リング -->
-  <rect x="233" y="193" width="46" height="11" rx="4" fill="#e8c97a"/>
-  <rect x="233" y="193" width="46" height="11" rx="4" fill="none" stroke="#c9a84c" stroke-width="1"/>
-  <rect x="236" y="194" width="40" height="3.5" rx="1.5" fill="rgba(255,255,255,0.20)"/>
+    <!-- 煙（金3本） -->
+    <path d="M224 126 C208 106 220 82 212 58 C206 38 218 20 210 6"
+          fill="none" stroke="url(#sm1)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M256 120 C238 94 256 68 248 42 C242 20 258 6 254 0"
+          fill="none" stroke="url(#sm2)" stroke-width="5.5" stroke-linecap="round"/>
+    <path d="M288 126 C304 106 292 82 300 58 C306 38 294 20 302 6"
+          fill="none" stroke="url(#sm3)" stroke-width="6" stroke-linecap="round"/>
 
-  <!-- ══════ ステム ══════ -->
-  <rect x="246" y="204" width="20" height="114" rx="5" fill="url(#stemGrad)"/>
-  <!-- 左エッジシャドウ -->
-  <rect x="246" y="204" width="4"  height="114" rx="2" fill="rgba(0,0,0,0.22)"/>
-  <!-- 右エッジシャドウ -->
-  <rect x="262" y="204" width="4"  height="114" rx="2" fill="rgba(0,0,0,0.10)"/>
-  <!-- 中央ハイライト -->
-  <rect x="252" y="208" width="4"  height="106" rx="2" fill="rgba(255,255,255,0.24)"/>
-  <!-- デコリング①（上寄り） -->
-  <rect x="246" y="243" width="20" height="6" rx="2.5" fill="#c9a84c"/>
-  <rect x="247" y="244" width="18" height="2.5" rx="1" fill="rgba(255,255,255,0.30)"/>
-  <!-- デコリング②（下寄り） -->
-  <rect x="246" y="285" width="20" height="6" rx="2.5" fill="#c9a84c"/>
-  <rect x="247" y="286" width="18" height="2.5" rx="1" fill="rgba(255,255,255,0.30)"/>
+    <!-- ボウル -->
+    <path d="M205 152 C204 126 256 120 256 120 C256 120 308 126 307 152 L294 196 Q256 206 218 196 Z"
+          fill="url(#goldLt)"/>
+    <ellipse cx="256" cy="151" rx="51" ry="11" fill="#f0d88a"/>
+    <ellipse cx="256" cy="151" rx="51" ry="11" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
+    <ellipse cx="256" cy="152" rx="40" ry="7" fill="rgba(0,0,0,0.26)"/>
+    <line x1="234" y1="156" x2="232" y2="191" stroke="rgba(0,0,0,0.28)" stroke-width="2"/>
+    <line x1="256" y1="151" x2="256" y2="193" stroke="rgba(0,0,0,0.28)" stroke-width="2"/>
+    <line x1="278" y1="156" x2="280" y2="191" stroke="rgba(0,0,0,0.28)" stroke-width="2"/>
+    <rect x="233" y="193" width="46" height="11" rx="4" fill="#e8c97a"/>
+    <rect x="233" y="193" width="46" height="11" rx="4" fill="none" stroke="#c9a84c" stroke-width="1"/>
+    <rect x="236" y="194" width="40" height="3.5" rx="1.5" fill="rgba(255,255,255,0.20)"/>
 
-  <!-- ══════ フランジ（2重リング） ══════ -->
-  <ellipse cx="256" cy="318" rx="58" ry="12" fill="url(#goldLt)"/>
-  <ellipse cx="256" cy="318" rx="58" ry="12" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
-  <ellipse cx="256" cy="322" rx="42" ry="7.5" fill="rgba(0,0,0,0.18)"/>
-  <ellipse cx="256" cy="322" rx="42" ry="7.5" fill="none" stroke="rgba(201,168,76,0.55)" stroke-width="1"/>
+    <!-- ステム -->
+    <rect x="246" y="204" width="20" height="114" rx="5" fill="url(#stemGrad)"/>
+    <rect x="246" y="204" width="4"  height="114" rx="2" fill="rgba(0,0,0,0.22)"/>
+    <rect x="262" y="204" width="4"  height="114" rx="2" fill="rgba(0,0,0,0.10)"/>
+    <rect x="252" y="208" width="4"  height="106" rx="2" fill="rgba(255,255,255,0.24)"/>
+    <rect x="246" y="243" width="20" height="6" rx="2.5" fill="#c9a84c"/>
+    <rect x="247" y="244" width="18" height="2.5" rx="1" fill="rgba(255,255,255,0.30)"/>
+    <rect x="246" y="285" width="20" height="6" rx="2.5" fill="#c9a84c"/>
+    <rect x="247" y="286" width="18" height="2.5" rx="1" fill="rgba(255,255,255,0.30)"/>
 
-  <!-- ══════ ベース（水タンク） ══════ -->
-  <!-- 内部：黒〜暗金グラデ -->
-  <path d="M176 330 Q166 355 166 384 Q166 450 256 454 Q346 450 346 384 Q346 355 336 330 Z"
-        fill="url(#baseInt)"/>
-  <!-- 外枠ゴールド -->
-  <path d="M176 330 Q166 355 166 384 Q166 450 256 454 Q346 450 346 384 Q346 355 336 330 Z"
-        fill="none" stroke="url(#gold)" stroke-width="7" stroke-linejoin="round"/>
-  <!-- 横帯ライン① -->
-  <path d="M182 349 Q256 342 330 349"
-        fill="none" stroke="rgba(201,168,76,0.50)" stroke-width="1.5"/>
-  <!-- 横帯ライン② -->
-  <path d="M172 374 Q256 366 340 374"
-        fill="none" stroke="rgba(201,168,76,0.30)" stroke-width="1.5"/>
-  <!-- 水面ハイライト -->
-  <path d="M198 368 Q256 358 314 368"
-        fill="none" stroke="#f0d88a" stroke-width="2" opacity="0.32"/>
-  <!-- 側面光沢 -->
-  <path d="M184 342 Q174 365 174 385"
-        fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="5" stroke-linecap="round"/>
-  <!-- ベース底 -->
-  <ellipse cx="256" cy="454" rx="70" ry="14" fill="url(#gold)" opacity="0.58"/>
-  <ellipse cx="256" cy="454" rx="60" ry="9"  fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1.5"/>
+    <!-- フランジ -->
+    <ellipse cx="256" cy="318" rx="58" ry="12" fill="url(#goldLt)"/>
+    <ellipse cx="256" cy="318" rx="58" ry="12" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
+    <ellipse cx="256" cy="322" rx="42" ry="7.5" fill="rgba(0,0,0,0.18)"/>
+    <ellipse cx="256" cy="322" rx="42" ry="7.5" fill="none" stroke="rgba(201,168,76,0.55)" stroke-width="1"/>
 
-  <!-- ══════ ホース ══════ -->
-  <!-- 差込口（2重リング） -->
-  <ellipse cx="334" cy="374" rx="16" ry="10" fill="url(#goldLt)"/>
-  <ellipse cx="334" cy="374" rx="16" ry="10" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
-  <ellipse cx="334" cy="374" rx="10" ry="6"  fill="none" stroke="rgba(201,168,76,0.48)" stroke-width="1"/>
-  <!-- ホース本体 -->
-  <path d="M350 374 Q412 374 422 418 Q434 462 402 474"
-        fill="none" stroke="url(#hose)" stroke-width="14" stroke-linecap="round"/>
-  <path d="M350 374 Q412 374 422 418 Q434 462 402 474"
-        fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="5" stroke-linecap="round"/>
-  <!-- マウスピース（2重リング） -->
-  <ellipse cx="400" cy="475" rx="18" ry="11" fill="url(#goldLt)"/>
-  <ellipse cx="400" cy="475" rx="18" ry="11" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
-  <ellipse cx="400" cy="475" rx="11" ry="6.5" fill="none" stroke="rgba(201,168,76,0.44)" stroke-width="1"/>
+    <!-- ベース（水タンク） -->
+    <path d="M176 330 Q166 355 166 384 Q166 450 256 454 Q346 450 346 384 Q346 355 336 330 Z"
+          fill="url(#baseInt)"/>
+    <path d="M176 330 Q166 355 166 384 Q166 450 256 454 Q346 450 346 384 Q346 355 336 330 Z"
+          fill="none" stroke="url(#gold)" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M182 349 Q256 342 330 349"
+          fill="none" stroke="rgba(201,168,76,0.50)" stroke-width="1.5"/>
+    <path d="M172 374 Q256 366 340 374"
+          fill="none" stroke="rgba(201,168,76,0.30)" stroke-width="1.5"/>
+    <path d="M198 368 Q256 358 314 368"
+          fill="none" stroke="#f0d88a" stroke-width="2" opacity="0.32"/>
+    <path d="M184 342 Q174 365 174 385"
+          fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="5" stroke-linecap="round"/>
+    <ellipse cx="256" cy="454" rx="70" ry="14" fill="url(#gold)" opacity="0.58"/>
+    <ellipse cx="256" cy="454" rx="60" ry="9"  fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1.5"/>
+
+    <!-- ホース -->
+    <ellipse cx="334" cy="374" rx="16" ry="10" fill="url(#goldLt)"/>
+    <ellipse cx="334" cy="374" rx="16" ry="10" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
+    <ellipse cx="334" cy="374" rx="10" ry="6"  fill="none" stroke="rgba(201,168,76,0.48)" stroke-width="1"/>
+    <path d="M350 374 Q412 374 422 418 Q434 462 402 474"
+          fill="none" stroke="url(#hose)" stroke-width="14" stroke-linecap="round"/>
+    <path d="M350 374 Q412 374 422 418 Q434 462 402 474"
+          fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="5" stroke-linecap="round"/>
+    <ellipse cx="400" cy="475" rx="18" ry="11" fill="url(#goldLt)"/>
+    <ellipse cx="400" cy="475" rx="18" ry="11" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
+    <ellipse cx="400" cy="475" rx="11" ry="6.5" fill="none" stroke="rgba(201,168,76,0.44)" stroke-width="1"/>
+
+  </g>
 </svg>
