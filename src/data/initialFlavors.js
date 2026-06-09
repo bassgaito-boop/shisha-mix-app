@@ -1,4 +1,4 @@
-import rawDb from './shisha_flavor_db.json'
+import rawDb from './flavorDb.json'
 
 /** @type {import('./types').Brand[]} */
 export const initialBrands = rawDb.map((entry) => entry.brand)
