@@ -29,7 +29,15 @@ export default function FlavorManage() {
       if (flavorSearch.trim()) return f.name.toLowerCase().includes(flavorSearch.toLowerCase())
       return true
     })
-    .sort((a, b) => a.name.localeCompare(b.name, 'en'))
+    .sort((a, b) => {
+      const aStock = a.inStock !== false ? 0 : 1
+      const bStock = b.inStock !== false ? 0 : 1
+      if (aStock !== bStock) return aStock - bStock
+      return a.name.localeCompare(b.name, 'en')
+    })
+
+  const inStockFlavors = activeFlavors.filter((f) => f.inStock !== false)
+  const outOfStockFlavors = activeFlavors.filter((f) => f.inStock === false)
 
   const totalFlavorsForBrand = flavors.filter((f) => f.brandId === activeBrandId).length
 
@@ -148,64 +156,77 @@ export default function FlavorManage() {
                 </p>
               ) : (
                 <div className="space-y-1">
-                  {activeFlavors.map((flavor) => {
+                  {[...inStockFlavors, ...outOfStockFlavors].map((flavor, index) => {
                     const flavorTags = getTags(flavor)
+                    const isOutOfStock = flavor.inStock === false
+                    const showDivider = inStockFlavors.length > 0 && outOfStockFlavors.length > 0 && index === inStockFlavors.length
                     return (
-                      <div
-                        key={flavor.id}
-                        onClick={() => navigate(`/flavors/${flavor.id}/edit`)}
-                        className="flex items-center gap-2 px-3 py-2.5 transition-colors cursor-pointer"
-                        style={{
-                          background: 'var(--c-surf)',
-                          border: '1px solid var(--ca-08)',
-                          borderRadius: 'var(--radius)',
-                        }}
-                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--ca-30)' }}
-                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--ca-08)' }}
-                        onTouchStart={(e) => { e.currentTarget.style.borderColor = 'var(--ca-30)' }}
-                        onTouchEnd={(e) => { e.currentTarget.style.borderColor = 'var(--ca-08)' }}
-                      >
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs" style={{ color: 'var(--c-text)' }}>{flavor.name}</p>
-                          {flavorTags.length > 0 && (
-                            <div className="flex flex-wrap gap-1 mt-1">
-                              {flavorTags.map((tag) => (
-                                <span
-                                  key={tag}
-                                  className="px-1.5 py-0.5 text-[9px] border"
-                                  style={{
-                                    border: '1px solid var(--ca-20)',
-                                    color: 'var(--c-muted)',
-                                    borderRadius: 'var(--radius)',
-                                  }}
-                                >
-                                  {tag}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                        {/* 在庫トグル（テキストラベル付き） */}
-                        <button
-                          onClick={(e) => { e.stopPropagation(); toggleStock(flavor.id) }}
-                          className="shrink-0 px-2 py-0.5 text-[9px] font-medium transition-colors"
+                      <div key={flavor.id}>
+                        {showDivider && (
+                          <div className="flex items-center gap-2 my-3">
+                            <div className="flex-1 h-px" style={{ background: 'var(--ca-15)' }} />
+                            <span className="text-[9px] tracking-widest uppercase shrink-0" style={{ color: 'var(--c-dim)' }}>
+                              {fm.stockOff}
+                            </span>
+                            <div className="flex-1 h-px" style={{ background: 'var(--ca-15)' }} />
+                          </div>
+                        )}
+                        <div
+                          onClick={() => navigate(`/flavors/${flavor.id}/edit`)}
+                          className="flex items-center gap-2 px-3 py-2.5 transition-colors cursor-pointer"
                           style={{
-                            background: flavor.inStock === false ? 'transparent' : 'var(--ca-10)',
-                            border: `1px solid ${flavor.inStock === false ? 'var(--ca-20)' : 'var(--c-accent)'}`,
-                            color: flavor.inStock === false ? 'var(--c-dim)' : 'var(--c-accent)',
+                            background: 'var(--c-surf)',
+                            border: '1px solid var(--ca-08)',
                             borderRadius: 'var(--radius)',
+                            opacity: isOutOfStock ? 0.5 : 1,
                           }}
+                          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--ca-30)' }}
+                          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--ca-08)' }}
+                          onTouchStart={(e) => { e.currentTarget.style.borderColor = 'var(--ca-30)' }}
+                          onTouchEnd={(e) => { e.currentTarget.style.borderColor = 'var(--ca-08)' }}
                         >
-                          {flavor.inStock === false ? fm.stockOff : fm.stockOn}
-                        </button>
-                        <ChevronRight size={13} className="shrink-0" style={{ color: 'var(--c-dim)' }} />
-                        <button
-                          onClick={(e) => handleDeleteFlavor(e, flavor)}
-                          className="shrink-0 p-1 transition-colors active:text-red-500"
-                          style={{ color: 'var(--c-dim)' }}
-                        >
-                          <X size={13} />
-                        </button>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs" style={{ color: 'var(--c-text)' }}>{flavor.name}</p>
+                            {flavorTags.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-1">
+                                {flavorTags.map((tag) => (
+                                  <span
+                                    key={tag}
+                                    className="px-1.5 py-0.5 text-[9px] border"
+                                    style={{
+                                      border: '1px solid var(--ca-20)',
+                                      color: 'var(--c-muted)',
+                                      borderRadius: 'var(--radius)',
+                                    }}
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                          {/* 在庫トグル（テキストラベル付き） */}
+                          <button
+                            onClick={(e) => { e.stopPropagation(); toggleStock(flavor.id) }}
+                            className="shrink-0 px-2 py-0.5 text-[9px] font-medium transition-colors"
+                            style={{
+                              background: isOutOfStock ? 'transparent' : 'var(--ca-10)',
+                              border: `1px solid ${isOutOfStock ? 'var(--ca-20)' : 'var(--c-accent)'}`,
+                              color: isOutOfStock ? 'var(--c-dim)' : 'var(--c-accent)',
+                              borderRadius: 'var(--radius)',
+                            }}
+                          >
+                            {isOutOfStock ? fm.stockOff : fm.stockOn}
+                          </button>
+                          <ChevronRight size={13} className="shrink-0" style={{ color: 'var(--c-dim)' }} />
+                          <button
+                            onClick={(e) => handleDeleteFlavor(e, flavor)}
+                            className="shrink-0 p-1 transition-colors active:text-red-500"
+                            style={{ color: 'var(--c-dim)' }}
+                          >
+                            <X size={13} />
+                          </button>
+                        </div>
                       </div>
                     )
                   })}
