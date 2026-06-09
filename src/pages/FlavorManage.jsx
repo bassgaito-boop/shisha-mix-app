@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Plus, X, ChevronDown, ChevronRight, Search } from 'lucide-react'
 import { useFlavors, useTags } from '../hooks/useStorage'
@@ -38,45 +38,21 @@ export default function FlavorManage() {
     [brands, activeBrandId]
   )
 
-  // ブランド切り替えとフレーバーの追加・削除時だけ再ソート。
-  // 在庫トグルでは順序を固定し、画面位置が変わらないようにする。
-  const [stableOrderedIds, setStableOrderedIds] = useState(() =>
-    sortByStockThenName(flavors.filter((f) => f.brandId === activeBrandId)).map((f) => f.id)
-  )
-
-  const brandFlavorIdsKey = useMemo(
-    () =>
-      flavors
-        .filter((f) => f.brandId === activeBrandId)
-        .map((f) => f.id)
-        .sort()
-        .join(','),
-    [flavors, activeBrandId]
-  )
-
-  useEffect(() => {
-    setStableOrderedIds(
-      sortByStockThenName(flavors.filter((f) => f.brandId === activeBrandId)).map((f) => f.id)
+  const activeFlavors = useMemo(() => {
+    const sorted = sortByStockThenName(
+      flavors.filter((f) => f.brandId === activeBrandId)
     )
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeBrandId, brandFlavorIdsKey])
+    if (!flavorSearch.trim()) return sorted
+    return sorted.filter((f) =>
+      f.name.toLowerCase().includes(flavorSearch.toLowerCase())
+    )
+  }, [flavors, activeBrandId, flavorSearch])
 
-  const flavorMap = useMemo(() => new Map(flavors.map((f) => [f.id, f])), [flavors])
-
-  const activeFlavors = stableOrderedIds
-    .map((id) => flavorMap.get(id))
-    .filter(Boolean)
-    .filter((f) => !flavorSearch.trim() || f.name.toLowerCase().includes(flavorSearch.toLowerCase()))
-
-  // 区切り線の位置：在庫ありの後に初めて現れる在庫なしアイテムのインデックス
-  let dividerIndex = -1
-  {
-    let seenInStock = false
-    for (let i = 0; i < activeFlavors.length; i++) {
-      if (activeFlavors[i].inStock !== false) seenInStock = true
-      else if (seenInStock) { dividerIndex = i; break }
-    }
-  }
+  // 在庫あり→なし の境界インデックス
+  const dividerIndex = useMemo(() => {
+    const idx = activeFlavors.findIndex((f) => f.inStock === false)
+    return idx > 0 ? idx : -1
+  }, [activeFlavors])
 
   const totalFlavorsForBrand = flavors.filter((f) => f.brandId === activeBrandId).length
 
