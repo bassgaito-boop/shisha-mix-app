@@ -102,7 +102,7 @@ export default function FlavorManage() {
             >
               {sortedBrands.map((brand) => (
                 <option key={brand.id} value={brand.id} style={{ background: 'var(--c-surf)', color: 'var(--c-text)' }}>
-                  {brand.name}（{brand.origin}）
+                  {brand.name}{brand.origin ? `（${brand.origin}）` : ''}
                 </option>
               ))}
             </select>

@@ -167,9 +167,10 @@ export default function RecipeList() {
     setFilterFlavorId('')
     setFilterTags([])
     setFavoriteOnly(false)
+    setStockOnly(false)
   }
 
-  const hasFilters = !!query || !!filterBrandId || !!filterFlavorId || filterTags.length > 0 || favoriteOnly
+  const hasFilters = !!query || !!filterBrandId || !!filterFlavorId || filterTags.length > 0 || favoriteOnly || stockOnly
 
   // レシピで実際に使われているブランド・フレーバーのみ
   const { usedBrands, usedFlavors } = useMemo(() => {
@@ -1004,7 +1005,7 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onRate, 
                   />
                   <p className="text-xs flex-1 truncate min-w-0" style={{ color: 'var(--c-text)' }}>
                     {fl?.name ?? 'Unknown'}
-                    <span style={{ color: 'var(--c-muted)' }}>　{br?.name ?? ''}</span>
+                    {br?.name && <span style={{ color: 'var(--c-muted)' }}>　{br.name}</span>}
                   </p>
                 </div>
               )
