@@ -5,7 +5,7 @@ import { translations } from '../i18n/translations'
 const LangContext = createContext(null)
 
 export function LangProvider({ children }) {
-  const [lang, setLang] = useLocalStorage('appLang', 'ja')
+  const [lang, setLang] = useLocalStorage('appLang', 'en')
   const t = translations[lang]
   const toggleLang = () => setLang(lang === 'ja' ? 'en' : 'ja')
   return (
