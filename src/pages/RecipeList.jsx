@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef, useMemo, useCallback, memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Search, Trash2, PlusCircle, Pencil, X, ChevronDown, Check, Download, Upload, Copy, CopyPlus, Send, QrCode, Camera, FileText, Heart } from 'lucide-react'
 import { useRecipes, useFlavors } from '../hooks/useStorage'
@@ -195,6 +195,8 @@ export default function RecipeList() {
     () => usedFlavors.filter((f) => !filterBrandId || f.brandId === filterBrandId),
     [usedFlavors, filterBrandId]
   )
+
+  const handleRate = useCallback((id, val) => updateRecipe(id, { rating: val }), [updateRecipe])
 
   // ── フィルタリング・ソートロジック ────────────────────────
   const filtered = useMemo(() => {
@@ -501,7 +503,7 @@ export default function RecipeList() {
               brands={brands}
               onDelete={deleteRecipe}
               onDuplicate={duplicateRecipe}
-              onRate={(id, val) => updateRecipe(id, { rating: val })}
+              onRate={handleRate}
               onFavorite={toggleFavorite}
             />
           ))}
@@ -874,7 +876,7 @@ function buildXPostText(recipe, getFlavor, brands) {
   return lines.join('\n')
 }
 
-function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onRate, onFavorite }) {
+const RecipeCard = memo(function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onRate, onFavorite }) {
   const navigate = useNavigate()
   const { t } = useLang()
   const rl = t.recipeList
@@ -1211,7 +1213,7 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onRate, 
       )}
     </div>
   )
-}
+})
 
 // ─── ミニドーナツチャート ──────────────────────────────────────
 

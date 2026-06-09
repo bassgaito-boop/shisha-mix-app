@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { useLocalStorage } from './useLocalStorage'
 import { initialBrands, initialFlavors } from '../data/initialFlavors'
 import { initialRecipes } from '../data/initialRecipes'
@@ -65,8 +66,7 @@ function calcRecipeMeta(flavors) {
 export function useRecipes() {
   const [recipes, setRecipes] = useLocalStorage('shisha_recipes', initialRecipes)
 
-  /** @param {Omit<import('../data/types').Recipe, 'id'|'totalGrams'|'ratios'|'createdAt'|'updatedAt'>} data */
-  const addRecipe = (data) => {
+  const addRecipe = useCallback((data) => {
     const { totalGrams, ratios } = calcRecipeMeta(data.flavors ?? [])
     const newRecipe = {
       tastingNote: '',
@@ -82,9 +82,9 @@ export function useRecipes() {
     }
     setRecipes((prev) => [newRecipe, ...prev])
     return newRecipe
-  }
+  }, [setRecipes])
 
-  const updateRecipe = (id, updates) => {
+  const updateRecipe = useCallback((id, updates) => {
     setRecipes((prev) =>
       prev.map((r) => {
         if (r.id !== id) return r
@@ -98,15 +98,18 @@ export function useRecipes() {
         return merged
       })
     )
-  }
+  }, [setRecipes])
 
-  const deleteRecipe = (id) => {
+  const deleteRecipe = useCallback((id) => {
     setRecipes((prev) => prev.filter((r) => r.id !== id))
-  }
+  }, [setRecipes])
 
-  const getRecipe = (id) => recipes.find((r) => r.id === id) ?? null
+  const getRecipe = useCallback((id) => {
+    // NOTE: This is called at mount time in RecipeCreate, not in a hot render path
+    return recipes.find((r) => r.id === id) ?? null
+  }, [recipes])
 
-  const bulkAddRecipes = (incoming) => {
+  const bulkAddRecipes = useCallback((incoming) => {
     setRecipes((prev) => {
       const existingIds = new Set(prev.map((r) => r.id))
       const toAdd = incoming.filter((r) =>
@@ -119,29 +122,31 @@ export function useRecipes() {
       )
       return [...toAdd, ...prev]
     })
-  }
+  }, [setRecipes])
 
-  const toggleFavorite = (id) => {
+  const toggleFavorite = useCallback((id) => {
     setRecipes((prev) =>
       prev.map((r) => (r.id === id ? { ...r, isFavorite: !r.isFavorite } : r))
     )
-  }
+  }, [setRecipes])
 
-  const duplicateRecipe = (id) => {
-    const original = recipes.find((r) => r.id === id)
-    if (!original) return
-    const { totalGrams, ratios } = calcRecipeMeta(original.flavors ?? [])
-    const copy = {
-      ...original,
-      id: crypto.randomUUID(),
-      name: original.name + ' (コピー)',
-      totalGrams,
-      ratios,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }
-    setRecipes((prev) => [copy, ...prev])
-  }
+  const duplicateRecipe = useCallback((id) => {
+    setRecipes((prev) => {
+      const original = prev.find((r) => r.id === id)
+      if (!original) return prev
+      const { totalGrams, ratios } = calcRecipeMeta(original.flavors ?? [])
+      const copy = {
+        ...original,
+        id: crypto.randomUUID(),
+        name: original.name + ' (コピー)',
+        totalGrams,
+        ratios,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }
+      return [copy, ...prev]
+    })
+  }, [setRecipes])
 
   return { recipes, addRecipe, updateRecipe, deleteRecipe, getRecipe, bulkAddRecipes, duplicateRecipe, toggleFavorite }
 }
@@ -154,8 +159,7 @@ export function useRecipes() {
 export function useSettings() {
   const [settings, setSettings] = useLocalStorage('shisha_settings', [])
 
-  /** @param {Omit<import('../data/types').Setting, 'id'|'createdAt'|'updatedAt'>} data */
-  const addSetting = (data) => {
+  const addSetting = useCallback((data) => {
     const newSetting = {
       bowlType: '',
       stemType: '',
@@ -169,21 +173,21 @@ export function useSettings() {
     }
     setSettings((prev) => [newSetting, ...prev])
     return newSetting
-  }
+  }, [setSettings])
 
-  const updateSetting = (id, updates) => {
+  const updateSetting = useCallback((id, updates) => {
     setSettings((prev) =>
       prev.map((s) =>
         s.id === id ? { ...s, ...updates, updatedAt: new Date().toISOString() } : s
       )
     )
-  }
+  }, [setSettings])
 
-  const deleteSetting = (id) => {
+  const deleteSetting = useCallback((id) => {
     setSettings((prev) => prev.filter((s) => s.id !== id))
-  }
+  }, [setSettings])
 
-  const getSetting = (id) => settings.find((s) => s.id === id) ?? null
+  const getSetting = useCallback((id) => settings.find((s) => s.id === id) ?? null, [settings])
 
   return { settings, addSetting, updateSetting, deleteSetting, getSetting }
 }
@@ -194,48 +198,45 @@ export function useSettings() {
 
 /** @returns フレーバー・ブランドのCRUD操作 */
 export function useFlavors() {
-  // 全ブランド・全フレーバーをlocalStorageで一元管理（初回は初期データで初期化）
   const [brands, setBrands] = useLocalStorage('shisha_brands', initialBrands)
   const [flavors, setFlavors] = useLocalStorage('shisha_flavors', initialFlavors)
 
-  const getFlavor = (id) => flavors.find((f) => f.id === id) ?? null
+  const getFlavor = useCallback((id) => flavors.find((f) => f.id === id) ?? null, [flavors])
 
-  const toggleStock = (id) => {
+  const toggleStock = useCallback((id) => {
     setFlavors((prev) =>
       prev.map((f) => (f.id === id ? { ...f, inStock: f.inStock === false } : f))
     )
-  }
+  }, [setFlavors])
 
-  /** @param {Omit<import('../data/types').Flavor, 'id'|'isCustom'>} data */
-  const addFlavor = (data) => {
+  const addFlavor = useCallback((data) => {
     const newFlavor = { ...data, id: crypto.randomUUID(), isCustom: true }
     setFlavors((prev) => [...prev, newFlavor])
     return newFlavor
-  }
+  }, [setFlavors])
 
-  const updateFlavor = (id, updates) => {
+  const updateFlavor = useCallback((id, updates) => {
     setFlavors((prev) => prev.map((f) => (f.id === id ? { ...f, ...updates } : f)))
-  }
+  }, [setFlavors])
 
-  const deleteFlavor = (id) => {
+  const deleteFlavor = useCallback((id) => {
     setFlavors((prev) => prev.filter((f) => f.id !== id))
-  }
+  }, [setFlavors])
 
-  /** @param {Omit<import('../data/types').Brand, 'id'|'isCustom'>} data */
-  const addBrand = (data) => {
+  const addBrand = useCallback((data) => {
     const newBrand = { ...data, id: crypto.randomUUID(), isCustom: true }
     setBrands((prev) => [...prev, newBrand])
     return newBrand
-  }
+  }, [setBrands])
 
-  const updateBrand = (id, updates) => {
+  const updateBrand = useCallback((id, updates) => {
     setBrands((prev) => prev.map((b) => (b.id === id ? { ...b, ...updates } : b)))
-  }
+  }, [setBrands])
 
-  const deleteBrand = (id) => {
+  const deleteBrand = useCallback((id) => {
     setBrands((prev) => prev.filter((b) => b.id !== id))
     setFlavors((prev) => prev.filter((f) => f.brandId !== id))
-  }
+  }, [setBrands, setFlavors])
 
   return {
     flavors,
@@ -258,16 +259,16 @@ export function useFlavors() {
 export function useTags() {
   const [tags, setTags] = useLocalStorage('shisha_tags', INITIAL_TAGS)
 
-  const addTag = (name) => {
+  const addTag = useCallback((name) => {
     const t = name.trim()
     if (!t || tags.includes(t)) return t
-    setTags([...tags, t])
+    setTags((prev) => [...prev, t])
     return t
-  }
+  }, [tags, setTags])
 
-  const deleteTag = (name) => {
-    setTags(tags.filter((t) => t !== name))
-  }
+  const deleteTag = useCallback((name) => {
+    setTags((prev) => prev.filter((t) => t !== name))
+  }, [setTags])
 
   return { tags, addTag, deleteTag }
 }
@@ -279,16 +280,16 @@ export function useTags() {
 export function useRecipeTags() {
   const [recipeTags, setRecipeTags] = useLocalStorage('shisha_recipe_tags', [])
 
-  const addRecipeTag = (name) => {
+  const addRecipeTag = useCallback((name) => {
     const t = name.trim()
     if (!t || recipeTags.includes(t)) return t
-    setRecipeTags([...recipeTags, t])
+    setRecipeTags((prev) => [...prev, t])
     return t
-  }
+  }, [recipeTags, setRecipeTags])
 
-  const deleteRecipeTag = (name) => {
-    setRecipeTags(recipeTags.filter((t) => t !== name))
-  }
+  const deleteRecipeTag = useCallback((name) => {
+    setRecipeTags((prev) => prev.filter((t) => t !== name))
+  }, [setRecipeTags])
 
   return { recipeTags, addRecipeTag, deleteRecipeTag }
 }

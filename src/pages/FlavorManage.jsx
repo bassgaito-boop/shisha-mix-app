@@ -29,8 +29,14 @@ export default function FlavorManage() {
   const [flavorSearch, setFlavorSearch] = useState('')
   const [deleteTarget, setDeleteTarget] = useState(null)
 
-  const sortedBrands = [...brands].sort((a, b) => a.name.localeCompare(b.name, 'en'))
-  const activeBrand  = brands.find((b) => b.id === activeBrandId)
+  const sortedBrands = useMemo(
+    () => [...brands].sort((a, b) => a.name.localeCompare(b.name, 'en')),
+    [brands]
+  )
+  const activeBrand = useMemo(
+    () => brands.find((b) => b.id === activeBrandId),
+    [brands, activeBrandId]
+  )
 
   // ブランド切り替えとフレーバーの追加・削除時だけ再ソート。
   // 在庫トグルでは順序を固定し、画面位置が変わらないようにする。
