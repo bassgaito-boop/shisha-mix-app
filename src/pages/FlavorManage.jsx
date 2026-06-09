@@ -1,10 +1,19 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Plus, X, ChevronDown, ChevronRight, Search } from 'lucide-react'
 import { useFlavors, useTags } from '../hooks/useStorage'
 import { getTags } from '../constants/categories'
 import { useLang } from '../contexts/LangContext'
 import { useToast, Toast } from '../components/common/Toast'
+
+function sortByStockThenName(list) {
+  return [...list].sort((a, b) => {
+    const aStock = a.inStock !== false ? 0 : 1
+    const bStock = b.inStock !== false ? 0 : 1
+    if (aStock !== bStock) return aStock - bStock
+    return a.name.localeCompare(b.name, 'en')
+  })
+}
 
 export default function FlavorManage() {
   const navigate = useNavigate()
@@ -23,21 +32,45 @@ export default function FlavorManage() {
   const sortedBrands = [...brands].sort((a, b) => a.name.localeCompare(b.name, 'en'))
   const activeBrand  = brands.find((b) => b.id === activeBrandId)
 
-  const activeFlavors = flavors
-    .filter((f) => {
-      if (f.brandId !== activeBrandId) return false
-      if (flavorSearch.trim()) return f.name.toLowerCase().includes(flavorSearch.toLowerCase())
-      return true
-    })
-    .sort((a, b) => {
-      const aStock = a.inStock !== false ? 0 : 1
-      const bStock = b.inStock !== false ? 0 : 1
-      if (aStock !== bStock) return aStock - bStock
-      return a.name.localeCompare(b.name, 'en')
-    })
+  // ブランド切り替えとフレーバーの追加・削除時だけ再ソート。
+  // 在庫トグルでは順序を固定し、画面位置が変わらないようにする。
+  const [stableOrderedIds, setStableOrderedIds] = useState(() =>
+    sortByStockThenName(flavors.filter((f) => f.brandId === activeBrandId)).map((f) => f.id)
+  )
 
-  const inStockFlavors = activeFlavors.filter((f) => f.inStock !== false)
-  const outOfStockFlavors = activeFlavors.filter((f) => f.inStock === false)
+  const brandFlavorIdsKey = useMemo(
+    () =>
+      flavors
+        .filter((f) => f.brandId === activeBrandId)
+        .map((f) => f.id)
+        .sort()
+        .join(','),
+    [flavors, activeBrandId]
+  )
+
+  useEffect(() => {
+    setStableOrderedIds(
+      sortByStockThenName(flavors.filter((f) => f.brandId === activeBrandId)).map((f) => f.id)
+    )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeBrandId, brandFlavorIdsKey])
+
+  const flavorMap = useMemo(() => new Map(flavors.map((f) => [f.id, f])), [flavors])
+
+  const activeFlavors = stableOrderedIds
+    .map((id) => flavorMap.get(id))
+    .filter(Boolean)
+    .filter((f) => !flavorSearch.trim() || f.name.toLowerCase().includes(flavorSearch.toLowerCase()))
+
+  // 区切り線の位置：在庫ありの後に初めて現れる在庫なしアイテムのインデックス
+  let dividerIndex = -1
+  {
+    let seenInStock = false
+    for (let i = 0; i < activeFlavors.length; i++) {
+      if (activeFlavors[i].inStock !== false) seenInStock = true
+      else if (seenInStock) { dividerIndex = i; break }
+    }
+  }
 
   const totalFlavorsForBrand = flavors.filter((f) => f.brandId === activeBrandId).length
 
@@ -156,10 +189,10 @@ export default function FlavorManage() {
                 </p>
               ) : (
                 <div className="space-y-1">
-                  {[...inStockFlavors, ...outOfStockFlavors].map((flavor, index) => {
+                  {activeFlavors.map((flavor, index) => {
                     const flavorTags = getTags(flavor)
                     const isOutOfStock = flavor.inStock === false
-                    const showDivider = inStockFlavors.length > 0 && outOfStockFlavors.length > 0 && index === inStockFlavors.length
+                    const showDivider = index === dividerIndex
                     return (
                       <div key={flavor.id}>
                         {showDivider && (
