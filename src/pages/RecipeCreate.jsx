@@ -432,18 +432,23 @@ export default function RecipeCreate() {
 // GramsInput
 // ---------------------------------------------------------------------------
 
+function toHalfWidth(str) {
+  return str.replace(/[０-９]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0xFEE0))
+}
+
 function GramsInput({ value, onChange }) {
   const [display, setDisplay] = useState(String(value))
 
   const handleChange = (e) => {
-    setDisplay(e.target.value)
-    const n = parseFloat(e.target.value)
+    const raw = toHalfWidth(e.target.value)
+    setDisplay(raw)
+    const n = parseFloat(raw)
     if (!isNaN(n) && n >= 0.1) onChange(n)
   }
 
   const handleBlur = (e) => {
     e.target.style.borderColor = 'var(--ca-15)'
-    const n = parseFloat(display)
+    const n = parseFloat(toHalfWidth(display))
     const valid = !isNaN(n) && n >= 0.1 ? n : 0.1
     setDisplay(String(valid))
     onChange(valid)

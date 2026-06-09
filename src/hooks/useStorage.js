@@ -109,7 +109,14 @@ export function useRecipes() {
   const bulkAddRecipes = (incoming) => {
     setRecipes((prev) => {
       const existingIds = new Set(prev.map((r) => r.id))
-      const toAdd = incoming.filter((r) => r.id && r.name && !existingIds.has(r.id))
+      const toAdd = incoming.filter((r) =>
+        r.id &&
+        typeof r.id === 'string' &&
+        r.name &&
+        typeof r.name === 'string' &&
+        Array.isArray(r.flavors) &&
+        !existingIds.has(r.id)
+      )
       return [...toAdd, ...prev]
     })
   }

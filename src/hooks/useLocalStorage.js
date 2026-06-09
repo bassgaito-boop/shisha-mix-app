@@ -17,6 +17,9 @@ export function useLocalStorage(key, initialValue) {
       window.localStorage.setItem(key, JSON.stringify(valueToStore))
     } catch (error) {
       console.error(error)
+      if (error?.name === 'QuotaExceededError' || error?.code === 22) {
+        window.dispatchEvent(new CustomEvent('shisha-storage-error'))
+      }
     }
   }
 

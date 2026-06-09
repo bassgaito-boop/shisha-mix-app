@@ -5,7 +5,11 @@ import { useLang } from '../contexts/LangContext'
 const currentYear = new Date().getFullYear()
 const years  = Array.from({ length: 100 }, (_, i) => currentYear - i)
 const months = Array.from({ length: 12 },  (_, i) => i + 1)
-const days   = Array.from({ length: 31 },  (_, i) => i + 1)
+
+function getDaysInMonth(year, month) {
+  if (!month) return 31
+  return new Date(Number(year) || 2000, Number(month), 0).getDate()
+}
 
 function calcAge(year, month, day) {
   const today = new Date()
@@ -25,6 +29,18 @@ export default function AgeGate({ onVerify }) {
   const [month, setMonth] = useState('')
   const [day,   setDay]   = useState('')
   const [denied, setDenied] = useState(false)
+
+  const days = Array.from({ length: getDaysInMonth(year, month) }, (_, i) => i + 1)
+
+  const handleYearChange = (val) => {
+    setYear(val)
+    if (day && Number(day) > getDaysInMonth(val, month)) setDay('')
+  }
+
+  const handleMonthChange = (val) => {
+    setMonth(val)
+    if (day && Number(day) > getDaysInMonth(year, val)) setDay('')
+  }
 
   const handleConfirm = () => {
     if (!year || !month || !day) return
@@ -67,9 +83,9 @@ export default function AgeGate({ onVerify }) {
         <p className="text-base font-medium mb-6 tracking-wide" style={{ color: 'var(--c-text)' }}>{a.prompt}</p>
 
         <div className="flex gap-2 mb-8">
-          <BirthSelect value={year}  onChange={setYear}  placeholder={a.year}  options={years.map(y => ({ value: y, label: `${y}` }))} />
-          <BirthSelect value={month} onChange={setMonth} placeholder={a.month} options={months.map(m => ({ value: m, label: `${m}` }))} />
-          <BirthSelect value={day}   onChange={setDay}   placeholder={a.day}   options={days.map(d => ({ value: d, label: `${d}` }))} />
+          <BirthSelect value={year}  onChange={handleYearChange}  placeholder={a.year}  options={years.map(y => ({ value: y, label: `${y}` }))} />
+          <BirthSelect value={month} onChange={handleMonthChange} placeholder={a.month} options={months.map(m => ({ value: m, label: `${m}` }))} />
+          <BirthSelect value={day}   onChange={setDay}            placeholder={a.day}   options={days.map(d => ({ value: d, label: `${d}` }))} />
         </div>
 
         <button

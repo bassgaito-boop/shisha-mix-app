@@ -168,9 +168,10 @@ export default function RecipeList() {
     setFilterTags([])
     setFavoriteOnly(false)
     setStockOnly(false)
+    setSortBy('newest')
   }
 
-  const hasFilters = !!query || !!filterBrandId || !!filterFlavorId || filterTags.length > 0 || favoriteOnly || stockOnly
+  const hasFilters = !!query || !!filterBrandId || !!filterFlavorId || filterTags.length > 0 || favoriteOnly || stockOnly || sortBy !== 'newest'
 
   // レシピで実際に使われているブランド・フレーバーのみ
   const { usedBrands, usedFlavors } = useMemo(() => {
@@ -880,6 +881,7 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onRate, 
   const [shareOpen, setShareOpen] = useState(false)
   const [qrOpen, setQrOpen] = useState(false)
   const [codeCopied, setCodeCopied] = useState(false)
+  const [imgSharing, setImgSharing] = useState(false)
   const [duplicated, setDuplicated] = useState(false)
   const [noteOpen, setNoteOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
@@ -907,6 +909,8 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onRate, 
   }
 
   const handleShareImg = async () => {
+    if (imgSharing) return
+    setImgSharing(true)
     const text = buildXPostText(recipe, getFlavor, brands)
     try {
       const blob = await generateShareCard(recipe, getFlavor, brands, rl.scanToImport)
@@ -926,6 +930,8 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onRate, 
       setShareOpen(false)
     } catch {
       // キャンセル時は何もしない
+    } finally {
+      setImgSharing(false)
     }
   }
 
@@ -1125,11 +1131,12 @@ function RecipeCard({ recipe, getFlavor, brands, onDelete, onDuplicate, onRate, 
               </button>
               <button
                 onClick={handleShareImg}
-                className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-left transition-colors active:opacity-70"
+                disabled={imgSharing}
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-left transition-colors active:opacity-70 disabled:opacity-50"
                 style={{ background: 'var(--c-surf-2)', border: '1px solid var(--ca-12)', borderRadius: 'var(--radius)' }}
               >
                 <Send size={16} style={{ color: 'var(--c-accent)', flexShrink: 0 }} />
-                <span style={{ color: 'var(--c-text)' }}>{rl.shareImg}</span>
+                <span style={{ color: 'var(--c-text)' }}>{imgSharing ? rl.shareImgLoading : rl.shareImg}</span>
               </button>
             </div>
           </div>
