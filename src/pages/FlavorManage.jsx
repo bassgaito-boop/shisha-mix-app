@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useLayoutEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Plus, X, ChevronDown, ChevronRight, Search } from 'lucide-react'
 import { useFlavors, useTags } from '../hooks/useStorage'
@@ -55,6 +55,19 @@ export default function FlavorManage() {
   }, [activeFlavors])
 
   const totalFlavorsForBrand = flavors.filter((f) => f.brandId === activeBrandId).length
+
+  // 在庫トグル時のスクロール位置を保持
+  const savedScrollY = useRef(null)
+  const handleToggleStock = (id) => {
+    savedScrollY.current = window.scrollY
+    toggleStock(id)
+  }
+  useLayoutEffect(() => {
+    if (savedScrollY.current !== null) {
+      window.scrollTo(0, savedScrollY.current)
+      savedScrollY.current = null
+    }
+  })
 
   const handleDeleteFlavor = (e, flavor) => {
     e.stopPropagation()
@@ -222,7 +235,7 @@ export default function FlavorManage() {
                           </div>
                           {/* 在庫トグル（テキストラベル付き） */}
                           <button
-                            onClick={(e) => { e.stopPropagation(); toggleStock(flavor.id) }}
+                            onClick={(e) => { e.stopPropagation(); handleToggleStock(flavor.id) }}
                             className="shrink-0 px-2 py-0.5 text-[9px] font-medium transition-colors"
                             style={{
                               background: isOutOfStock ? 'transparent' : 'var(--ca-10)',
