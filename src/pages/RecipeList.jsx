@@ -720,7 +720,17 @@ async function generateShareCard(recipe, getFlavor, brands, scanToImport = 'Scan
 
   const W = 420
   const flavorH = Math.max(flavors.length * 38, 38)
-  const noteH = (recipe.tastingNote || recipe.memo) ? 36 : 0
+
+  const NOTE_LINE_H = 16
+  const NOTE_MAX_LINES = 5
+  const noteText = recipe.tastingNote || recipe.memo || ''
+  let noteLines = []
+  if (noteText) {
+    const tmpCtx = document.createElement('canvas').getContext('2d')
+    tmpCtx.font = '11px system-ui,sans-serif'
+    noteLines = wrapLines(tmpCtx, noteText, W - 32).slice(0, NOTE_MAX_LINES)
+  }
+  const noteH = noteLines.length > 0 ? (16 + noteLines.length * NOTE_LINE_H) : 0
   const H = 96 + flavorH + 20 + noteH + 160
 
   const canvas = document.createElement('canvas')
@@ -779,12 +789,14 @@ async function generateShareCard(recipe, getFlavor, brands, scanToImport = 'Scan
   })
 
   const afterFlavorY = 105 + flavorH + 10
-  if (recipe.tastingNote || recipe.memo) {
+  if (noteLines.length > 0) {
     ctx.strokeStyle = 'rgba(201,168,76,0.1)'
     ctx.beginPath(); ctx.moveTo(16, afterFlavorY); ctx.lineTo(W - 16, afterFlavorY); ctx.stroke()
     ctx.fillStyle = '#5a5555'
     ctx.font = '11px system-ui,sans-serif'
-    ctx.fillText(truncate(recipe.tastingNote || recipe.memo, ctx, W - 32), 16, afterFlavorY + 20)
+    noteLines.forEach((line, i) => {
+      ctx.fillText(line, 16, afterFlavorY + 16 + i * NOTE_LINE_H)
+    })
   }
 
   const qrSize = 130
@@ -810,6 +822,22 @@ async function generateShareCard(recipe, getFlavor, brands, scanToImport = 'Scan
   ctx.textAlign = 'left'
 
   return new Promise((resolve) => canvas.toBlob(resolve, 'image/png'))
+}
+
+function wrapLines(ctx, text, maxWidth) {
+  const lines = []
+  let line = ''
+  for (const ch of text) {
+    const test = line + ch
+    if (ctx.measureText(test).width > maxWidth) {
+      if (line) lines.push(line)
+      line = ch
+    } else {
+      line = test
+    }
+  }
+  if (line) lines.push(line)
+  return lines
 }
 
 function truncate(text, ctx, maxWidth) {
