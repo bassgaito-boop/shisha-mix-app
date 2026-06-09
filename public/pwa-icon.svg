@@ -1,34 +1,115 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <!-- フレーバーミックス：ベース内部 -->
+    <radialGradient id="baseFill" cx="35%" cy="55%" r="75%">
+      <stop offset="0%"   stop-color="#7c3aed" stop-opacity="0.55"/>
+      <stop offset="42%"  stop-color="#0e7490" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.30"/>
+    </radialGradient>
+    <!-- ゴールドメイン -->
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#e8c97a"/>
+      <stop offset="100%" stop-color="#a87830"/>
+    </linearGradient>
+    <!-- ゴールド（ライト面） -->
+    <linearGradient id="goldLt" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#f0d88a"/>
+      <stop offset="100%" stop-color="#c9a84c"/>
+    </linearGradient>
+    <!-- ホースグラデ -->
+    <linearGradient id="hose" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#e8c97a"/>
+      <stop offset="100%" stop-color="#b07828"/>
+    </linearGradient>
+    <!-- 煙①：パープル -->
+    <linearGradient id="sm1" x1="0%" y1="100%" x2="15%" y2="0%">
+      <stop offset="0%"   stop-color="#a855f7" stop-opacity="0.75"/>
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+    </linearGradient>
+    <!-- 煙②：ティール -->
+    <linearGradient id="sm2" x1="0%" y1="100%" x2="0%"  y2="0%">
+      <stop offset="0%"   stop-color="#22d3ee" stop-opacity="0.65"/>
+      <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
+    </linearGradient>
+    <!-- 煙③：ゴールド -->
+    <linearGradient id="sm3" x1="0%" y1="100%" x2="-15%" y2="0%">
+      <stop offset="0%"   stop-color="#f0d06a" stop-opacity="0.60"/>
+      <stop offset="100%" stop-color="#f0d06a" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
   <!-- 背景 -->
-  <rect width="512" height="512" rx="96" fill="#0a0a0a"/>
+  <rect width="512" height="512" rx="76" fill="#0a0a0a"/>
+  <!-- 細い白枠 -->
+  <rect x="2.5" y="2.5" width="507" height="507" rx="74.5"
+        fill="none" stroke="rgba(255,255,255,0.13)" stroke-width="3"/>
 
-  <!-- 煙 -->
-  <path d="M256 80 Q240 55 256 35 Q272 15 256 0" fill="none" stroke="#c9a84c" stroke-width="10" stroke-linecap="round" opacity="0.5"/>
-  <path d="M232 88 Q210 63 226 40 Q242 17 222 0" fill="none" stroke="#c9a84c" stroke-width="7" stroke-linecap="round" opacity="0.3"/>
+  <!-- ══════ 煙（3色） ══════ -->
+  <!-- 左：パープル -->
+  <path d="M223 126 Q206 104 219 81 Q232 58 215 38"
+        fill="none" stroke="url(#sm1)" stroke-width="7" stroke-linecap="round"/>
+  <!-- 中：ティール -->
+  <path d="M256 120 Q237 93 256 68 Q275 43 256 18"
+        fill="none" stroke="url(#sm2)" stroke-width="6" stroke-linecap="round"/>
+  <!-- 右：ゴールド -->
+  <path d="M289 126 Q306 104 293 81 Q280 58 297 38"
+        fill="none" stroke="url(#sm3)" stroke-width="7" stroke-linecap="round"/>
 
-  <!-- ボウル（上部） -->
-  <path d="M216 112 Q216 92 256 92 Q296 92 296 112 L284 158 Q256 164 228 158 Z" fill="#c9a84c"/>
-  <!-- ボウル底リング -->
-  <rect x="228" y="156" width="56" height="10" rx="4" fill="#e8c97a"/>
+  <!-- ══════ ボウル ══════ -->
+  <!-- ボウル本体 -->
+  <path d="M202 150 Q203 122 256 122 Q309 122 310 150 L295 194 Q256 203 217 194 Z"
+        fill="url(#goldLt)"/>
+  <!-- ボウル上縁リング -->
+  <ellipse cx="256" cy="150" rx="54" ry="11" fill="#f0d88a"/>
+  <!-- アルミホイル的な縦線 -->
+  <line x1="234" y1="154" x2="232" y2="188" stroke="rgba(0,0,0,0.18)" stroke-width="2.5"/>
+  <line x1="256" y1="150" x2="256" y2="191" stroke="rgba(0,0,0,0.18)" stroke-width="2.5"/>
+  <line x1="278" y1="154" x2="280" y2="188" stroke="rgba(0,0,0,0.18)" stroke-width="2.5"/>
+  <!-- ボウル下リング -->
+  <rect x="231" y="191" width="50" height="12" rx="5" fill="#e8c97a"/>
 
-  <!-- ステム（中央の細長いパイプ） -->
-  <rect x="248" y="166" width="16" height="140" rx="6" fill="#c9a84c"/>
+  <!-- ══════ ステム ══════ -->
+  <rect x="244" y="203" width="24" height="114" rx="7" fill="url(#gold)"/>
+  <!-- ステム光沢ライン -->
+  <rect x="251" y="207" width="5" height="106" rx="2" fill="rgba(255,255,255,0.20)"/>
 
-  <!-- プレート（ステムとベースの接続部） -->
-  <rect x="220" y="298" width="72" height="14" rx="5" fill="#e8c97a"/>
+  <!-- ══════ フランジ（ステム⇔ベース接続） ══════ -->
+  <ellipse cx="256" cy="317" rx="56" ry="12" fill="url(#goldLt)"/>
+  <!-- フランジ下の細リング -->
+  <ellipse cx="256" cy="323" rx="44" ry="7" fill="rgba(201,168,76,0.4)"/>
 
-  <!-- ベース（水タンク） -->
-  <path d="M186 312 Q180 330 180 360 Q180 415 256 418 Q332 415 332 360 Q332 330 326 312 Z" fill="none" stroke="#c9a84c" stroke-width="12" stroke-linejoin="round"/>
-  <!-- ベース内の水（光沢） -->
-  <path d="M200 345 Q256 335 312 345" fill="none" stroke="#c9a84c" stroke-width="4" opacity="0.4"/>
+  <!-- ══════ ベース（水タンク） ══════ -->
+  <!-- 内部ミックスカラー -->
+  <path d="M174 328 Q165 352 165 382 Q165 448 256 452 Q347 448 347 382 Q347 352 338 328 Z"
+        fill="url(#baseFill)"/>
+  <!-- 外枠 -->
+  <path d="M174 328 Q165 352 165 382 Q165 448 256 452 Q347 448 347 382 Q347 352 338 328 Z"
+        fill="none" stroke="url(#gold)" stroke-width="7.5" stroke-linejoin="round"/>
+  <!-- 水面ハイライトライン -->
+  <path d="M194 364 Q256 353 318 364"
+        fill="none" stroke="#f0d88a" stroke-width="3" opacity="0.45"/>
+  <!-- ベース側面の光沢 -->
+  <path d="M184 340 Q176 358 176 378"
+        fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="6" stroke-linecap="round"/>
+  <!-- 水面下のバブル（ミックス感） -->
+  <circle cx="222" cy="398" r="5"  fill="#a855f7" opacity="0.35"/>
+  <circle cx="244" cy="415" r="4"  fill="#22d3ee" opacity="0.35"/>
+  <circle cx="272" cy="408" r="6"  fill="#c9a84c" opacity="0.30"/>
+  <circle cx="296" cy="395" r="4"  fill="#a855f7" opacity="0.28"/>
+  <circle cx="260" cy="430" r="3"  fill="#22d3ee" opacity="0.25"/>
 
   <!-- ベース底 -->
-  <ellipse cx="256" cy="418" rx="60" ry="16" fill="#c9a84c" opacity="0.5"/>
+  <ellipse cx="256" cy="452" rx="70" ry="14" fill="url(#gold)" opacity="0.65"/>
 
-  <!-- ホース差し込み口 -->
-  <ellipse cx="320" cy="350" rx="12" ry="8" fill="#c9a84c"/>
-  <!-- ホース -->
-  <path d="M332 350 Q390 350 400 390 Q410 430 380 440" fill="none" stroke="#c9a84c" stroke-width="11" stroke-linecap="round"/>
+  <!-- ══════ ホース ══════ -->
+  <!-- 差し込み口 -->
+  <ellipse cx="334" cy="372" rx="15" ry="9" fill="url(#goldLt)"/>
+  <!-- ホース本体 -->
+  <path d="M349 372 Q408 372 420 415 Q432 458 402 470"
+        fill="none" stroke="url(#hose)" stroke-width="14" stroke-linecap="round"/>
+  <!-- ホース内側光沢 -->
+  <path d="M349 372 Q408 372 420 415 Q432 458 402 470"
+        fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="5" stroke-linecap="round"/>
   <!-- マウスピース -->
-  <ellipse cx="378" cy="441" rx="14" ry="9" fill="#c9a84c"/>
+  <ellipse cx="400" cy="471" rx="18" ry="11" fill="url(#goldLt)"/>
 </svg>
